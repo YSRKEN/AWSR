@@ -78,6 +78,16 @@ namespace AWSR.ViewModels
 		}
 		#endregion
 
+		#region メソッドに関する処理
+		// デッキビルダーの画面を開く処理
+		private void OpenDeckBuilder() {
+			if (DeckBuilder.IsValidDeckBuilderText(inputDeckBuilderText)) {
+				System.Diagnostics.Process.Start($"http://kancolle-calc.net/deckbuilder.html?predeck={DeckBuilder.ComplessText(inputDeckBuilderText)}");
+			}
+			else {
+				System.Diagnostics.Process.Start("http://kancolle-calc.net/deckbuilder.html");
+			}
+		}
 		// 自艦隊の情報を表示する処理
 		private void ShowFriendFleetInfo() {
 			try {
@@ -88,6 +98,7 @@ namespace AWSR.ViewModels
 			}
 			
 		}
+		#endregion
 
 		// コンストラクタ
 		public MainViewModel() {
@@ -100,11 +111,7 @@ namespace AWSR.ViewModels
 			EnemyFleetType = 0;
 			EnemyFleetFormation = 0;
 			// コマンドを登録する
-			OpenDeckBuilderCommand = new CommandBase(
-				() => {
-					System.Diagnostics.Process.Start("http://kancolle-calc.net/deckbuilder.html");
-				}
-			);
+			OpenDeckBuilderCommand = new CommandBase(OpenDeckBuilder);
 			ShowFriendFleetInfoCommand = new CommandBase(ShowFriendFleetInfo);
 		}
 	}

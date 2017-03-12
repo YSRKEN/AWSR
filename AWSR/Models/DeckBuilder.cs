@@ -11,7 +11,7 @@ namespace AWSR.Models
 		const int MaxFleetCount = 4;
 		const int MaxShipCount = 6;
 		const int MaxItemCount = 5;
-		// 分析用のモデル
+		#region 分析用のモデル
 		[JsonObject("deck")]
 		private class DeckBuilderModel
 		{
@@ -40,25 +40,23 @@ namespace AWSR.Models
 				// インデクサ
 				public DeckBuilderFleetModel this[int n] {
 					get {
-						switch (n)
-						{
-						case 0:
-							return dbm.Fleet1;
-						case 1:
-							return dbm.Fleet2;
-						case 2:
-							return dbm.Fleet3;
-						case 3:
-							return dbm.Fleet4;
-						default:
-							throw new IndexOutOfRangeException();
+						switch (n) {
+							case 0:
+								return dbm.Fleet1;
+							case 1:
+								return dbm.Fleet2;
+							case 2:
+								return dbm.Fleet3;
+							case 3:
+								return dbm.Fleet4;
+							default:
+								throw new IndexOutOfRangeException();
 						}
 					}
 				}
 				// メソッド
 				public IEnumerator<DeckBuilderFleetModel> GetEnumerator() {
-					for (int i = 0; i < MaxFleetCount; i++)
-					{
+					for (int i = 0; i < MaxFleetCount; i++) {
 						yield return this[i];
 					}
 				}
@@ -99,8 +97,7 @@ namespace AWSR.Models
 				// インデクサ
 				public DeckBuilderShipModel this[int n] {
 					get {
-						switch (n)
-						{
+						switch (n) {
 							case 0:
 								return dbfm.Ship1;
 							case 1:
@@ -120,8 +117,7 @@ namespace AWSR.Models
 				}
 				// メソッド
 				public IEnumerator<DeckBuilderShipModel> GetEnumerator() {
-					for (int i = 0; i < MaxShipCount; i++)
-					{
+					for (int i = 0; i < MaxShipCount; i++) {
 						yield return this[i];
 					}
 				}
@@ -173,8 +169,7 @@ namespace AWSR.Models
 				// インデクサ
 				public DeckBuilderItemModel this[int n] {
 					get {
-						switch (n)
-						{
+						switch (n) {
 							case 0:
 								return dbism.Item1;
 							case 1:
@@ -192,8 +187,7 @@ namespace AWSR.Models
 				}
 				// メソッド
 				public IEnumerator<DeckBuilderItemModel> GetEnumerator() {
-					for (int i = 0; i < MaxItemCount; i++)
-					{
+					for (int i = 0; i < MaxItemCount; i++) {
 						yield return this[i];
 					}
 				}
@@ -215,6 +209,45 @@ namespace AWSR.Models
 			[JsonProperty("mas")]
 			public int Mas { get; set; }
 		}
+		#endregion
+
+		/// <summary>
+		/// 入力されたJSON文字列を解析する
+		/// </summary>
+		/// <param name="inputDeckBuilderText">デッキビルダー用のJSON文字列</param>
+		/// <returns>デシリアライズした結果</returns>
+		private static DeckBuilderModel ToDeckBuilderModel(string inputDeckBuilderText)
+			=> JsonConvert.DeserializeObject<DeckBuilderModel>(inputDeckBuilderText);
+
+		/// <summary>
+		/// 入力されたJSON文字列が文法上正しいかを判定する
+		/// </summary>
+		/// <param name="inputDeckBuilderText"></param>
+		/// <returns></returns>
+		public static bool IsValidDeckBuilderText(string inputDeckBuilderText) {
+			try {
+				ToDeckBuilderModel(inputDeckBuilderText);
+				return true;
+			}
+			catch {
+				return false;
+			}
+		}
+
+		/// <summary>
+		/// 入力されたJSON文字列を圧縮する
+		/// </summary>
+		/// <param name="inputDeckBuilderText"></param>
+		/// <returns></returns>
+		public static string ComplessText(string inputDeckBuilderText) {
+			var deckObject = ToDeckBuilderModel(inputDeckBuilderText);
+			try {
+				return SerializeDeckBuilderModel(deckObject);
+			}
+			catch {
+				return "";
+			}
+		}
 
 		/// <summary>
 		/// 入力されたJSON文字列を解析し、艦隊文字列として出力する
@@ -224,7 +257,7 @@ namespace AWSR.Models
 		public static string InfoText(string inputDeckBuilderText) {
 			string output = "";
 			// JSONをデシリアライズする
-			var deckObject = JsonConvert.DeserializeObject<DeckBuilderModel>(inputDeckBuilderText);
+			var deckObject = ToDeckBuilderModel(inputDeckBuilderText);
 			// 艦隊毎に読み込み処理を行う
 			for (int fi = 0; fi < MaxFleetCount; ++fi)
 			{
@@ -253,6 +286,56 @@ namespace AWSR.Models
 					}
 				}
 			}
+			return output;
+		}
+
+		/// <summary>
+		/// DeckBuilderModelをJSONに書き戻す
+		/// </summary>
+		/// <param name="model">DeckBuilderModel</param>
+		/// <returns>JSON文字列</returns>
+		private static string SerializeDeckBuilderModel(DeckBuilderModel model) {
+			var output = "";
+			// テンポラリ変数に艦隊情報を詰め込む
+			output += $"{{\"version\":{model.Version},";
+			bool first_flg1 = true;
+			for (int fi = 0; fi < MaxFleetCount; ++fi) {
+				if (model.Fleet[fi] == null)
+					continue;
+				if (!first_flg1)
+					output += ",";
+				first_flg1 = false;
+				output += $"\"f{fi + 1}\":{{";
+				bool first_flg2 = true;
+				for (int si = 0; si < MaxShipCount; ++si) {
+					if (model.Fleet[fi].Ship[si] == null)
+						continue;
+					if (!first_flg2)
+						output += ",";
+					first_flg2 = false;
+					output += $"\"s{si + 1}\":{{";
+					output += $"\"id\":\"{model.Fleet[fi].Ship[si].Id}\",";
+					output += $"\"lv\":{model.Fleet[fi].Ship[si].Level},";
+					output += $"\"luck\":{model.Fleet[fi].Ship[si].Luck},";
+					output += "\"items\":{";
+					bool first_flg3 = true;
+					for (int ii = 0; ii < MaxItemCount; ++ii) {
+						if (model.Fleet[fi].Ship[si].Items.Item[ii] == null)
+							continue;
+						if (!first_flg3)
+							output += ",";
+						first_flg3 = false;
+						output += $"\"i{ii + 1}\":{{";
+						output += $"\"id\":{model.Fleet[fi].Ship[si].Items.Item[ii].Id},";
+						output += $"\"rf\":\"{model.Fleet[fi].Ship[si].Items.Item[ii].Rf}\",";
+						output += $"\"mas\":{model.Fleet[fi].Ship[si].Items.Item[ii].Mas}";
+						output += "}";
+					}
+					output += "}}";
+				}
+				output += "}";
+			}
+			output += "}";
 			return output;
 		}
 	}
