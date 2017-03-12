@@ -1,15 +1,21 @@
 ﻿using AWSR.Models;
 using System;
 using System.ComponentModel;
+using System.Windows;
 using System.Windows.Input;
 
 namespace AWSR.ViewModels
 {
 	class MainViewModel : ViewModelBase
 	{
+		#region コマンドに関する処理
 		// デッキビルダーの画面を開く処理
 		public ICommand OpenDeckBuilderCommand { get; private set; }
+		// 自艦隊の情報を表示する処理
+		public ICommand ShowFriendFleetInfoCommand { get; private set; }
+		#endregion
 
+		#region プロパティに関する処理
 		// 入力するデッキビルダーのデータ
 		string inputDeckBuilderText;
 		public string InputDeckBuilderText {
@@ -70,6 +76,18 @@ namespace AWSR.ViewModels
 			get { return enemyFleetFormation; }
 			set { enemyFleetFormation = value; }
 		}
+		#endregion
+
+		// 自艦隊の情報を表示する処理
+		private void ShowFriendFleetInfo() {
+			try {
+				MessageBox.Show(DeckBuilder.InfoText(InputDeckBuilderText), "航空戦シミュレーションR");
+			}
+			catch {
+				MessageBox.Show("入力データに誤りがあります.", "航空戦シミュレーションR", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+			}
+			
+		}
 
 		// コンストラクタ
 		public MainViewModel() {
@@ -87,6 +105,7 @@ namespace AWSR.ViewModels
 					System.Diagnostics.Process.Start("http://kancolle-calc.net/deckbuilder.html");
 				}
 			);
+			ShowFriendFleetInfoCommand = new CommandBase(ShowFriendFleetInfo);
 		}
 	}
 }
