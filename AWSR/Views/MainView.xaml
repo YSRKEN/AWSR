@@ -12,7 +12,11 @@
 			<Button Content="デッキビルダーを開く" Command="{Binding OpenDeckBuilderCommand}"
 					Width="100" Height="24" Margin="0,0,0,10" HorizontalAlignment="Left"/>
 			<TextBox Text="{Binding InputDeckBuilderText, UpdateSourceTrigger=PropertyChanged}"
-					 Width="200" Height="24"  Margin="0,0,0,10" HorizontalAlignment="Left"/>
+					 Width="200" Height="24"  Margin="0,0,0,10" HorizontalAlignment="Left"
+					 AcceptsReturn="True"/>
+			<TextBox Text="{Binding DeckBuilderInfoText, Mode=OneWay}"
+					 Width="200" Height="200" Margin="0,0,0,10" HorizontalAlignment="Left"
+					 IsReadOnly="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" />
 		</StackPanel>
 	</Grid>
 </Window>

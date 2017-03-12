@@ -1,13 +1,12 @@
-﻿using System;
+﻿using AWSR.Models;
+using System;
 using System.ComponentModel;
 using System.Windows.Input;
 
 namespace AWSR.ViewModels
 {
-	class MainViewModel : INotifyPropertyChanged
+	class MainViewModel : ViewModelBase
 	{
-		public event PropertyChangedEventHandler PropertyChanged;
-
 		// デッキビルダーの画面を開く処理
 		public ICommand OpenDeckBuilderCommand { get; private set; }
 
@@ -21,6 +20,23 @@ namespace AWSR.ViewModels
 				// 入力値が変化した際の処理
 				inputDeckBuilderText = value;
 				Console.WriteLine(inputDeckBuilderText);
+				DeckBuilderInfoText = "";
+			}
+		}
+		// デッキビルダーのデータを整形して出力する
+		public string DeckBuilderInfoText {
+			get {
+				try
+				{
+					return DeckBuilder.InfoText(InputDeckBuilderText);
+				}
+				catch
+				{
+					return "(デッキビルダーの内容が表示されます)";
+				}
+			}
+			set {
+				NotifyPropertyChanged(nameof(DeckBuilderInfoText));
 			}
 		}
 
