@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows;
-
-namespace AWSR
+﻿namespace AWSR
 {
+	using System.Windows;
 	using AWSR.Views;
 	using AWSR.ViewModels;
 	/// <summary>
 	/// App.xaml の相互作用ロジック
+	/// (参考→http://yujiro15.net/YKSoftware/MVVM_Tree.html)
 	/// </summary>
 	public partial class App : Application
 	{
