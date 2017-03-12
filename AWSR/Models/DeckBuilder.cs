@@ -215,6 +215,7 @@ namespace AWSR.Models
 			[JsonProperty("mas")]
 			public int Mas { get; set; }
 		}
+
 		/// <summary>
 		/// 入力されたJSON文字列を解析し、艦隊文字列として出力する
 		/// </summary>

@@ -13,37 +13,74 @@ namespace AWSR.ViewModels
 		// 入力するデッキビルダーのデータ
 		string inputDeckBuilderText;
 		public string InputDeckBuilderText {
-			get { return inputDeckBuilderText; }
+			get => inputDeckBuilderText;
 			set {
 				if (inputDeckBuilderText == value)
 					return;
 				// 入力値が変化した際の処理
 				inputDeckBuilderText = value;
-				Console.WriteLine(inputDeckBuilderText);
-				DeckBuilderInfoText = "";
+				NotifyPropertyChanged(nameof(InputDeckBuilderText));
 			}
 		}
-		// デッキビルダーのデータを整形して出力する
-		public string DeckBuilderInfoText {
-			get {
-				try
-				{
-					return DeckBuilder.InfoText(InputDeckBuilderText);
-				}
-				catch
-				{
-					return "(デッキビルダーの内容が表示されます)";
-				}
-			}
+		// 自艦隊の陣容
+		int friendFleetType;
+		public int FriendFleetType {
+			get { return friendFleetType; }
+			set { friendFleetType = value; }
+		}
+		// 自艦隊の陣形
+		int friendFleetFormation;
+		public int FriendFleetFormation {
+			get { return friendFleetFormation; }
+			set { friendFleetFormation = value; }
+		}
+		// 入力する基地航空隊のデータ
+		string inputAirBaseText;
+		public string InputAirBaseText {
+			get => inputAirBaseText;
 			set {
-				NotifyPropertyChanged(nameof(DeckBuilderInfoText));
+				if (inputAirBaseText == value)
+					return;
+				// 入力値が変化した際の処理
+				inputAirBaseText = value;
+				NotifyPropertyChanged(nameof(InputAirBaseText));
 			}
+		}
+		// 入力する敵艦隊のデータ
+		string inputEnemyDataText;
+		public string InputEnemyDataText {
+			get => inputEnemyDataText;
+			set {
+				if (inputEnemyDataText == value)
+					return;
+				// 入力値が変化した際の処理
+				inputEnemyDataText = value;
+				NotifyPropertyChanged(nameof(InputEnemyDataText));
+			}
+		}
+		// 敵艦隊の陣容
+		int enemyFleetType;
+		public int EnemyFleetType {
+			get { return enemyFleetType; }
+			set { enemyFleetType = value; }
+		}
+		// 敵艦隊の陣形
+		int enemyFleetFormation;
+		public int EnemyFleetFormation {
+			get { return enemyFleetFormation; }
+			set { enemyFleetFormation = value; }
 		}
 
 		// コンストラクタ
 		public MainViewModel() {
 			// フィールドに初期値を設定する
-			InputDeckBuilderText = "";
+			InputDeckBuilderText = "{\"version\":4,\"f1\":{\"s1\":{\"id\":\"330\",\"lv\":99,\"luck\":-1,\"items\":{\"i1\":{\"id\":122,\"rf\":\"10\"},\"i2\":{\"id\":122,\"rf\":\"10\"},\"i3\":{\"id\":106,\"rf\":\"10\"}}},\"s2\":{\"id\":\"346\",\"lv\":99,\"luck\":-1,\"items\":{\"i1\":{\"id\":122,\"rf\":\"10\"},\"i2\":{\"id\":122,\"rf\":\"10\"},\"i3\":{\"id\":106,\"rf\":\"10\"}}},\"s3\":{\"id\":\"357\",\"lv\":99,\"luck\":-1,\"items\":{\"i1\":{\"id\":122,\"rf\":\"10\"},\"i2\":{\"id\":122,\"rf\":\"10\"},\"i3\":{\"id\":106,\"rf\":\"10\"}}},\"s4\":{\"id\":\"428\",\"lv\":99,\"luck\":-1,\"items\":{\"i1\":{\"id\":135,\"rf\":\"10\"},\"i2\":{\"id\":173,\"rf\":0},\"i3\":{\"id\":124,\"rf\":0},\"i4\":{\"id\":135,\"rf\":\"10\"}}},\"s5\":{\"id\":\"278\",\"lv\":99,\"luck\":-1,\"items\":{\"i1\":{\"id\":191,\"rf\":0},\"i2\":{\"id\":53,\"rf\":0,\"mas\":7},\"i3\":{\"id\":157,\"rf\":0,\"mas\":7},\"i4\":{\"id\":189,\"rf\":0,\"mas\":7}}},\"s6\":{\"id\":\"461\",\"lv\":99,\"luck\":-1,\"items\":{\"i1\":{\"id\":191,\"rf\":0},\"i2\":{\"id\":110,\"rf\":0,\"mas\":7},\"i3\":{\"id\":56,\"rf\":0,\"mas\":7},\"i4\":{\"id\":110,\"rf\":0,\"mas\":7}}}}}";
+			FriendFleetType = 0;
+			FriendFleetFormation = 0;
+			InputAirBaseText = "";
+			InputEnemyDataText = "{\n\t\"formation\": \"circle\",\n	\"fleet\": [\n\t\t[544,544,528,554,515,515]\n\t]\t}\n";
+			EnemyFleetType = 0;
+			EnemyFleetFormation = 0;
 			// コマンドを登録する
 			OpenDeckBuilderCommand = new CommandBase(
 				() => {
