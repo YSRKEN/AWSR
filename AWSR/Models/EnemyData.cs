@@ -59,9 +59,8 @@ namespace AWSR.Models
 			// 艦隊毎に読み込み処理を行う
 			output += $"陣形 : {enemyData.Formation.ToStr()}\n";
 			foreach (var fleet in enemyData.Fleet.Select((v, i) => new { v, i })) {
-				output += $"第{fleet.i + 1}艦隊\n";
 				foreach (var ship in fleet.v.Select((v, i) => new { v, i })) {
-					output += $"　{ship.i + 1}番艦 : {ship.v}\n";
+					output += $"({(fleet.i != 0 ? $"{fleet.i + 1}-" : "")}{ship.i + 1}){ship.v}\n";
 				}
 			}
 			return output;

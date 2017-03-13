@@ -264,26 +264,27 @@ namespace AWSR.Models
 				var fleetObject = deckObject.Fleet[fi];
 				if (fleetObject == null)
 					continue;
-				output += $"第{fi + 1}艦隊\n";
 				for (int si = 0; si < MaxShipCount; ++si)
 				{
 					var shipObject = fleetObject.Ship[si];
 					if (shipObject == null)
 						continue;
-					output += $"　{si + 1}番艦 : {shipObject.Id}";
+					output += $"({(fi != 0 ? $"{fi + 1}-" : "")}{si + 1}){shipObject.Id}";
 					output += (shipObject.Level != 0 ? $" Lv.{shipObject.Level}" : "");
 					output += (shipObject.Luck != -1 ? $" 運{shipObject.Luck}" : "");
-					output += "\n";
+					int itemCount = 0;
 					for (int ii = 0; ii < MaxItemCount; ++ii)
 					{
 						var itemObject = shipObject.Items.Item[ii];
 						if (itemObject == null)
 							continue;
-						output += $"　　{ii + 1}スロット : {itemObject.Id}";
-						output += (itemObject.Rf != 0 ? $" 改修度{itemObject.Rf}" : "");
-						output += (itemObject.Mas != 0 ? $" 熟練度{itemObject.Mas}" : "");
-						output += "\n";
+						++itemCount;
+						output += $"{(itemCount == 1 ? "　" : ",")}";
+						output += $"{itemObject.Id}";
+						output += AirWarSimulator.ToMasStr(itemObject.Mas);
+						output += (itemObject.Rf != 0 ? $"★{itemObject.Rf}" : "");
 					}
+					output += "\n";
 				}
 			}
 			return output;
