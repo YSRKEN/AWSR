@@ -23,8 +23,7 @@ namespace AWSR.Models
 				// http://blog.okazuki.jp/entry/20100728/1280300415
 				foreach (var unit in Unit.Select((v, i) => new { v, i })) {
 					foreach (var kammusu in unit.v.Kammusu.Select((v, i) => new { v, i })) {
-						output += (unit.i != 0 ? $"{unit.i + 1}-" : "");
-						output += $"({kammusu.i + 1})";
+						output += (unit.i != 0 ? $"({unit.i + 1}-{kammusu.i + 1})" : $"({kammusu.i + 1})");
 						output += $"{kammusu.v.Id}";
 						output += (kammusu.v.Level != 0 ? $" Lv.{kammusu.v.Level}" : "");
 						output += (kammusu.v.Luck != -1 ? $" 運{kammusu.v.Luck}" : "");
