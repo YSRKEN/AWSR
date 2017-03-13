@@ -52,23 +52,11 @@ namespace AWSR.Models
 		/// </summary>
 		/// <param name="inputJsonText">JSON文字列</param>
 		/// <returns>大艦隊クラス</returns>
-		private static Fleet ToFleet(string inputEnemyDataText) {
+		public static Fleet ToFleet(string inputEnemyDataText) {
 			// JSONをデシリアライズする
 			var jsonModel = JsonConvert.DeserializeObject<JsonModel>(inputEnemyDataText);
 			// jsonModelからFleetクラスを構築する
 			return jsonModel.ToFleet();
-		}
-
-		/// <summary>
-		/// 入力されたJSON文字列を解析し、敵艦隊文字列として出力する
-		/// </summary>
-		/// <param name="inputEnemyDataText">敵艦隊用のJSON文字列</param>
-		/// <returns>敵艦隊文字列</returns>
-		public static string InfoText(string inputEnemyDataText) {
-			// JSON文字列を大艦隊クラスに変換する
-			var fleet = ToFleet(inputEnemyDataText);
-			// 艦隊毎に読み込み処理を行う
-			return fleet.InfoText;
 		}
 	}
 }

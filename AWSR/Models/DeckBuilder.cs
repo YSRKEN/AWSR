@@ -131,57 +131,15 @@ namespace AWSR.Models
 		#endregion
 
 		/// <summary>
-		/// 入力されたJSON文字列が文法上正しいかを判定する
-		/// </summary>
-		/// <param name="inputDeckBuilderText"></param>
-		/// <returns></returns>
-		public static bool IsValidDeckBuilderText(string inputDeckBuilderText) {
-			try {
-				JsonConvert.DeserializeObject<FleetModel>(inputDeckBuilderText);
-				return true;
-			}
-			catch {
-				return false;
-			}
-		}
-
-		/// <summary>
-		/// 入力されたJSON文字列を圧縮する
-		/// </summary>
-		/// <param name="inputDeckBuilderText"></param>
-		/// <returns></returns>
-		public static string ComplessText(string inputDeckBuilderText) {
-			var jsonModel = JsonConvert.DeserializeObject<FleetModel>(inputDeckBuilderText);
-			try {
-				return JsonConvert.SerializeObject(jsonModel);
-			}
-			catch {
-				return "";
-			}
-		}
-
-		/// <summary>
 		/// 入力されたJSON文字列を大艦隊クラスに変換する
 		/// </summary>
-		/// <param name="inputJsonText">JSON文字列</param>
+		/// <param name="inputDeckBuilderText">JSON文字列</param>
 		/// <returns>大艦隊クラス</returns>
-		private static Fleet ToFleet(string inputJsonText) {
+		public static Fleet ToFleet(string inputDeckBuilderText) {
 			// JSONをデシリアライズする
-			var jsonModel = JsonConvert.DeserializeObject<FleetModel>(inputJsonText);
+			var jsonModel = JsonConvert.DeserializeObject<FleetModel>(inputDeckBuilderText);
 			// jsonModelからFleetクラスを構築する
 			return jsonModel.ToFleet();
-		}
-
-		/// <summary>
-		/// 入力されたJSON文字列を解析し、艦隊文字列として出力する
-		/// </summary>
-		/// <param name="inputDeckBuilderText">デッキビルダー用のJSON文字列</param>
-		/// <returns>艦隊文字列</returns>
-		public static string InfoText(string inputDeckBuilderText) {
-			// JSON文字列を大艦隊クラスに変換する
-			var fleet = ToFleet(inputDeckBuilderText);
-			// 艦隊毎に読み込み処理を行う
-			return fleet.InfoText;
 		}
 	}
 }
