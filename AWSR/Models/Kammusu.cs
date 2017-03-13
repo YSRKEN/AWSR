@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using static AWSR.Models.AirWarSimulator;
 
 namespace AWSR.Models
 {
@@ -10,10 +11,32 @@ namespace AWSR.Models
 		// 艦船ID
 		public int Id { get; set; }
 		// レベル
-		public int Level { get; set; }
+		private int level;
+		public int Level {
+			get {
+				return level;
+			}
+			set {
+				level = (value < 1 ? 1 : value > MaxLevel ? MaxLevel : value);
+			}
+		}
 		// 運
-		public int Luck { get; set; }
+		private int luck;
+		public int Luck {
+			get {
+				return luck;
+			}
+			set {
+				level = (value < -1 ? -1 : value > MaxLuck ? MaxLuck : value);
+			}
+		}
 		// 所持装備
 		public List<Weapon> Weapon { get; set; }
+		// 艦娘か否か
+		public bool IsKammusu { get; set; }
+		// コンストラクタ
+		public Kammusu() {
+			Weapon = new List<Weapon>();
+		}
 	}
 }

@@ -8,6 +8,10 @@ namespace AWSR.Models
 	class Unit
 	{
 		// 艦隊に属する艦娘
-		public List<Kammusu> Kammusu = new List<Kammusu>();
+		public List<Kammusu> Kammusu { get; set; }
+		// コンストラクタ
+		public Unit() {
+			Kammusu = new List<Kammusu>();
+		}
 	}
 }
