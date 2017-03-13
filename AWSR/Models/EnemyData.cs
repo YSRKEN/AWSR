@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Linq;
 using static AWSR.Models.AirWarSimulator;
 
 namespace AWSR.Models
@@ -19,7 +18,7 @@ namespace AWSR.Models
 			private List<List<int>> fleet { get; set; }
 			// Fleetクラスを構築する
 			public Fleet ToFleet() {
-				// 艦隊数
+				// 書き込むためのインスタンスを作成する
 				var outputFleet = new Fleet();
 				// 陣形
 				var formationHash = new Dictionary<string, Formation> {
@@ -34,12 +33,12 @@ namespace AWSR.Models
 				foreach(var unit in fleet) {
 					var tempUnit = new Unit();
 					foreach (int kammusu in unit) {
-						var tempKammsu = new Kammusu();
-						tempKammsu.Id = kammusu;
-						tempKammsu.Level = 0;
-						tempKammsu.Luck = -1;
-						tempKammsu.IsKammusu = false;
-						tempUnit.Kammusu.Add(tempKammsu);
+						var tempKammusu = new Kammusu();
+						tempKammusu.Id = kammusu;
+						tempKammusu.Level = 0;
+						tempKammusu.Luck = -1;
+						tempKammusu.IsKammusu = false;
+						tempUnit.Kammusu.Add(tempKammusu);
 					}
 					outputFleet.Unit.Add(tempUnit);
 				}
@@ -53,9 +52,9 @@ namespace AWSR.Models
 		/// </summary>
 		/// <param name="inputJsonText">JSON文字列</param>
 		/// <returns>大艦隊クラス</returns>
-		private static Fleet ToFleet(string inputJsonText) {
+		private static Fleet ToFleet(string inputEnemyDataText) {
 			// JSONをデシリアライズする
-			var jsonModel = JsonConvert.DeserializeObject<JsonModel>(inputJsonText);
+			var jsonModel = JsonConvert.DeserializeObject<JsonModel>(inputEnemyDataText);
 			// jsonModelからFleetクラスを構築する
 			return jsonModel.ToFleet();
 		}

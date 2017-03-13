@@ -26,6 +26,8 @@ namespace AWSR.Models
 						output += (unit.i != 0 ? $"{unit.i + 1}-" : "");
 						output += $"({kammusu.i + 1})";
 						output += $"{kammusu.v.Id}";
+						output += (kammusu.v.Level != 0 ? $" Lv.{kammusu.v.Level}" : "");
+						output += (kammusu.v.Luck != -1 ? $" 運{kammusu.v.Luck}" : "");
 						foreach (var weapon in kammusu.v.Weapon.Select((v, i) => new { v, i })) {
 							output += (weapon.i == 0 ? "　" : ",");
 							output += $"{weapon.v.Id}";
