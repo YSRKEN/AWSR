@@ -64,6 +64,10 @@
     <Compile Include="Models\AirWarSimulator.cs" />
     <Compile Include="Models\DeckBuilder.cs" />
     <Compile Include="Models\EnemyData.cs" />
+    <Compile Include="Models\Fleet.cs" />
+    <Compile Include="Models\Kammusu.cs" />
+    <Compile Include="Models\Unit.cs" />
+    <Compile Include="Models\Weapon.cs" />
     <Compile Include="ViewModels\CommandBase.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />

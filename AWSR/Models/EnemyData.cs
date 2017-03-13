@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Linq;
 using static AWSR.Models.AirWarSimulator;
 
 namespace AWSR.Models
@@ -11,59 +10,53 @@ namespace AWSR.Models
 
 		#region 分析用のモデル
 		[JsonObject("enemy")]
-		private class EnemyDataModel
+		private class JsonModel
 		{
-			// プロパティ
 			[JsonProperty("formation")]
 			private string formation { get; set; }
-			public Formation Formation {
-				get {
-					switch (formation) {
-					case "trail":
-						return Formation.Trail;
-					case "subTrail":
-						return Formation.SubTrail;
-					case "circle":
-						return Formation.Circle;
-					case "echelon":
-						return Formation.Echelon;
-					case "abreast":
-						return Formation.Abreast;
-					default:
-						return Formation.Trail;
-					}
-				}
-			}
 			[JsonProperty("fleet")]
-			public List<List<int>> Fleet { get; set; }
+			private List<List<int>> fleet { get; set; }
+			// Fleetクラスを構築する
+			public Fleet ToFleet() {
+				// 書き込むためのインスタンスを作成する
+				var outputFleet = new Fleet();
+				// 陣形
+				var formationHash = new Dictionary<string, Formation> {
+					{ "trail", Formation.Trail },
+					{ "subTrail", Formation.SubTrail },
+					{ "circle",Formation.Circle },
+					{ "echelon", Formation.Echelon },
+					{ "abreast", Formation.Abreast },
+				};
+				outputFleet.Formation = formationHash[formation];
+				// 艦船
+				foreach(var unit in fleet) {
+					var tempUnit = new Unit();
+					foreach (int kammusu in unit) {
+						var tempKammusu = new Kammusu();
+						tempKammusu.Id = kammusu;
+						tempKammusu.Level = 0;
+						tempKammusu.Luck = -1;
+						tempKammusu.IsKammusu = false;
+						tempUnit.Kammusu.Add(tempKammusu);
+					}
+					outputFleet.Unit.Add(tempUnit);
+				}
+				return outputFleet;
+			}
 		}
 		#endregion
 
 		/// <summary>
-		/// 入力されたJSON文字列を解析する
+		/// 入力されたJSON文字列を大艦隊クラスに変換する
 		/// </summary>
-		/// <param name="inputEnemyDataText">敵艦隊用のJSON文字列</param>
-		/// <returns>デシリアライズした結果</returns>
-		private static EnemyDataModel ToEnemyDataModel(string inputEnemyDataText)
-			=> JsonConvert.DeserializeObject<EnemyDataModel>(inputEnemyDataText);
-
-		/// <summary>
-		/// 入力されたJSON文字列を解析し、敵艦隊文字列として出力する
-		/// </summary>
-		/// <param name="inputEnemyDataText">敵艦隊用のJSON文字列</param>
-		/// <returns>敵艦隊文字列</returns>
-		public static string InfoText(string inputEnemyDataText) {
-			string output = "";
+		/// <param name="inputJsonText">JSON文字列</param>
+		/// <returns>大艦隊クラス</returns>
+		public static Fleet ToFleet(string inputEnemyDataText) {
 			// JSONをデシリアライズする
-			var enemyData = ToEnemyDataModel(inputEnemyDataText);
-			// 艦隊毎に読み込み処理を行う
-			output += $"陣形 : {enemyData.Formation.ToStr()}\n";
-			foreach (var fleet in enemyData.Fleet.Select((v, i) => new { v, i })) {
-				foreach (var ship in fleet.v.Select((v, i) => new { v, i })) {
-					output += $"({(fleet.i != 0 ? $"{fleet.i + 1}-" : "")}{ship.i + 1}){ship.v}\n";
-				}
-			}
-			return output;
+			var jsonModel = JsonConvert.DeserializeObject<JsonModel>(inputEnemyDataText);
+			// jsonModelからFleetクラスを構築する
+			return jsonModel.ToFleet();
 		}
 	}
 }

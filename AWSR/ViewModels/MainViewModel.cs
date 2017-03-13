@@ -1,8 +1,7 @@
 ﻿using AWSR.Models;
-using System;
-using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
+using static AWSR.Models.AirWarSimulator;
 
 namespace AWSR.ViewModels
 {
@@ -87,19 +86,70 @@ namespace AWSR.ViewModels
 		#endregion
 
 		#region メソッドに関する処理
+		// 自艦隊のデータを作成する
+		Fleet FriendFleet(string inputDeckBuilderText) {
+			// とりあえず読み込む
+			var friendFleet = DeckBuilder.ToFleet(inputDeckBuilderText);
+			// 陣形を設定する
+			friendFleet.Formation = (Formation)friendFleetFormation;
+			// 艦隊の陣容を設定する
+			switch (friendFleetType) {
+			case 0:
+				// 普段は何もしないが、第3艦隊以降が存在する際は切り捨てる
+				if(friendFleet.Unit.Count >= 3)
+					friendFleet.Unit.RemoveRange(2, friendFleet.Unit.Count - 2);
+				break;
+			case 1:
+				// 通常艦隊なので、最初の艦隊以外は切り捨てる
+				friendFleet.Unit.RemoveRange(1, friendFleet.Unit.Count - 1);
+				break;
+			case 2:
+				// 連合艦隊なので、最初から2つ分の艦隊以外は切り捨てる
+				// 通常艦隊のデータを入れると例外が発生することに注意
+				friendFleet.Unit.RemoveRange(2, friendFleet.Unit.Count - 2);
+				break;
+			}
+			return friendFleet;
+		}
+		// 敵艦隊のデータを作成する
+		Fleet EnemyFleet(string inputEnemyDataText) {
+			// とりあえず読み込む
+			var enemyFleet = EnemyData.ToFleet(inputEnemyDataText);
+			// 陣形を設定する
+			if (enemyFleetFormation != 0)
+				enemyFleet.Formation = (Formation)(enemyFleetFormation - 1);
+			// 艦隊の陣容を設定する
+			switch (enemyFleetType) {
+			case 0:
+				// 何もしない
+				break;
+			case 1:
+				// 通常艦隊なので、最初の艦隊以外は切り捨てる
+				enemyFleet.Unit.RemoveRange(1, enemyFleet.Unit.Count - 1);
+				break;
+			case 2:
+				// 連合艦隊なので、最初から2つ分の艦隊以外は切り捨てる
+				// 通常艦隊のデータを入れると例外が発生することに注意
+				enemyFleet.Unit.RemoveRange(2, enemyFleet.Unit.Count - 2);
+				break;
+			}
+			return enemyFleet;
+		}
 		// デッキビルダーの画面を開く処理
 		private void OpenDeckBuilder() {
-			if (DeckBuilder.IsValidDeckBuilderText(InputDeckBuilderText)) {
-				System.Diagnostics.Process.Start($"http://kancolle-calc.net/deckbuilder.html?predeck={DeckBuilder.ComplessText(InputDeckBuilderText)}");
+			try {
+				var friendFleet = FriendFleet(InputDeckBuilderText);
+				System.Diagnostics.Process.Start($"http://kancolle-calc.net/deckbuilder.html?predeck={friendFleet.ToDeckBuilderText()}");
 			}
-			else {
+			catch {
 				System.Diagnostics.Process.Start("http://kancolle-calc.net/deckbuilder.html");
 			}
 		}
 		// 自艦隊の情報を表示する処理
 		private void ShowFriendFleetInfo() {
 			try {
-				MessageBox.Show(DeckBuilder.InfoText(InputDeckBuilderText), "航空戦シミュレーションR");
+				var friendFleet = FriendFleet(InputDeckBuilderText);
+				MessageBox.Show(friendFleet.ToInfoText(), "航空戦シミュレーションR");
 			}
 			catch {
 				MessageBox.Show("入力データに誤りがあります.", "航空戦シミュレーションR", MessageBoxButton.OK, MessageBoxImage.Exclamation);
@@ -109,7 +159,8 @@ namespace AWSR.ViewModels
 		// 敵艦隊の情報を表示する処理
 		private void ShowEnemyFleetInfo() {
 			try {
-				MessageBox.Show(EnemyData.InfoText(InputEnemyDataText), "航空戦シミュレーションR");
+				var enemyFleet = EnemyFleet(InputEnemyDataText);
+				MessageBox.Show(enemyFleet.ToInfoText(), "航空戦シミュレーションR");
 			}
 			catch {
 				MessageBox.Show("入力データに誤りがあります.", "航空戦シミュレーションR", MessageBoxButton.OK, MessageBoxImage.Exclamation);

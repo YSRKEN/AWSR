@@ -9,6 +9,10 @@ namespace AWSR.Models
 	static class AirWarSimulator
 	{
 		#region 定数・ヘルパーメソッド
+		public static readonly int MaxLevel = 155;
+		public static readonly int MaxLuck = 100;
+		public static readonly int MaxImprovement = 10;
+		public static readonly int MaxProficiency = 7;
 		public enum Formation { Trail, SubTrail, Circle, Echelon, Abreast };
 		// 陣形を文字列に変換する
 		public static string ToStr(this Formation formation) {
