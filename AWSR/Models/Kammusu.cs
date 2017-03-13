@@ -27,7 +27,7 @@ namespace AWSR.Models
 				return luck;
 			}
 			set {
-				level = (value < -1 ? -1 : value > MaxLuck ? MaxLuck : value);
+				luck = (value < -1 ? -1 : value > MaxLuck ? MaxLuck : value);
 			}
 		}
 		// 所持装備

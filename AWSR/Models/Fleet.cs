@@ -19,21 +19,55 @@ namespace AWSR.Models
 			get {
 				string output = "";
 				output += $"陣形 : {Formation.ToStr()}\n";
+				// Selectメソッドでインデックスを付加する手法は次のURLを参考にした
+				// http://blog.okazuki.jp/entry/20100728/1280300415
 				foreach (var unit in Unit.Select((v, i) => new { v, i })) {
 					foreach (var kammusu in unit.v.Kammusu.Select((v, i) => new { v, i })) {
-						output += $"({(unit.i != 0 ? $"{unit.i + 1}-" : "")}{kammusu.i + 1})";
+						output += (unit.i != 0 ? $"{unit.i + 1}-" : "");
+						output += $"({kammusu.i + 1})";
 						output += $"{kammusu.v.Id}";
 						foreach (var weapon in kammusu.v.Weapon.Select((v, i) => new { v, i })) {
-							output += $"{(weapon.i == 0 ? "　" : ",")}";
+							output += (weapon.i == 0 ? "　" : ",");
 							output += $"{weapon.v.Id}";
 							output += ToMasStr(weapon.v.Proficiency);
-							output += $"{(weapon.v.Improvement > 0 ? $"★{weapon.v.Improvement}" : "")}";
+							output += (weapon.v.Improvement > 0 ? $"★{weapon.v.Improvement}" : "");
 						}
 						output += "\n";
 					}
 				}
 				return output;
 			}
+		}
+		// デッキビルダーのJSONに変換
+		public string ToDeckBuilderText() {
+			string output = "";
+			// 艦隊情報を先頭から書き込んでいく
+			output += $"{{\"version\":4,";
+			foreach (var unit in Unit.Select((v, i) => new { v, i })) {
+				output += (unit.i != 0 ? "," : "");
+				output += $"\"f{unit.i + 1}\":{{";
+				foreach (var kammusu in unit.v.Kammusu.Select((v, i) => new { v, i })) {
+					output += (kammusu.i != 0 ? "," : "");
+					output += $"\"s{kammusu.i + 1}\":{{";
+					output += $"\"id\":\"{kammusu.v.Id}\",";
+					output += $"\"lv\":{kammusu.v.Level},";
+					output += $"\"luck\":{kammusu.v.Luck},";
+					output += "\"items\":{";
+					foreach (var weapon in kammusu.v.Weapon.Select((v, i) => new { v, i })) {
+						output += (weapon.i != 0 ? "," : "");
+						output += $"\"i{weapon.i + 1}\":{{";
+						output += $"\"id\":{weapon.v.Id},";
+						output += $"\"rf\":\"{weapon.v.Improvement}\",";
+						output += $"\"mas\":{weapon.v.Proficiency}";
+						output += "}";
+					}
+					output += "}}";
+				}
+				output += "}";
+			}
+			output += "}";
+			// 出力
+			return output;
 		}
 		// コンストラクタ
 		public Fleet() {

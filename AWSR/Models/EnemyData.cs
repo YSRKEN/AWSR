@@ -33,7 +33,7 @@ namespace AWSR.Models
 				// 艦船
 				foreach(var unit in fleet) {
 					var tempUnit = new Unit();
-					foreach (var kammusu in unit) {
+					foreach (int kammusu in unit) {
 						var tempKammsu = new Kammusu();
 						tempKammsu.Id = kammusu;
 						tempKammsu.Level = 0;
