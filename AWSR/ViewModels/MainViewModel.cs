@@ -13,13 +13,17 @@ namespace AWSR.ViewModels
 		public ICommand OpenDeckBuilderCommand { get; private set; }
 		// 自艦隊の情報を表示する処理
 		public ICommand ShowFriendFleetInfoCommand { get; private set; }
+		// 敵艦隊の情報を表示する処理
+		public ICommand ShowEnemyFleetInfoCommand { get; private set; }
 		#endregion
 
 		#region プロパティに関する処理
 		// 入力するデッキビルダーのデータ
 		string inputDeckBuilderText;
 		public string InputDeckBuilderText {
-			get => inputDeckBuilderText;
+			get {
+				return inputDeckBuilderText;
+			}
 			set {
 				if (inputDeckBuilderText == value)
 					return;
@@ -43,7 +47,9 @@ namespace AWSR.ViewModels
 		// 入力する基地航空隊のデータ
 		string inputAirBaseText;
 		public string InputAirBaseText {
-			get => inputAirBaseText;
+			get {
+				return inputAirBaseText;
+			}
 			set {
 				if (inputAirBaseText == value)
 					return;
@@ -55,7 +61,9 @@ namespace AWSR.ViewModels
 		// 入力する敵艦隊のデータ
 		string inputEnemyDataText;
 		public string InputEnemyDataText {
-			get => inputEnemyDataText;
+			get {
+				return inputEnemyDataText;
+			}
 			set {
 				if (inputEnemyDataText == value)
 					return;
@@ -81,8 +89,8 @@ namespace AWSR.ViewModels
 		#region メソッドに関する処理
 		// デッキビルダーの画面を開く処理
 		private void OpenDeckBuilder() {
-			if (DeckBuilder.IsValidDeckBuilderText(inputDeckBuilderText)) {
-				System.Diagnostics.Process.Start($"http://kancolle-calc.net/deckbuilder.html?predeck={DeckBuilder.ComplessText(inputDeckBuilderText)}");
+			if (DeckBuilder.IsValidDeckBuilderText(InputDeckBuilderText)) {
+				System.Diagnostics.Process.Start($"http://kancolle-calc.net/deckbuilder.html?predeck={DeckBuilder.ComplessText(InputDeckBuilderText)}");
 			}
 			else {
 				System.Diagnostics.Process.Start("http://kancolle-calc.net/deckbuilder.html");
@@ -98,6 +106,16 @@ namespace AWSR.ViewModels
 			}
 			
 		}
+		// 敵艦隊の情報を表示する処理
+		private void ShowEnemyFleetInfo() {
+			try {
+				MessageBox.Show(EnemyData.InfoText(InputEnemyDataText), "航空戦シミュレーションR");
+			}
+			catch {
+				MessageBox.Show("入力データに誤りがあります.", "航空戦シミュレーションR", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+			}
+
+		}
 		#endregion
 
 		// コンストラクタ
@@ -107,12 +125,13 @@ namespace AWSR.ViewModels
 			FriendFleetType = 0;
 			FriendFleetFormation = 0;
 			InputAirBaseText = "";
-			InputEnemyDataText = "{\n\t\"formation\": \"circle\",\n	\"fleet\": [\n\t\t[544,544,528,554,515,515]\n\t]\t}\n";
+			InputEnemyDataText = "{\n\t\"formation\": \"circle\",\n	\"fleet\": [\n\t\t[544,544,528,554,515,515]\n\t]\n}\n";
 			EnemyFleetType = 0;
 			EnemyFleetFormation = 0;
 			// コマンドを登録する
 			OpenDeckBuilderCommand = new CommandBase(OpenDeckBuilder);
 			ShowFriendFleetInfoCommand = new CommandBase(ShowFriendFleetInfo);
+			ShowEnemyFleetInfoCommand = new CommandBase(ShowEnemyFleetInfo);
 		}
 	}
 }
