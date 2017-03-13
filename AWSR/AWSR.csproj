@@ -61,6 +61,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Models\AirWarSimulator.cs" />
     <Compile Include="Models\DeckBuilder.cs" />
     <Compile Include="Models\EnemyData.cs" />
     <Compile Include="ViewModels\CommandBase.cs" />

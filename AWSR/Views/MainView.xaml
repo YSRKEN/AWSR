@@ -63,10 +63,12 @@
 					<TextBox Grid.Row="1" Text="{Binding InputEnemyDataText}"
 							 Margin="10,5,10,5" HorizontalAlignment="Stretch" AcceptsReturn="True" AcceptsTab="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" />
 					<ComboBox Grid.Row="2" Margin="10,5,10,5" SelectedIndex="{Binding EnemyFleetType}">
+						<ComboBoxItem Content="入力通り" />
 						<ComboBoxItem Content="通常艦隊" />
 						<ComboBoxItem Content="連合艦隊" />
 					</ComboBox>
 					<ComboBox Grid.Row="3" Margin="10,5,10,10" SelectedIndex="{Binding EnemyFleetFormation}">
+						<ComboBoxItem Content="入力通り" />
 						<ComboBoxItem Content="単縦陣" />
 						<ComboBoxItem Content="複縦陣" />
 						<ComboBoxItem Content="輪形陣" />
