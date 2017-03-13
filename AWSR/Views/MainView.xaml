@@ -29,7 +29,7 @@
 					<TextBox Grid.Row="1" Text="{Binding InputDeckBuilderText}"
 							 Margin="10,5,10,5" HorizontalAlignment="Stretch" AcceptsReturn="True" AcceptsTab="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" />
 					<ComboBox Grid.Row="2" Margin="10,5,10,5" SelectedIndex="{Binding FriendFleetType}">
-						<ComboBoxItem Content="入力通り" />
+						<ComboBoxItem Content="艦隊数：入力通り" />
 						<ComboBoxItem Content="通常艦隊" />
 						<ComboBoxItem Content="連合艦隊" />
 					</ComboBox>
@@ -48,8 +48,14 @@
 						<RowDefinition Height="auto" />
 						<RowDefinition />
 					</Grid.RowDefinitions>
-					<Button Grid.Row="0" Content="ファイルから読み込み" Height="24" Margin="10,10,10,5" HorizontalAlignment="Stretch" />
-					<TextBox Grid.Row="1" Text="{Binding InputAirBaseText}" Margin="10,5,10,5" HorizontalAlignment="Stretch" AcceptsReturn="True" AcceptsTab="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" />
+					<Button Grid.Row="0" Content="ファイルから読み込み"
+							Height="24" Margin="10,10,10,5" HorizontalAlignment="Stretch" 
+							IsEnabled="False"/>
+					<TextBox Grid.Row="1" Text="{Binding InputAirBaseText}"
+							 Margin="10,5,10,5" HorizontalAlignment="Stretch"
+							 AcceptsReturn="True" AcceptsTab="True"
+							 HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" 
+							 IsEnabled="False"/>
 				</Grid>
 			</GroupBox>
 			<GroupBox Grid.Column="2" Header="敵艦隊" Margin="5,0,10,5">
@@ -64,12 +70,12 @@
 					<TextBox Grid.Row="1" Text="{Binding InputEnemyDataText}"
 							 Margin="10,5,10,5" HorizontalAlignment="Stretch" AcceptsReturn="True" AcceptsTab="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" />
 					<ComboBox Grid.Row="2" Margin="10,5,10,5" SelectedIndex="{Binding EnemyFleetType}">
-						<ComboBoxItem Content="入力通り" />
+						<ComboBoxItem Content="艦隊数：入力通り" />
 						<ComboBoxItem Content="通常艦隊" />
 						<ComboBoxItem Content="連合艦隊" />
 					</ComboBox>
 					<ComboBox Grid.Row="3" Margin="10,5,10,10" SelectedIndex="{Binding EnemyFleetFormation}">
-						<ComboBoxItem Content="入力通り" />
+						<ComboBoxItem Content="陣形：入力通り" />
 						<ComboBoxItem Content="単縦陣" />
 						<ComboBoxItem Content="複縦陣" />
 						<ComboBoxItem Content="輪形陣" />
@@ -99,7 +105,7 @@
 							Command="{Binding ShowFriendFleetInfoCommand}"
 							FontSize="14" Margin="5,5,5,5"/>
 					<Button Grid.Row="0" Grid.Column="1" Content="【基地航空隊】"
-							FontSize="14" Margin="5,5,5,5"/>
+							FontSize="14" Margin="5,5,5,5" IsEnabled="False"/>
 					<Button Grid.Row="0" Grid.Column="2" Content="【敵艦隊】"
 							Command="{Binding ShowEnemyFleetInfoCommand}"
 							FontSize="14" Margin="5,5,5,5"/>

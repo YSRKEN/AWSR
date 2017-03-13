@@ -154,7 +154,6 @@ namespace AWSR.ViewModels
 			catch {
 				MessageBox.Show("入力データに誤りがあります.", "航空戦シミュレーションR", MessageBoxButton.OK, MessageBoxImage.Exclamation);
 			}
-			
 		}
 		// 敵艦隊の情報を表示する処理
 		private void ShowEnemyFleetInfo() {
@@ -165,7 +164,6 @@ namespace AWSR.ViewModels
 			catch {
 				MessageBox.Show("入力データに誤りがあります.", "航空戦シミュレーションR", MessageBoxButton.OK, MessageBoxImage.Exclamation);
 			}
-
 		}
 		#endregion
 
