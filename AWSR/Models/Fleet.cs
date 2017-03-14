@@ -84,8 +84,6 @@ namespace AWSR.Models
 			foreach(var unit in Unit){
 				foreach(var kammusu in unit.Kammusu) {
 					// データベースに存在しない艦娘における制空値は0とする
-					if (!DataBase.ContainsKammusu(kammusu.Id))
-						continue;
 					var kammusuData = DataBase.Kammusu(kammusu.Id);
 					foreach (var weapon in kammusu.Weapon.Select((v, i) => new { v, i })) {
 						airValue += weapon.v.AirValue(kammusuData.Airs[weapon.i]);
@@ -99,10 +97,11 @@ namespace AWSR.Models
 			string output = "";
 			foreach (var unit in Unit) {
 				foreach (var kammusu in unit.Kammusu) {
-					// データベースに存在しない艦娘は飛ばす
-					if (!DataBase.ContainsKammusu(kammusu.Id))
-						continue;
+					// 艦名
 					output += $"{kammusu.Name}→";
+					// 加重対空値
+					double weightAntiAir = kammusu.WeightAntiAir;
+					output += $"加重対空値{weightAntiAir}";
 					output += "\n";
 				}
 			}

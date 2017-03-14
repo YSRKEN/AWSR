@@ -33,13 +33,21 @@ namespace AWSR.Models
 		// 艦名
 		public string Name {
 			get {
-				return (DataBase.ContainsKammusu(Id) ? DataBase.Kammusu(Id).Name : "？");
+				return DataBase.Kammusu(Id).Name;
 			}
 		}
 		// 所持装備
 		public List<Weapon> Weapon { get; set; }
 		// 艦娘か否か
 		public bool IsKammusu { get; set; }
+		// 加重対空値
+		public double WeightAntiAir {
+			get {
+				// スタブ
+				double weightAntiAir = 0.0;
+				return weightAntiAir;
+			}
+		}
 		// コンストラクタ
 		public Kammusu() {
 			Weapon = new List<Weapon>();
