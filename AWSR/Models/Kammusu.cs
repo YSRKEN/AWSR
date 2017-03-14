@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using static AWSR.Models.AirWarSimulator;
+using static AWSR.Models.Constant;
 
 namespace AWSR.Models
 {
@@ -28,6 +28,12 @@ namespace AWSR.Models
 			}
 			set {
 				luck = (value < -1 ? -1 : value > MaxLuck ? MaxLuck : value);
+			}
+		}
+		// 艦名
+		public string Name {
+			get {
+				return (DataBase.ContainsKammusu(Id) ? DataBase.Kammusu(Id).Name : "？");
 			}
 		}
 		// 所持装備

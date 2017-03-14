@@ -1,4 +1,4 @@
-﻿using static AWSR.Models.AirWarSimulator;
+﻿using static AWSR.Models.Constant;
 
 namespace AWSR.Models
 {
@@ -9,6 +9,12 @@ namespace AWSR.Models
 	{
 		// 装備ID
 		public int Id { get; set; }
+		// 装備名
+		public string Name {
+			get {
+				return (DataBase.ContainsWeapon(Id) ? DataBase.Weapon(Id).Name : "？");
+			}
+		}
 		// 装備改修度
 		private int improvement;
 		public int Improvement{
