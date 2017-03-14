@@ -86,45 +86,71 @@ namespace AWSR.Models
 				}
 			}
 		}
-		// 艦娘データの内部表現
-		class KammusuData
-		{
-			// フィールド
-			// 艦名,艦種,対空,搭載数,初期装備,艦娘フラグ
-			public string Name { get; private set; }
-			public FleetType Type { get; private set; }
-			public int AntiAir { get; private set; }
-			public int[] Airs { get; private set; }
-			public int[] WeaponId { get; private set; }
-			public bool IsKammusu { get; private set; }
-			// コンストラクタ
-			public KammusuData(string name, FleetType type, int antiAir, int[] airs, int[] weaponId, bool isKammusu) {
-				Name = name;
-				Type = type;
-				AntiAir = antiAir;
-				Airs = airs;
-				WeaponId = weaponId;
-				IsKammusu = isKammusu;
+		// そのID()の艦娘・装備が存在するかを判定する
+		public static bool ContainsKammusu(int id) {
+			return kammusuDictionary.ContainsKey(id);
+		}
+		public static bool ContainsWeapon(int id) {
+			return weaponDictionary.ContainsKey(id);
+		}
+		// データを読み込む
+		public static KammusuData Kammusu(int id) {
+			KammusuData temp;
+			if(kammusuDictionary.TryGetValue(id, out temp)){
+				return temp;
+			}
+			else {
+				return null;
 			}
 		}
-		// 装備データの内部表現
-		class WeaponData
-		{
-			// フィールド
-			// 装備名,種別,対空,対爆,迎撃
-			public string Name { get; private set; }
-			public string Type { get; private set; }
-			public int AntiAir { get; private set; }
-			public int AntiBomb { get; private set; }
-			public int Intercept { get; private set; }
-			// コンストラクタ
-			public WeaponData(string name, string type, int antiAir, int antiBomb, int intercept) {
-				Name = name;
-				Type = type;
-				AntiAir = antiAir;
-				AntiBomb = antiBomb;
-				Intercept = intercept;
+		public static WeaponData Weapon(int id) {
+			WeaponData temp;
+			if (weaponDictionary.TryGetValue(id, out temp)) {
+				return temp;
 			}
+			else {
+				return null;
+			}
+		}
+	}
+	// 艦娘データの内部表現
+	class KammusuData
+	{
+		// フィールド
+		// 艦名,艦種,対空,搭載数,初期装備,艦娘フラグ
+		public string Name { get; private set; }
+		public FleetType Type { get; private set; }
+		public int AntiAir { get; private set; }
+		public int[] Airs { get; private set; }
+		public int[] WeaponId { get; private set; }
+		public bool IsKammusu { get; private set; }
+		// コンストラクタ
+		public KammusuData(string name, FleetType type, int antiAir, int[] airs, int[] weaponId, bool isKammusu) {
+			Name = name;
+			Type = type;
+			AntiAir = antiAir;
+			Airs = airs;
+			WeaponId = weaponId;
+			IsKammusu = isKammusu;
+		}
+	}
+	// 装備データの内部表現
+	class WeaponData
+	{
+		// フィールド
+		// 装備名,種別,対空,対爆,迎撃
+		public string Name { get; private set; }
+		public string Type { get; private set; }
+		public int AntiAir { get; private set; }
+		public int AntiBomb { get; private set; }
+		public int Intercept { get; private set; }
+		// コンストラクタ
+		public WeaponData(string name, string type, int antiAir, int antiBomb, int intercept) {
+			Name = name;
+			Type = type;
+			AntiAir = antiAir;
+			AntiBomb = antiBomb;
+			Intercept = intercept;
 		}
 	}
 }

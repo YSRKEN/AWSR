@@ -30,6 +30,12 @@ namespace AWSR.Models
 				luck = (value < -1 ? -1 : value > MaxLuck ? MaxLuck : value);
 			}
 		}
+		// 艦名
+		public string Name {
+			get {
+				return (DataBase.ContainsKammusu(Id) ? DataBase.Kammusu(Id).Name : "？");
+			}
+		}
 		// 所持装備
 		public List<Weapon> Weapon { get; set; }
 		// 艦娘か否か
