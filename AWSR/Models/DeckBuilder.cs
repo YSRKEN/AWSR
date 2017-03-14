@@ -51,16 +51,25 @@ namespace AWSR.Models
 						tempKammusu.IsKammusu = true;
 						// 装備
 						var weaponList = new List<WeaponModel>();
-						if (kammusu.Items.Item1 != null) weaponList.Add(kammusu.Items.Item1);
-						if (kammusu.Items.Item2 != null) weaponList.Add(kammusu.Items.Item2);
-						if (kammusu.Items.Item3 != null) weaponList.Add(kammusu.Items.Item3);
-						if (kammusu.Items.Item4 != null) weaponList.Add(kammusu.Items.Item4);
-						if (kammusu.Items.ItemX != null) weaponList.Add(kammusu.Items.ItemX);
+						weaponList.Add(kammusu.Items.Item1);
+						weaponList.Add(kammusu.Items.Item2);
+						weaponList.Add(kammusu.Items.Item3);
+						weaponList.Add(kammusu.Items.Item4);
+						weaponList.Add(kammusu.Items.ItemX);
 						foreach (var weapon in weaponList) {
 							var tempWeapon = new Weapon();
-							tempWeapon.Id = weapon.Id;
-							tempWeapon.Improvement = weapon.Rf;
-							tempWeapon.Proficiency = weapon.Mas;
+							if(weapon != null) {
+								// 装備が存在する場合
+								tempWeapon.Id = weapon.Id;
+								tempWeapon.Improvement = weapon.Rf;
+								tempWeapon.Proficiency = weapon.Mas;
+							}
+							else {
+								// 装備が存在しない場合
+								tempWeapon.Id = -1;
+								tempWeapon.Improvement = 0;
+								tempWeapon.Proficiency = 0;
+							}
 							tempKammusu.Weapon.Add(tempWeapon);
 						}
 						tempUnit.Kammusu.Add(tempKammusu);
