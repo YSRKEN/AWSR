@@ -6,7 +6,9 @@ namespace AWSR.Models
 {
 	static class DataBase
 	{
+		// データベースの内部表現(Dictionary)
 		private static Dictionary<int, KammusuData> kammusuDictionary;
+		private static Dictionary<int, WeaponData> weaponDictionary;
 		// データベースを初期化
 		public static void Initialize() {
 			// 艦娘側のデータベースを読み込む
@@ -53,11 +55,42 @@ namespace AWSR.Models
 					}
 				}
 			}
-			return;
+			// 装備側のデータベースを読み込む
+			weaponDictionary = new Dictionary<int, WeaponData>();
+			using (var sr = new System.IO.StreamReader(@"slotitems.csv")) {
+				while (!sr.EndOfStream) {
+					// 1行を読み込む
+					string line = sr.ReadLine();
+					// マッチさせてから各数値を取り出す
+					string pattern = @"(?<Number>\d+),(?<Name>[^,]+),(?<Type>[^,]+),(?<AntiAir>\d+),(?<AntiBomb>\d+),(?<Intercept>\d+)";
+					var match = Regex.Match(line, pattern);
+					if (!match.Success) {
+						continue;
+					}
+					// 取り出した数値を元に、weaponDictionaryに代入する
+					try {
+						// マッチした文字列をそれぞれの型にパースする
+						int number = int.Parse(match.Groups["Number"].Value);
+						string name = match.Groups["Name"].Value;
+						string type = match.Groups["Type"].Value;
+						int antiAir = int.Parse(match.Groups["AntiAir"].Value);
+						int antiBomb = int.Parse(match.Groups["AntiBomb"].Value);
+						int intercept = int.Parse(match.Groups["Intercept"].Value);
+						// WeaponData型を生成し、Dictionaryに登録する
+						var weaponData = new WeaponData(name, type, antiAir, antiBomb, intercept);
+						weaponDictionary[number] = weaponData;
+					}
+					catch {
+						continue;
+					}
+				}
+			}
 		}
 		// 艦娘データの内部表現
 		class KammusuData
 		{
+			// フィールド
+			// 艦名,艦種,対空,搭載数,初期装備,艦娘フラグ
 			public string Name { get; private set; }
 			public FleetType Type { get; private set; }
 			public int AntiAir { get; private set; }
@@ -72,6 +105,25 @@ namespace AWSR.Models
 				Airs = airs;
 				WeaponId = weaponId;
 				IsKammusu = isKammusu;
+			}
+		}
+		// 装備データの内部表現
+		class WeaponData
+		{
+			// フィールド
+			// 装備名,種別,対空,対爆,迎撃
+			public string Name { get; private set; }
+			public string Type { get; private set; }
+			public int AntiAir { get; private set; }
+			public int AntiBomb { get; private set; }
+			public int Intercept { get; private set; }
+			// コンストラクタ
+			public WeaponData(string name, string type, int antiAir, int antiBomb, int intercept) {
+				Name = name;
+				Type = type;
+				AntiAir = antiAir;
+				AntiBomb = antiBomb;
+				Intercept = intercept;
 			}
 		}
 	}
