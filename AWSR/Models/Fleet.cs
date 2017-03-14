@@ -94,6 +94,20 @@ namespace AWSR.Models
 			}
 			return airValue;
 		}
+		// 撃墜計算情報
+		public string AntiAirText() {
+			string output = "";
+			foreach (var unit in Unit) {
+				foreach (var kammusu in unit.Kammusu) {
+					// データベースに存在しない艦娘は飛ばす
+					if (!DataBase.ContainsKammusu(kammusu.Id))
+						continue;
+					output += $"{kammusu.Name}→";
+					output += "\n";
+				}
+			}
+			return output;
+		}
 		// コンストラクタ
 		public Fleet() {
 			Unit = new List<Unit>();
