@@ -70,7 +70,19 @@ namespace AWSR.Models
 		}
 		// 制空値を計算
 		public int AirValue() {
-			return 0;	//スタブ
+			int airValue = 0;
+			foreach(var unit in Unit){
+				foreach(var kammusu in unit.Kammusu) {
+					// データベースに存在しない艦娘における制空値は0とする
+					if (!DataBase.ContainsKammusu(kammusu.Id))
+						continue;
+					var kammusuData = DataBase.Kammusu(kammusu.Id);
+					foreach (var weapon in kammusu.Weapon.Select((v, i) => new { v, i })) {
+						airValue += weapon.v.AirValue(kammusuData.Airs[weapon.i]);
+					}
+				}
+			}
+			return airValue;
 		}
 		// コンストラクタ
 		public Fleet() {
