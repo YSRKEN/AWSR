@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using static AWSR.Models.AirWarSimulator;
+using static AWSR.Models.Constant;
 
 namespace AWSR.Models
 {

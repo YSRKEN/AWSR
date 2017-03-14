@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using static AWSR.Models.AirWarSimulator;
+using static AWSR.Models.Constant;
 
 namespace AWSR.Models
 {
