@@ -68,6 +68,10 @@ namespace AWSR.Models
 			// 出力
 			return output;
 		}
+		// 制空値を計算
+		public int AirValue() {
+			return 0;	//スタブ
+		}
 		// コンストラクタ
 		public Fleet() {
 			Unit = new List<Unit>();
