@@ -15,6 +15,8 @@ namespace AWSR.ViewModels
 		public ICommand ShowFriendFleetInfoCommand { get; private set; }
 		// 敵艦隊の情報を表示する処理
 		public ICommand ShowEnemyFleetInfoCommand { get; private set; }
+		// 制空値を表示する処理
+		public ICommand ShowAirValueCommand { get; private set; }
 		#endregion
 
 		#region プロパティに関する処理
@@ -150,7 +152,7 @@ namespace AWSR.ViewModels
 		private void ShowFriendFleetInfo() {
 			try {
 				var friendFleet = FriendFleet(InputDeckBuilderText);
-				MessageBox.Show(friendFleet.ToInfoText(), "航空戦シミュレーションR");
+				MessageBox.Show($"【自艦隊】\n{friendFleet.ToInfoText()}", "航空戦シミュレーションR");
 			}
 			catch {
 				MessageBox.Show("入力データに誤りがあります.", "航空戦シミュレーションR", MessageBoxButton.OK, MessageBoxImage.Exclamation);
@@ -160,11 +162,36 @@ namespace AWSR.ViewModels
 		private void ShowEnemyFleetInfo() {
 			try {
 				var enemyFleet = EnemyFleet(InputEnemyDataText);
-				MessageBox.Show(enemyFleet.ToInfoText(), "航空戦シミュレーションR");
+				MessageBox.Show($"【敵艦隊】\n{enemyFleet.ToInfoText()}", "航空戦シミュレーションR");
 			}
 			catch {
 				MessageBox.Show("入力データに誤りがあります.", "航空戦シミュレーションR", MessageBoxButton.OK, MessageBoxImage.Exclamation);
 			}
+		}
+		// 制空値を表示する処理
+		private void ShowAirValue() {
+			string output = "【制空計算】\n";
+			// 自艦隊
+			output += "自艦隊：";
+			try {
+				var friendFleet = FriendFleet(InputDeckBuilderText);
+				output += friendFleet.AirValue().ToString();
+			}
+			catch{
+				output += "(入力データに誤りがあります)";
+			}
+			output += "\n";
+			// 敵艦隊
+			output += "敵艦隊：";
+			try {
+				var enemyFleet = EnemyFleet(InputEnemyDataText);
+				output += enemyFleet.AirValue().ToString();
+			}
+			catch {
+				output += "(入力データに誤りがあります)";
+			}
+			// 表示
+			MessageBox.Show(output, "航空戦シミュレーションR");
 		}
 		#endregion
 
@@ -182,6 +209,7 @@ namespace AWSR.ViewModels
 			OpenDeckBuilderCommand = new CommandBase(OpenDeckBuilder);
 			ShowFriendFleetInfoCommand = new CommandBase(ShowFriendFleetInfo);
 			ShowEnemyFleetInfoCommand = new CommandBase(ShowEnemyFleetInfo);
+			ShowAirValueCommand = new CommandBase(ShowAirValue);
 		}
 	}
 }

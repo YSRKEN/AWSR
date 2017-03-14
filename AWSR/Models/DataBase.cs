@@ -18,7 +18,7 @@ namespace AWSR.Models
 					// 1行を読み込む
 					string line = sr.ReadLine();
 					// マッチさせてから各数値を取り出す
-					string pattern = @"(?<Number>\d+),(?<Name>[^,]+),(?<Type>\d+),(?<AntiAir>\d+),(?<Airs1>\d+)/(?<Airs2>\d+)/(?<Airs3>\d+)/(?<Airs4>\d+)/(?<Airs5>\d+),(?<WeaponId1>(|-)\d+)/(?<WeaponId2>(|-)\d+)/(?<WeaponId3>(|-)\d+)/(?<WeaponId4>(|-)\d+)/(?<WeaponId5>(|-)\d+),(?<IsKammusu>\d)";
+					string pattern = @"(?<Number>\d+),(?<Name>[^,]+),(?<Type>\d+),(?<AntiAir>\d+),(?<SlotCount>\d+),(?<Airs1>\d+)/(?<Airs2>\d+)/(?<Airs3>\d+)/(?<Airs4>\d+)/(?<Airs5>\d+),(?<WeaponId1>(|-)\d+)/(?<WeaponId2>(|-)\d+)/(?<WeaponId3>(|-)\d+)/(?<WeaponId4>(|-)\d+)/(?<WeaponId5>(|-)\d+),(?<IsKammusu>\d)";
 					var match = Regex.Match(line, pattern);
 					if (!match.Success) {
 						continue;
@@ -30,6 +30,7 @@ namespace AWSR.Models
 						string name = match.Groups["Name"].Value;
 						FleetType type = (FleetType)int.Parse(match.Groups["Type"].Value);
 						int antiAir = int.Parse(match.Groups["AntiAir"].Value);
+						int slotCount = int.Parse(match.Groups["SlotCount"].Value);
 						int airs1 = int.Parse(match.Groups["Airs1"].Value);
 						int airs2 = int.Parse(match.Groups["Airs2"].Value);
 						int airs3 = int.Parse(match.Groups["Airs3"].Value);
@@ -44,7 +45,7 @@ namespace AWSR.Models
 						bool isKammusu = (isKammusu_ != 0);
 						// KammusuData型を生成し、Dictionaryに登録する
 						var kammusuData = new KammusuData(
-							name, type, antiAir,
+							name, type, antiAir, slotCount,
 							new int[] { airs1, airs2, airs3, airs4, airs5 },
 							new int[] { weaponId1, weaponId2, weaponId3, weaponId4, weaponId5 },
 							isKammusu);
@@ -121,14 +122,16 @@ namespace AWSR.Models
 		public string Name { get; private set; }
 		public FleetType Type { get; private set; }
 		public int AntiAir { get; private set; }
+		public int SlotCount { get; private set; }
 		public int[] Airs { get; private set; }
 		public int[] WeaponId { get; private set; }
 		public bool IsKammusu { get; private set; }
 		// コンストラクタ
-		public KammusuData(string name, FleetType type, int antiAir, int[] airs, int[] weaponId, bool isKammusu) {
+		public KammusuData(string name, FleetType type, int antiAir, int slotCount, int[] airs, int[] weaponId, bool isKammusu) {
 			Name = name;
 			Type = type;
 			AntiAir = antiAir;
+			SlotCount = slotCount;
 			Airs = airs;
 			WeaponId = weaponId;
 			IsKammusu = isKammusu;

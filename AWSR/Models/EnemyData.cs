@@ -38,6 +38,21 @@ namespace AWSR.Models
 						tempKammusu.Level = 0;
 						tempKammusu.Luck = -1;
 						tempKammusu.IsKammusu = false;
+						// 装備(データベースから情報を拾う)
+						if (DataBase.ContainsKammusu(kammusu)) {
+							// 艦娘(深海棲艦)のデータから初期装備を拾い、それをWeaponとして追加する
+							var kammusuData = DataBase.Kammusu(kammusu);
+							foreach(int id in kammusuData.WeaponId) {
+								// 初期装備データでは、id == -1だと「それ以降は装備していない」ことを指す
+								if (id == -1)
+									break;
+								var tempWeapon = new Weapon();
+								tempWeapon.Id = id;
+								tempWeapon.Improvement = 0;
+								tempWeapon.Proficiency = 0;
+								tempKammusu.Weapon.Add(tempWeapon);
+							}
+						}
 						tempUnit.Kammusu.Add(tempKammusu);
 					}
 					outputFleet.Unit.Add(tempUnit);
