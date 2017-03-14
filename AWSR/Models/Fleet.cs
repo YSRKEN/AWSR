@@ -27,6 +27,13 @@ namespace AWSR.Models
 					output += (kammusu.v.Level != 0 ? $" Lv.{kammusu.v.Level}" : "");
 					output += (kammusu.v.Luck != -1 ? $" 運{kammusu.v.Luck}" : "");
 					foreach (var weapon in kammusu.v.Weapon.Select((v, i) => new { v, i })) {
+						// 艦娘がデータベースに載っている際はスロット数を調べ、
+						// そこをあふれる位置＝拡張スロットに装備が載ってなければ
+						// その部分の表示を省くようにした
+						if (DataBase.ContainsKammusu(kammusu.v.Id)
+						&& weapon.i >= DataBase.Kammusu(kammusu.v.Id).SlotCount
+						&& weapon.v.Id == -1)
+							break;
 						output += (weapon.i == 0 ? "　" : ",");
 						output += $"{weapon.v.Name}";
 						output += ToMasStr(weapon.v.Proficiency);
@@ -39,6 +46,7 @@ namespace AWSR.Models
 		}
 		// デッキビルダーのJSONに変換
 		public string ToDeckBuilderText() {
+			string[] weaponIndexName = { "i1", "i2", "i3", "i4", "ix" };
 			string output = "";
 			// 艦隊情報を先頭から書き込んでいく
 			output += $"{{\"version\":4,";
@@ -53,8 +61,10 @@ namespace AWSR.Models
 					output += $"\"luck\":{kammusu.v.Luck},";
 					output += "\"items\":{";
 					foreach (var weapon in kammusu.v.Weapon.Select((v, i) => new { v, i })) {
+						if (weapon.v.Id == -1)
+							continue;
 						output += (weapon.i != 0 ? "," : "");
-						output += $"\"i{weapon.i + 1}\":{{";
+						output += $"\"{weaponIndexName[weapon.i]}\":{{";
 						output += $"\"id\":{weapon.v.Id},";
 						output += $"\"rf\":\"{weapon.v.Improvement}\",";
 						output += $"\"mas\":{weapon.v.Proficiency}";

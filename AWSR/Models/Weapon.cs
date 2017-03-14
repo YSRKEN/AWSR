@@ -13,7 +13,7 @@ namespace AWSR.Models
 		// 装備名
 		public string Name {
 			get {
-				return (DataBase.ContainsWeapon(Id) ? DataBase.Weapon(Id).Name : "？");
+				return (DataBase.ContainsWeapon(Id) ? DataBase.Weapon(Id).Name : "―");
 			}
 		}
 		// 装備改修度
