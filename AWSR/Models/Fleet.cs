@@ -100,7 +100,7 @@ namespace AWSR.Models
 					// 艦名
 					output += $"{kammusu.Name}→";
 					// 加重対空値
-					double weightAntiAir = kammusu.WeightAntiAir;
+					int weightAntiAir = kammusu.WeightAntiAir;
 					output += $"加重対空値{weightAntiAir}";
 					output += "\n";
 				}

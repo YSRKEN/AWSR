@@ -37,12 +37,12 @@ namespace AWSR.Models
 					var tempUnit = new Unit();
 					// 艦娘
 					var kammusuList = new List<KammusuModel>();
-					if (fleet.Kammusu1 != null) kammusuList.Add(fleet.Kammusu1);
-					if (fleet.Kammusu2 != null) kammusuList.Add(fleet.Kammusu2);
-					if (fleet.Kammusu3 != null) kammusuList.Add(fleet.Kammusu3);
-					if (fleet.Kammusu4 != null) kammusuList.Add(fleet.Kammusu4);
-					if (fleet.Kammusu5 != null) kammusuList.Add(fleet.Kammusu5);
-					if (fleet.Kammusu6 != null) kammusuList.Add(fleet.Kammusu6);
+					if (fleet.Kammusu1 != null && fleet.Kammusu1.Id > 0) kammusuList.Add(fleet.Kammusu1);
+					if (fleet.Kammusu2 != null && fleet.Kammusu2.Id > 0) kammusuList.Add(fleet.Kammusu2);
+					if (fleet.Kammusu3 != null && fleet.Kammusu3.Id > 0) kammusuList.Add(fleet.Kammusu3);
+					if (fleet.Kammusu4 != null && fleet.Kammusu4.Id > 0) kammusuList.Add(fleet.Kammusu4);
+					if (fleet.Kammusu5 != null && fleet.Kammusu5.Id > 0) kammusuList.Add(fleet.Kammusu5);
+					if (fleet.Kammusu6 != null && fleet.Kammusu6.Id > 0) kammusuList.Add(fleet.Kammusu6);
 					foreach (var kammusu in kammusuList) {
 						var tempKammusu = new Kammusu();
 						tempKammusu.Id = kammusu.Id;
