@@ -1,7 +1,6 @@
 ﻿using AWSR.Models;
 using System.Windows;
 using System.Windows.Input;
-using static AWSR.Models.AirWarSimulator;
 using static AWSR.Models.Constant;
 
 namespace AWSR.ViewModels
