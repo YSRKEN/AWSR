@@ -1,7 +1,6 @@
 ﻿using AWSR.Models;
 using System.Windows;
 using System.Windows.Input;
-using static AWSR.Models.AirWarSimulator;
 using static AWSR.Models.Constant;
 
 namespace AWSR.ViewModels
@@ -17,6 +16,8 @@ namespace AWSR.ViewModels
 		public ICommand ShowEnemyFleetInfoCommand { get; private set; }
 		// 制空値を表示する処理
 		public ICommand ShowAirValueCommand { get; private set; }
+		// 撃墜計算を表示する処理
+		public ICommand ShowAntiAirPowerCommand { get; private set; }
 		#endregion
 
 		#region プロパティに関する処理
@@ -152,7 +153,7 @@ namespace AWSR.ViewModels
 		private void ShowFriendFleetInfo() {
 			try {
 				var friendFleet = FriendFleet(InputDeckBuilderText);
-				MessageBox.Show($"【自艦隊】\n{friendFleet.ToInfoText()}", "航空戦シミュレーションR");
+				MessageBox.Show($"【自艦隊】\n{friendFleet.InfoText()}", "航空戦シミュレーションR");
 			}
 			catch {
 				MessageBox.Show("入力データに誤りがあります.", "航空戦シミュレーションR", MessageBoxButton.OK, MessageBoxImage.Exclamation);
@@ -162,7 +163,7 @@ namespace AWSR.ViewModels
 		private void ShowEnemyFleetInfo() {
 			try {
 				var enemyFleet = EnemyFleet(InputEnemyDataText);
-				MessageBox.Show($"【敵艦隊】\n{enemyFleet.ToInfoText()}", "航空戦シミュレーションR");
+				MessageBox.Show($"【敵艦隊】\n{enemyFleet.InfoText()}", "航空戦シミュレーションR");
 			}
 			catch {
 				MessageBox.Show("入力データに誤りがあります.", "航空戦シミュレーションR", MessageBoxButton.OK, MessageBoxImage.Exclamation);
@@ -175,7 +176,7 @@ namespace AWSR.ViewModels
 			output += "自艦隊：";
 			try {
 				var friendFleet = FriendFleet(InputDeckBuilderText);
-				output += friendFleet.AirValue().ToString();
+				output += friendFleet.AirValue.ToString();
 			}
 			catch{
 				output += "(入力データに誤りがあります)";
@@ -185,7 +186,32 @@ namespace AWSR.ViewModels
 			output += "敵艦隊：";
 			try {
 				var enemyFleet = EnemyFleet(InputEnemyDataText);
-				output += enemyFleet.AirValue().ToString();
+				output += enemyFleet.AirValue.ToString();
+			}
+			catch {
+				output += "(入力データに誤りがあります)";
+			}
+			// 表示
+			MessageBox.Show(output, "航空戦シミュレーションR");
+		}
+		// 撃墜計算を表示する処理
+		private void ShowAntiAirPower() {
+			string output = "【撃墜計算】\n";
+			// 自艦隊
+			output += "自艦隊：\n";
+			try {
+				var friendFleet = FriendFleet(InputDeckBuilderText);
+				output += friendFleet.AntiAirText();
+			}
+			catch {
+				output += "(入力データに誤りがあります)";
+			}
+			output += "\n";
+			// 敵艦隊
+			output += "敵艦隊：\n";
+			try {
+				var enemyFleet = EnemyFleet(InputEnemyDataText);
+				output += enemyFleet.AntiAirText();
 			}
 			catch {
 				output += "(入力データに誤りがあります)";
@@ -210,6 +236,7 @@ namespace AWSR.ViewModels
 			ShowFriendFleetInfoCommand = new CommandBase(ShowFriendFleetInfo);
 			ShowEnemyFleetInfoCommand = new CommandBase(ShowEnemyFleetInfo);
 			ShowAirValueCommand = new CommandBase(ShowAirValue);
+			ShowAntiAirPowerCommand = new CommandBase(ShowAntiAirPower);
 		}
 	}
 }

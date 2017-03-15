@@ -101,7 +101,7 @@ namespace AWSR.Models
 				return temp;
 			}
 			else {
-				return null;
+				return new KammusuData();
 			}
 		}
 		public static WeaponData Weapon(int id) {
@@ -110,7 +110,7 @@ namespace AWSR.Models
 				return temp;
 			}
 			else {
-				return null;
+				return new WeaponData();
 			}
 		}
 	}
@@ -127,6 +127,15 @@ namespace AWSR.Models
 		public int[] WeaponId { get; private set; }
 		public bool IsKammusu { get; private set; }
 		// コンストラクタ
+		public KammusuData() {
+			Name = "なし";
+			Type = FleetType.None;
+			AntiAir = 0;
+			SlotCount = 0;
+			Airs = new int[] {0,0,0,0,0};
+			WeaponId = new int[] { -1, -1, -1, -1, -1 };
+			IsKammusu = true;
+		}
 		public KammusuData(string name, FleetType type, int antiAir, int slotCount, int[] airs, int[] weaponId, bool isKammusu) {
 			Name = name;
 			Type = type;
@@ -148,6 +157,13 @@ namespace AWSR.Models
 		public int AntiBomb { get; private set; }
 		public int Intercept { get; private set; }
 		// コンストラクタ
+		public WeaponData() {
+			Name = "―";
+			Type = "";
+			AntiAir = 0;
+			AntiBomb = 0;
+			Intercept = 0;
+		}
 		public WeaponData(string name, string type, int antiAir, int antiBomb, int intercept) {
 			Name = name;
 			Type = type;
