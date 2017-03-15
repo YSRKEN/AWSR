@@ -57,6 +57,14 @@
 			1.2,1.45,1.25,
 		};
 		#endregion
+		#region 制空状態
+		public enum AirWarStatus { Best, Good, Balance, Bad, Worst, Size };
+		// 制空状態を文字列に変換する
+		public static string ToStr(this AirWarStatus airWarStatus) {
+			string[] name = { "確保", "優勢", "均衡", "劣勢", "喪失" };
+			return name[(int)airWarStatus];
+		}
+		#endregion
 		// 数値を熟練度文字列に変換する
 		public static string ToMasStr(int mas) {
 			string[] name = { "", "|", "||", "|||", "/", "//", "///", ">>" };
