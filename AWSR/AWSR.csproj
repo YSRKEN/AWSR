@@ -67,6 +67,7 @@
     <Compile Include="Models\EnemyData.cs" />
     <Compile Include="Models\Fleet.cs" />
     <Compile Include="Models\Kammusu.cs" />
+    <Compile Include="Models\Simulator.cs" />
     <Compile Include="Models\Unit.cs" />
     <Compile Include="Models\Weapon.cs" />
     <Compile Include="ViewModels\CommandBase.cs" />

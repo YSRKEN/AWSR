@@ -20,6 +20,8 @@ namespace AWSR.ViewModels
 		public ICommand ShowAntiAirPowerCommand { get; private set; }
 		// 対空カットイン可否を表示する処理
 		public ICommand ShowCutInTypeCommand { get; private set; }
+		// 動的解析を行う処理
+		public ICommand RunMonteCarloCommand { get; private set; }
 		#endregion
 
 		#region プロパティに関する処理
@@ -81,13 +83,19 @@ namespace AWSR.ViewModels
 		int enemyFleetType;
 		public int EnemyFleetType {
 			get { return enemyFleetType; }
-			set { enemyFleetType = value; }
+			set { enemyFleetType = value; NotifyPropertyChanged(nameof(EnemyFleetType)); }
 		}
 		// 敵艦隊の陣形
 		int enemyFleetFormation;
 		public int EnemyFleetFormation {
 			get { return enemyFleetFormation; }
-			set { enemyFleetFormation = value; }
+			set { enemyFleetFormation = value; NotifyPropertyChanged(nameof(EnemyFleetFormation)); }
+		}
+		// 反復回数
+		int simulationSizeIndex;
+		public int SimulationSizeIndex {
+			get { return simulationSizeIndex; }
+			set { simulationSizeIndex = value; NotifyPropertyChanged(nameof(SimulationSizeIndex)); }
 		}
 		#endregion
 
@@ -246,6 +254,23 @@ namespace AWSR.ViewModels
 			// 表示
 			MessageBox.Show(output, "航空戦シミュレーションR");
 		}
+		// 動的解析を行う処理
+		private void RunMonteCarlo() {
+			string output = "";
+			try {
+				// 艦隊を読み込み
+				var friendFleet = FriendFleet(InputDeckBuilderText);
+				var enemyFleet = EnemyFleet(InputEnemyDataText);
+				// モンテカルロシミュレーションを行う
+				var simulationSize = new int[]{ 10000, 100000, 1000000, 10000000, 100000000};
+				output = Simulator.MonteCarlo(friendFleet, enemyFleet, simulationSize[SimulationSizeIndex]);
+			}
+			catch {
+				output = "自艦隊 or 敵艦隊が正常に読み込めませんでした.";
+			}
+			// 表示
+			MessageBox.Show(output, "航空戦シミュレーションR");
+		}
 		#endregion
 
 		// コンストラクタ
@@ -258,6 +283,7 @@ namespace AWSR.ViewModels
 			InputEnemyDataText = "{\n\t\"formation\": \"circle\",\n	\"fleet\": [\n\t\t[544,544,528,554,515,515]\n\t]\n}\n";
 			EnemyFleetType = 0;
 			EnemyFleetFormation = 0;
+			SimulationSizeIndex = 0;
 			// コマンドを登録する
 			OpenDeckBuilderCommand = new CommandBase(OpenDeckBuilder);
 			ShowFriendFleetInfoCommand = new CommandBase(ShowFriendFleetInfo);
@@ -265,6 +291,7 @@ namespace AWSR.ViewModels
 			ShowAirValueCommand = new CommandBase(ShowAirValue);
 			ShowAntiAirPowerCommand = new CommandBase(ShowAntiAirPower);
 			ShowCutInTypeCommand = new CommandBase(ShowCutInType);
+			RunMonteCarloCommand = new CommandBase(RunMonteCarlo);
 		}
 	}
 }
