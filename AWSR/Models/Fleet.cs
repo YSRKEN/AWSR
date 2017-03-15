@@ -166,6 +166,27 @@ namespace AWSR.Models
 			output += $"艦隊防空：{fleetAntiAir}\n";
 			return output;
 		}
+		// 対空カットイン情報
+		public string CutInText() {
+			string output = "";
+			foreach (var unit in Unit.Select((v, i) => new { v, i })) {
+				foreach (var kammusu in unit.v.Kammusu.Select((v, i) => new { v, i })) {
+					if (kammusu.v.CutInType == CutInType.None)
+						continue;
+					// 艦名
+					output += (unit.i != 0 ? $"({unit.i + 1}-{kammusu.i + 1})" : $"({kammusu.i + 1})");
+					output += $"{kammusu.v.Name}　";
+					// 種別
+					output += $"第{(int)kammusu.v.CutInType}種";
+					// 固定ボーナス
+					output += $"　固定＋{CutInAddBonus[(int)kammusu.v.CutInType]}";
+					// 変動ボーナス
+					output += $"　変動×{CutInMulBonus[(int)kammusu.v.CutInType]}";
+					output += "\n";
+				}
+			}
+			return output;
+		}
 		// デッキビルダーのJSONに変換
 		public string ToDeckBuilderText() {
 			string[] weaponIndexName = { "i1", "i2", "i3", "i4", "ix" };

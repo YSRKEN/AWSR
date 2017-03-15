@@ -18,6 +18,8 @@ namespace AWSR.ViewModels
 		public ICommand ShowAirValueCommand { get; private set; }
 		// 撃墜計算を表示する処理
 		public ICommand ShowAntiAirPowerCommand { get; private set; }
+		// 対空カットイン可否を表示する処理
+		public ICommand ShowCutInTypeCommand { get; private set; }
 		#endregion
 
 		#region プロパティに関する処理
@@ -91,7 +93,7 @@ namespace AWSR.ViewModels
 
 		#region メソッドに関する処理
 		// 自艦隊のデータを作成する
-		Fleet FriendFleet(string inputDeckBuilderText) {
+		private Fleet FriendFleet(string inputDeckBuilderText) {
 			// とりあえず読み込む
 			var friendFleet = DeckBuilder.ToFleet(inputDeckBuilderText);
 			// 陣形を設定する
@@ -116,7 +118,7 @@ namespace AWSR.ViewModels
 			return friendFleet;
 		}
 		// 敵艦隊のデータを作成する
-		Fleet EnemyFleet(string inputEnemyDataText) {
+		private Fleet EnemyFleet(string inputEnemyDataText) {
 			// とりあえず読み込む
 			var enemyFleet = EnemyData.ToFleet(inputEnemyDataText);
 			// 陣形を設定する
@@ -219,6 +221,31 @@ namespace AWSR.ViewModels
 			// 表示
 			MessageBox.Show(output, "航空戦シミュレーションR");
 		}
+		// 対空カットイン可否を表示する処理
+		private void ShowCutInType() {
+			string output = "【対空カットイン可否】\n";
+			// 自艦隊
+			output += "自艦隊：\n";
+			try {
+				var friendFleet = FriendFleet(InputDeckBuilderText);
+				output += friendFleet.CutInText();
+			}
+			catch {
+				output += "(入力データに誤りがあります)";
+			}
+			output += "\n";
+			// 敵艦隊
+			output += "敵艦隊：\n";
+			try {
+				var enemyFleet = EnemyFleet(InputEnemyDataText);
+				output += enemyFleet.CutInText();
+			}
+			catch {
+				output += "(入力データに誤りがあります)";
+			}
+			// 表示
+			MessageBox.Show(output, "航空戦シミュレーションR");
+		}
 		#endregion
 
 		// コンストラクタ
@@ -237,6 +264,7 @@ namespace AWSR.ViewModels
 			ShowEnemyFleetInfoCommand = new CommandBase(ShowEnemyFleetInfo);
 			ShowAirValueCommand = new CommandBase(ShowAirValue);
 			ShowAntiAirPowerCommand = new CommandBase(ShowAntiAirPower);
+			ShowCutInTypeCommand = new CommandBase(ShowCutInType);
 		}
 	}
 }
