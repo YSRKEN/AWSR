@@ -32,51 +32,74 @@ namespace AWSR.Models
 				luck = (value < -1 ? -1 : value > MaxLuck ? MaxLuck : value);
 			}
 		}
+		// 所持装備
+		public List<Weapon> Weapon { get; set; }
+		// 艦娘か否か
+		public bool IsKammusu { get; set; }
 		// 艦名
 		public string Name {
 			get {
 				return DataBase.Kammusu(Id).Name;
 			}
 		}
-		// 所持装備
-		public List<Weapon> Weapon { get; set; }
-		// 艦娘か否か
-		public bool IsKammusu { get; set; }
+		// 搭載数
+		public int[] Airs {
+			get {
+				return DataBase.Kammusu(Id).Airs;
+			}
+		}
+		// スロット数
+		public int SlotCount {
+			get {
+				return DataBase.Kammusu(Id).SlotCount;
+			}
+		}
+		// 対空値
+		public int AntiAir {
+			get {
+				return DataBase.Kammusu(Id).AntiAir;
+			}
+		}
+		// 艦種
+		public FleetType Type {
+			get {
+				return DataBase.Kammusu(Id).Type;
+			}
+		}
 		// 加重対空値
 		public int WeightAntiAir {
 			get {
 				// 素対空値(艦娘か深海棲艦かで変化する)
 				double weightAntiAir;
-				if (DataBase.Kammusu(Id).IsKammusu) {
-					weightAntiAir = DataBase.Kammusu(Id).AntiAir;
+				if (IsKammusu) {
+					weightAntiAir = AntiAir;
 				}
 				else {
-					weightAntiAir = (int)(2.0 * Math.Sqrt(DataBase.Kammusu(Id).AntiAir));
+					weightAntiAir = (int)(2.0 * Math.Sqrt(AntiAir));
 				}
 				bool hasWeaponFlg = false;
 				// 装備毎の加重対空値を加算する
 				foreach (var weapon in Weapon) {
 					// 装備データを取得する
-					var weaponData = DataBase.Weapon(weapon.Id);
-					if (weaponData.Name != "―")
+					if (weapon.Name != "―")
 						hasWeaponFlg = true;
 					// 装備の素対空値
-					double tempAntiAir = weaponData.AntiAir;
+					double tempAntiAir = weapon.AntiAir;
 					// 装備の種類から、装備倍率と改修倍率を算出する
 					double ri = 0.0, gi = 0.0;
-					if (weaponData.Name.Contains("高角砲")) {
+					if (weapon.Name.Contains("高角砲")) {
 						// 高角砲の場合
 						ri = 4.0; gi = 3.0;
 					}
-					else if (weaponData.Name.Contains("高射装置")) {
+					else if (weapon.Name.Contains("高射装置")) {
 						// 高射装置の場合
 						ri = 4.0; gi = 0.0;
 					}
-					else if (weaponData.Type == "対空機銃") {
+					else if (weapon.Type == "対空機銃") {
 						// 機銃の場合
 						ri = 6.0; gi = 4.0;
 					}
-					else if (weaponData.Type.Contains("電探")) {
+					else if (weapon.Type.Contains("電探")) {
 						ri = 3.0; gi = 0.0;
 					}
 					// 装備倍率と改修倍率を加算する
@@ -92,7 +115,7 @@ namespace AWSR.Models
 				// 優先度1：専用カットイン(同一グループ内では強い方を優先)
 				if(Name.Contains("秋月") || Name.Contains("照月") || Name.Contains("初月")) {
 					int hagCount = Weapon.Count(w => w.Name.Contains("高角砲") || w.Name == "5inch連装砲 Mk.28 mod.2");
-					bool radarAny = Weapon.Any(w => DataBase.Weapon(w.Id).Type.Contains("電探"));
+					bool radarAny = Weapon.Any(w => w.Type.Contains("電探"));
 					if (hagCount >= 2 && radarAny)
 						return CutInType.Akiduki1;
 					if (hagCount >= 1 && radarAny)
@@ -103,15 +126,15 @@ namespace AWSR.Models
 				if(Name == "摩耶改二") {
 					bool hagAny = Weapon.Any(w => w.Name.Contains("高角砲") || w.Name == "5inch連装砲 Mk.28 mod.2");
 					bool aagSpecialAny = Weapon.Any(w =>
-						DataBase.Weapon(w.Id).Name == "25mm三連装機銃 集中配備"
-						|| DataBase.Weapon(w.Id).Name == "Bofors 40mm四連装機関砲"
-						|| DataBase.Weapon(w.Id).Name == "QF 2ポンド8連装ポンポン砲"
+						w.Name == "25mm三連装機銃 集中配備"
+						|| w.Name == "Bofors 40mm四連装機関砲"
+						|| w.Name == "QF 2ポンド8連装ポンポン砲"
 					);
 					bool radarAntiAirAny = Weapon.Any(w => 
-						DataBase.Weapon(w.Id).Type.Contains("電探")
-						&& (DataBase.Weapon(w.Id).Name.Contains("対空")
-						|| DataBase.Weapon(w.Id).Name == "FuMO25 レーダー"
-						|| DataBase.Weapon(w.Id).Name == "15m二重測距儀+21号電探改二")
+						w.Type.Contains("電探")
+						&& (w.Name.Contains("対空")
+						|| w.Name == "FuMO25 レーダー"
+						|| w.Name == "15m二重測距儀+21号電探改二")
 					);
 					if (hagAny && aagSpecialAny && radarAntiAirAny)
 						return CutInType.Maya1;
@@ -121,12 +144,12 @@ namespace AWSR.Models
 				// 五十鈴改二
 				if (Name == "五十鈴改二") {
 					bool hagAny = Weapon.Any(w => w.Name.Contains("高角砲") || w.Name == "5inch連装砲 Mk.28 mod.2");
-					bool aagAny = Weapon.Any(w => DataBase.Weapon(w.Id).Type == "対空機銃");
+					bool aagAny = Weapon.Any(w => w.Type == "対空機銃");
 					bool radarAntiAirAny = Weapon.Any(w =>
-						DataBase.Weapon(w.Id).Type.Contains("電探")
-						&& (DataBase.Weapon(w.Id).Name.Contains("対空")
-						|| DataBase.Weapon(w.Id).Name == "FuMO25 レーダー"
-						|| DataBase.Weapon(w.Id).Name == "15m二重測距儀+21号電探改二")
+						w.Type.Contains("電探")
+						&& (w.Name.Contains("対空")
+						|| w.Name == "FuMO25 レーダー"
+						|| w.Name == "15m二重測距儀+21号電探改二")
 					);
 					if (hagAny && aagAny && radarAntiAirAny)
 						return CutInType.Isuzu1;
@@ -135,12 +158,12 @@ namespace AWSR.Models
 				}
 				if(Name == "霞改二乙") {
 					bool hagAny = Weapon.Any(w => w.Name.Contains("高角砲") || w.Name == "5inch連装砲 Mk.28 mod.2");
-					bool aagAny = Weapon.Any(w => DataBase.Weapon(w.Id).Type == "対空機銃");
+					bool aagAny = Weapon.Any(w => w.Type == "対空機銃");
 					bool radarAntiAirAny = Weapon.Any(w =>
-						DataBase.Weapon(w.Id).Type.Contains("電探")
-						&& (DataBase.Weapon(w.Id).Name.Contains("対空")
-						|| DataBase.Weapon(w.Id).Name == "FuMO25 レーダー"
-						|| DataBase.Weapon(w.Id).Name == "15m二重測距儀+21号電探改二")
+						w.Type.Contains("電探")
+						&& (w.Name.Contains("対空")
+						|| w.Name == "FuMO25 レーダー"
+						|| w.Name == "15m二重測距儀+21号電探改二")
 					);
 					if (hagAny && aagAny && radarAntiAirAny)
 						return CutInType.Kasumi1;
@@ -149,9 +172,9 @@ namespace AWSR.Models
 				}
 				if(Name == "皐月改二") {
 					bool aagSpecialAny = Weapon.Any(w =>
-						DataBase.Weapon(w.Id).Name == "25mm三連装機銃 集中配備"
-						|| DataBase.Weapon(w.Id).Name == "Bofors 40mm四連装機関砲"
-						|| DataBase.Weapon(w.Id).Name == "QF 2ポンド8連装ポンポン砲"
+						w.Name == "25mm三連装機銃 集中配備"
+						|| w.Name == "Bofors 40mm四連装機関砲"
+						|| w.Name == "QF 2ポンド8連装ポンポン砲"
 					);
 					if (aagSpecialAny)
 						return CutInType.Satsuki;
@@ -165,9 +188,9 @@ namespace AWSR.Models
 						&& w.Name != "5inch連装砲 Mk.28 mod.2"
 					);
 					bool aagSpecialAny = Weapon.Any(w =>
-						DataBase.Weapon(w.Id).Name == "25mm三連装機銃 集中配備"
-						|| DataBase.Weapon(w.Id).Name == "Bofors 40mm四連装機関砲"
-						|| DataBase.Weapon(w.Id).Name == "QF 2ポンド8連装ポンポン砲"
+						w.Name == "25mm三連装機銃 集中配備"
+						|| w.Name == "Bofors 40mm四連装機関砲"
+						|| w.Name == "QF 2ポンド8連装ポンポン砲"
 					);
 					if (hagNormalAny && aagSpecialAny)
 						return CutInType.Kinu1;
@@ -178,23 +201,23 @@ namespace AWSR.Models
 				// 4→5→6→8→7→12→9の順で判定する
 				{
 					bool isBB = (
-						DataBase.Kammusu(Id).Type == FleetType.CC
-						|| DataBase.Kammusu(Id).Type == FleetType.BB
-						|| DataBase.Kammusu(Id).Type == FleetType.BBV);
-					bool gumLargeAny = Weapon.Any(w => DataBase.Weapon(w.Id).Type == "大口径主砲");
-					bool sansikiAny = Weapon.Any(w => DataBase.Weapon(w.Id).Type == "対空強化弾");
+						Type == FleetType.CC
+						|| Type == FleetType.BB
+						|| Type == FleetType.BBV);
+					bool gumLargeAny = Weapon.Any(w => w.Type == "大口径主砲");
+					bool sansikiAny = Weapon.Any(w => w.Type == "対空強化弾");
 					bool aadAny = Weapon.Any(w =>
-						DataBase.Weapon(w.Id).Name.Contains("高射装置")
+						w.Name.Contains("高射装置")
 						|| w.Name == "10cm連装高角砲+高射装置"
 						|| w.Name == "12.7cm高角砲+高射装置"
 						|| w.Name == "90mm単装高角砲"
 						|| w.Name == "5inch連装砲 Mk.28 mod.2"
 					);
 					bool radarAntiAirAny = Weapon.Any(w =>
-						DataBase.Weapon(w.Id).Type.Contains("電探")
-						&& (DataBase.Weapon(w.Id).Name.Contains("対空")
-						|| DataBase.Weapon(w.Id).Name == "FuMO25 レーダー"
-						|| DataBase.Weapon(w.Id).Name == "15m二重測距儀+21号電探改二")
+						w.Type.Contains("電探")
+						&& (w.Name.Contains("対空")
+						|| w.Name == "FuMO25 レーダー"
+						|| w.Name == "15m二重測距儀+21号電探改二")
 					);
 					// 4
 					if (isBB && gumLargeAny && sansikiAny && aadAny && radarAntiAirAny)
@@ -220,11 +243,11 @@ namespace AWSR.Models
 						return CutInType.Normal2;
 					// 12
 					int aagSpecialCount = Weapon.Count(w =>
-						DataBase.Weapon(w.Id).Name == "25mm三連装機銃 集中配備"
-						|| DataBase.Weapon(w.Id).Name == "Bofors 40mm四連装機関砲"
-						|| DataBase.Weapon(w.Id).Name == "QF 2ポンド8連装ポンポン砲"
+						w.Name == "25mm三連装機銃 集中配備"
+						|| w.Name == "Bofors 40mm四連装機関砲"
+						|| w.Name == "QF 2ポンド8連装ポンポン砲"
 					);
-					int aagCount = Weapon.Count(w => DataBase.Weapon(w.Id).Type == "対空機銃");
+					int aagCount = Weapon.Count(w => w.Type == "対空機銃");
 					if (aagSpecialCount >= 1 && aagCount >= 2 && radarAntiAirAny)
 						return CutInType.Normal5;
 					// 9
