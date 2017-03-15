@@ -12,12 +12,25 @@ namespace AWSR.Models
 			var firstFriendAirsList = friend.AirsList;
 			var firstEnemyAirsList = enemy.AirsList;
 			// 反復計算を行う
+			var friendAirsList = DeepCopyHelper.DeepCopy(firstFriendAirsList);
+			var enemyAirsList = DeepCopyHelper.DeepCopy(firstEnemyAirsList);
 			var AirWarStatusCount = new int[] { 0, 0, 0, 0, 0 };
 			for(int i = 0; i < simulationSize; ++i) {
-				var friendAirsList = DeepCopyHelper.DeepCopy(firstFriendAirsList);
-				var enemyAirsList = DeepCopyHelper.DeepCopy(firstEnemyAirsList);
+				// 状態を初期化する
+				CopyAirsList(firstFriendAirsList, friendAirsList);
+				CopyAirsList(firstEnemyAirsList, enemyAirsList);
 			}
 			return output;
+		}
+		// AirsListをコピーする
+		private static void CopyAirsList(AirsList src, AirsList dst) {
+			for(int i = 0; i < src.Count; ++i) {
+				for (int j = 0; j < src[i].Count; ++j) {
+					for (int k = 0; k < src[i][j].Count; ++k) {
+						dst[i][j][k] = src[i][j][k];
+					}
+				}
+			}
 		}
 	}
 }
