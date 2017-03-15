@@ -36,6 +36,18 @@ namespace AWSR.Models
 				proficiency = (value < 0 ? 0 : value > MaxProficiency ? MaxProficiency : value);
 			}
 		}
+		// 種類
+		public string Type {
+			get {
+				return DataBase.Weapon(Id).Type;
+			}
+		}
+		// 対空値
+		public int AntiAir {
+			get {
+				return DataBase.Weapon(Id).AntiAir;
+			}
+		}
 		/// <summary>
 		/// その艦載機における制空値を計算する
 		/// </summary>

@@ -22,9 +22,8 @@ namespace AWSR.Models
 				foreach (var unit in Unit) {
 					foreach (var kammusu in unit.Kammusu) {
 						// データベースに存在しない艦娘における制空値は0とする
-						var kammusuData = DataBase.Kammusu(kammusu.Id);
 						foreach (var weapon in kammusu.Weapon.Select((v, i) => new { v, i })) {
-							airValue += weapon.v.AirValue(kammusuData.Airs[weapon.i]);
+							airValue += weapon.v.AirValue(kammusu.Airs[weapon.i]);
 						}
 					}
 				}
@@ -40,33 +39,31 @@ namespace AWSR.Models
 					foreach (var kammusu in unit.Kammusu) {
 						double tempSum = 0.0;
 						foreach (var weapon in kammusu.Weapon) {
-							// 装備データを取得する
-							var weaponData = DataBase.Weapon(weapon.Id);
 							// 装備の素対空値
-							double tempAntiAir = weaponData.AntiAir;
+							double tempAntiAir = weapon.AntiAir;
 							// 装備の種類から、装備倍率と改修倍率を算出する
 							double rf = 0.0, gf = 0.0;
-							if (weaponData.Name.Contains("高角砲")) {
+							if (weapon.Name.Contains("高角砲")) {
 								// 高角砲の場合
 								rf = 0.35; gf = 3.0;
 							}
-							else if (weaponData.Name.Contains("高射装置")) {
+							else if (weapon.Name.Contains("高射装置")) {
 								// 高射装置の場合
 								rf = 0.35; gf = 0.0;
 							}
-							else if (weaponData.Type.Contains("電探")) {
+							else if (weapon.Type.Contains("電探")) {
 								rf = 0.4; gf = 1.5;
 							}
-							else if (weaponData.Type == "対空強化弾") {
+							else if (weapon.Type == "対空強化弾") {
 								rf = 0.6; gf = 0.0;
 							}
-							else if (weaponData.Type == "対空機銃"
-							|| weaponData.Type.Contains("主砲")
-							|| weaponData.Type == "副砲"
-							|| weaponData.Type == "艦上戦闘機"
-							|| weaponData.Type == "艦上爆撃機"
-							|| weaponData.Type == "噴式戦闘爆撃機"
-							|| weaponData.Type == "水上偵察機") {
+							else if (weapon.Type == "対空機銃"
+							|| weapon.Type.Contains("主砲")
+							|| weapon.Type == "副砲"
+							|| weapon.Type == "艦上戦闘機"
+							|| weapon.Type == "艦上爆撃機"
+							|| weapon.Type == "噴式戦闘爆撃機"
+							|| weapon.Type == "水上偵察機") {
 								// 機銃等の場合
 								rf = 0.2; gf = 0.0;
 							}
@@ -124,7 +121,7 @@ namespace AWSR.Models
 						// そこをあふれる位置＝拡張スロットに装備が載ってなければ
 						// その部分の表示を省くようにした
 						if (DataBase.ContainsKammusu(kammusu.v.Id)
-						&& weapon.i >= DataBase.Kammusu(kammusu.v.Id).SlotCount
+						&& weapon.i >= kammusu.v.SlotCount
 						&& weapon.v.Id == -1)
 							break;
 						output += (weapon.i == 0 ? "　" : ",");
@@ -164,6 +161,27 @@ namespace AWSR.Models
 				}
 			}
 			output += $"艦隊防空：{fleetAntiAir}\n";
+			return output;
+		}
+		// 対空カットイン情報
+		public string CutInText() {
+			string output = "";
+			foreach (var unit in Unit.Select((v, i) => new { v, i })) {
+				foreach (var kammusu in unit.v.Kammusu.Select((v, i) => new { v, i })) {
+					if (kammusu.v.CutInType == CutInType.None)
+						continue;
+					// 艦名
+					output += (unit.i != 0 ? $"({unit.i + 1}-{kammusu.i + 1})" : $"({kammusu.i + 1})");
+					output += $"{kammusu.v.Name}　";
+					// 種別
+					output += $"第{(int)kammusu.v.CutInType}種";
+					// 固定ボーナス
+					output += $"　固定＋{CutInAddBonus[(int)kammusu.v.CutInType]}";
+					// 変動ボーナス
+					output += $"　変動×{CutInMulBonus[(int)kammusu.v.CutInType]}";
+					output += "\n";
+				}
+			}
 			return output;
 		}
 		// デッキビルダーのJSONに変換

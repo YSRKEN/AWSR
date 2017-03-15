@@ -39,8 +39,7 @@ namespace AWSR.Models
 						tempKammusu.Luck = -1;
 						tempKammusu.IsKammusu = false;
 						// 装備(データベースから情報を拾う)
-						var kammusuData = DataBase.Kammusu(kammusu);
-						foreach (int id in kammusuData.WeaponId) {
+						foreach (int id in DataBase.Kammusu(kammusu).WeaponId) {
 							// 初期装備データでは、id == -1だと「それ以降は装備していない」ことを指す
 							if (id == -1)
 								break;

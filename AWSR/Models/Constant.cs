@@ -35,6 +35,28 @@
 			return name[(int)formation];
 		}
 		#endregion
+		#region 対空カットイン
+		// 名称
+		public enum CutInType {
+			None, Akiduki1, Akiduki2, Akiduki3, BattleShip1, Normal1,
+			BattleShip2, Normal2, Normal3, Normal4, Maya1, Maya2,
+			Normal5, Unknown, Isuzu1, Isuzu2, Kasumi1, Kasumi2,
+			Satsuki, Kinu1, Kinu2};
+		// 固定ボーナス
+		public static int[] CutInAddBonus = new int[] {
+			0,7,6,4,6,4,
+			4,3,4,2,8,6,
+			3,0,4,3,4,2,
+			2,5,3,
+		};
+		// 変動ボーナス
+		public static double[] CutInMulBonus = new double[] {
+			1.0,1.7,1.7,1.6,1.5,1.5,
+			1.45,1.35,1.4,1.3,1.65,1.5,
+			1.25,1.0,1.45,1.3,1.4,1.25,
+			1.2,1.45,1.25,
+		};
+		#endregion
 		// 数値を熟練度文字列に変換する
 		public static string ToMasStr(int mas) {
 			string[] name = { "", "|", "||", "|||", "/", "//", "///", ">>" };
