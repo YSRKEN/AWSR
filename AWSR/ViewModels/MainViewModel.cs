@@ -153,7 +153,7 @@ namespace AWSR.ViewModels
 		private void ShowFriendFleetInfo() {
 			try {
 				var friendFleet = FriendFleet(InputDeckBuilderText);
-				MessageBox.Show($"【自艦隊】\n{friendFleet.ToInfoText()}", "航空戦シミュレーションR");
+				MessageBox.Show($"【自艦隊】\n{friendFleet.InfoText()}", "航空戦シミュレーションR");
 			}
 			catch {
 				MessageBox.Show("入力データに誤りがあります.", "航空戦シミュレーションR", MessageBoxButton.OK, MessageBoxImage.Exclamation);
@@ -163,7 +163,7 @@ namespace AWSR.ViewModels
 		private void ShowEnemyFleetInfo() {
 			try {
 				var enemyFleet = EnemyFleet(InputEnemyDataText);
-				MessageBox.Show($"【敵艦隊】\n{enemyFleet.ToInfoText()}", "航空戦シミュレーションR");
+				MessageBox.Show($"【敵艦隊】\n{enemyFleet.InfoText()}", "航空戦シミュレーションR");
 			}
 			catch {
 				MessageBox.Show("入力データに誤りがあります.", "航空戦シミュレーションR", MessageBoxButton.OK, MessageBoxImage.Exclamation);
@@ -176,7 +176,7 @@ namespace AWSR.ViewModels
 			output += "自艦隊：";
 			try {
 				var friendFleet = FriendFleet(InputDeckBuilderText);
-				output += friendFleet.AirValue().ToString();
+				output += friendFleet.AirValue.ToString();
 			}
 			catch{
 				output += "(入力データに誤りがあります)";
@@ -186,7 +186,7 @@ namespace AWSR.ViewModels
 			output += "敵艦隊：";
 			try {
 				var enemyFleet = EnemyFleet(InputEnemyDataText);
-				output += enemyFleet.AirValue().ToString();
+				output += enemyFleet.AirValue.ToString();
 			}
 			catch {
 				output += "(入力データに誤りがあります)";
