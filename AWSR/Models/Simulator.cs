@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace AWSR.Models
 {
@@ -11,6 +7,10 @@ namespace AWSR.Models
 		public static string MonteCarlo(Fleet friend, Fleet enemy, int simulationSize) {
 			string output =  "【モンテカルロシミュレーション】\n";
 			output += $"反復回数：{simulationSize}回\n";
+			// 初期状態を記録する
+			var firstFriendAirsList = friend.AirsList;
+			var firstEnemyAirsList = enemy.AirsList;
+
 			return output;
 		}
 	}

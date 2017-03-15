@@ -5,6 +5,7 @@ using static AWSR.Models.Constant;
 
 namespace AWSR.Models
 {
+	using AirsList = List<List<List<int>>>;
 	/// <summary>
 	/// 大艦隊クラス
 	/// (連合艦隊＝艦隊×2と考える)
@@ -102,6 +103,24 @@ namespace AWSR.Models
 				// 最後の補正
 				fleetAntiAir = 1.54 * fleetAntiAir;
 				return fleetAntiAir;
+			}
+		}
+		// 全搭載数
+		public AirsList AirsList {
+			get {
+				var airsList = new AirsList();
+				foreach (var unit in Unit) {
+					var airsUnit = new List<List<int>>();
+					foreach (var kammusu in unit.Kammusu) {
+						var airs = new List<int>();
+						foreach(var a in kammusu.Airs) {
+							airs.Add(a);
+						}
+						airsUnit.Add(airs);
+;					}
+					airsList.Add(airsUnit);
+				}
+				return airsList;
 			}
 		}
 		// 文字情報
