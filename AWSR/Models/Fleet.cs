@@ -113,7 +113,7 @@ namespace AWSR.Models
 					var airsUnit = new List<List<int>>();
 					foreach (var kammusu in unit.Kammusu) {
 						var airs = new List<int>();
-						foreach(var a in kammusu.Airs) {
+						foreach(int a in kammusu.Airs) {
 							airs.Add(a);
 						}
 						airsUnit.Add(airs);

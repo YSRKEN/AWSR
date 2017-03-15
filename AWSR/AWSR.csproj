@@ -64,6 +64,7 @@
     <Compile Include="Models\Constant.cs" />
     <Compile Include="Models\DataBase.cs" />
     <Compile Include="Models\DeckBuilder.cs" />
+    <Compile Include="Models\DeepCopyHelper.cs" />
     <Compile Include="Models\EnemyData.cs" />
     <Compile Include="Models\Fleet.cs" />
     <Compile Include="Models\Kammusu.cs" />

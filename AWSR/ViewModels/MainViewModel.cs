@@ -1,4 +1,5 @@
 ﻿using AWSR.Models;
+using System;
 using System.Windows;
 using System.Windows.Input;
 using static AWSR.Models.Constant;
@@ -261,9 +262,15 @@ namespace AWSR.ViewModels
 				// 艦隊を読み込み
 				var friendFleet = FriendFleet(InputDeckBuilderText);
 				var enemyFleet = EnemyFleet(InputEnemyDataText);
+				// 時間を記録する
+				var sw = new System.Diagnostics.Stopwatch();
+				sw.Start();
 				// モンテカルロシミュレーションを行う
 				var simulationSize = new int[]{ 10000, 100000, 1000000, 10000000, 100000000};
 				output = Simulator.MonteCarlo(friendFleet, enemyFleet, simulationSize[SimulationSizeIndex]);
+				// 先頭に計算時間を追加する
+				sw.Stop();
+				output = $"経過時間：{Math.Round(sw.Elapsed.TotalSeconds, 1)}秒\n" + output;
 			}
 			catch {
 				output = "自艦隊 or 敵艦隊が正常に読み込めませんでした.";
