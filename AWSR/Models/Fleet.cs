@@ -174,7 +174,7 @@ namespace AWSR.Models
 			foreach (var unit in Unit.Select((v, i) => new { v, i })) {
 				foreach (var kammusu in unit.v.Kammusu) {
 					// 艦名
-					output += $"{kammusu.Name}→";
+					output += $"{kammusu.Name}　";
 					// 加重対空値
 					int weightAntiAir = kammusu.WeightAntiAir();
 					output += $"加重対空値：{weightAntiAir}";
@@ -182,7 +182,12 @@ namespace AWSR.Models
 					double cf = (Unit.Count < 2 ? 1.0 : unit.i == 0 ? 0.72 : 0.48);
 					output += $"　割合撃墜：{Math.Round(cf * weightAntiAir / 4, 1)}％";
 					// 固定撃墜
-					output += $"　固定撃墜：{(int)((weightAntiAir + fleetAntiAir) * cf / 10)}機";
+					if (kammusu.IsKammusu) {
+						output += $"　固定撃墜：{(int)((weightAntiAir + fleetAntiAir) * cf / 10)}機";
+					}
+					else {
+						output += $"　固定撃墜：{(int)((weightAntiAir + fleetAntiAir) * cf / 10.6)}機";
+					}
 					output += "\n";
 				}
 			}

@@ -43,8 +43,14 @@ namespace AWSR.Models
 		public bool IsKammusu { get; set; }
 		// 加重対空値
 		public int WeightAntiAir() {
-			// 素対空値
-			double weightAntiAir = DataBase.Kammusu(Id).AntiAir;
+			// 素対空値(艦娘か深海棲艦かで変化する)
+			double weightAntiAir;
+			if (DataBase.Kammusu(Id).IsKammusu) {
+				weightAntiAir = DataBase.Kammusu(Id).AntiAir;
+			}
+			else {
+				weightAntiAir = (int)(2.0 * Math.Sqrt(DataBase.Kammusu(Id).AntiAir));
+			}
 			bool hasWeaponFlg = false;
 			// 装備毎の加重対空値を加算する
 			foreach (var weapon in Weapon) {
