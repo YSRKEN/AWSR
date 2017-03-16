@@ -19,6 +19,8 @@
 			var vm = new MainViewModel();
 			w.DataContext = vm;
 			w.Show();
+			// 乱数を初期化
+			Simulator.Initialize();
 			// データベースを読み込む
 			try {
 				DataBase.Initialize();

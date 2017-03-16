@@ -258,7 +258,7 @@ namespace AWSR.ViewModels
 		// 動的解析を行う処理
 		private void RunMonteCarlo() {
 			string output = "";
-			try {
+			//try {
 				// 艦隊を読み込み
 				var friendFleet = FriendFleet(InputDeckBuilderText);
 				var enemyFleet = EnemyFleet(InputEnemyDataText);
@@ -271,10 +271,10 @@ namespace AWSR.ViewModels
 				// 先頭に計算時間を追加する
 				sw.Stop();
 				output = $"経過時間：{Math.Round(sw.Elapsed.TotalSeconds, 1)}秒\n" + output;
-			}
-			catch {
-				output = "自艦隊 or 敵艦隊が正常に読み込めませんでした.";
-			}
+			//}
+			//catch {
+			//	output = "自艦隊 or 敵艦隊が正常に読み込めませんでした.";
+			//}
 			// 表示
 			MessageBox.Show(output, "航空戦シミュレーションR");
 		}
