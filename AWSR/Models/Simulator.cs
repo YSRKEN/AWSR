@@ -45,8 +45,8 @@ namespace AWSR.Models
 				St1EnemyBreak(enemy, unitCount, enemyAirsList, airWarStatus);
 				#endregion
 				#region ステージ2：対空砲火
-				St2FriendBreak(friend, enemy, friendAirsList);
-				St2EnemyBreak(enemy, friend, enemyAirsList);
+				St2FriendBreak(friend, enemy, unitCount, friendAirsList);
+				St2EnemyBreak(enemy, friend, unitCount,  enemyAirsList);
 				#endregion
 				// 残数を記録する
 				MemoLeaveList(friendAirsList, friendLeaveAirsList);
@@ -68,6 +68,10 @@ namespace AWSR.Models
 				if (friendLeaveAirsList == null || enemyLeaveAirsList == null)
 					return "";
 				string output = "";
+				// 全滅率
+				output += "自艦隊\n";
+				output += "敵艦隊\n";
+				// 残数
 				output += "自艦隊\n";
 				for (int i = 0; i < friendLeaveAirsList.Count; ++i) {
 					for (int j = 0; j < friendLeaveAirsList[i].Count; ++j) {
@@ -105,7 +109,7 @@ namespace AWSR.Models
 		}
 		// [a,b]の整数一様乱数を作成する
 		private static int RandInt(int a, int b) {
-			return rand.Next(a, b);
+			return rand.Next(a, b + 1);
 		}
 		// AirsListをコピーする
 		private static void CopyAirsList(AirsList src, AirsList dst) {
@@ -219,9 +223,12 @@ namespace AWSR.Models
 			}
 		}
 		// ステージ2撃墜処理(自軍)
-		private static void St2FriendBreak(Fleet friend, Fleet enemy, AirsList friendAirsList) {
+		private static void St2FriendBreak(Fleet friend, Fleet enemy, int unitCount, AirsList friendAirsList) {
+			// 迎撃艦を一覧を算出し、それぞれの撃墜量を出す
+			var breakPer = enemy.BreakPer;
+			var breakFixed = enemy.BreakFixed;
 			// 撃墜処理
-			for (int i = 0; i < UnitCount(enemy.Unit.Count, friend.Unit.Count); ++i) {
+			for (int i = 0; i < unitCount; ++i) {
 				for (int j = 0; j < friend.Unit[i].Kammusu.Count; ++j) {
 					for (int k = 0; k < friend.Unit[i].Kammusu[j].Weapon.Count; ++k) {
 						string type = friend.Unit[i].Kammusu[j].Weapon[k].Type;
@@ -231,14 +238,53 @@ namespace AWSR.Models
 						&& type != "噴式戦闘爆撃機") {
 							continue;
 						}
-						
+						// 迎撃艦を選択する
+						int selectKammusuIndex = RandInt(0, breakPer.Count - 1);
+						// 割合撃墜
+						if(RandInt(0,1) == 1) {
+							int breakCount = (int)(breakPer[selectKammusuIndex] * friendAirsList[i][j][k]);
+							friendAirsList[i][j][k] -= breakCount;
+						}
+						// 固定撃墜
+						if (RandInt(0, 1) == 1) {
+							int breakCount = breakFixed[selectKammusuIndex];
+							friendAirsList[i][j][k] = Math.Max(friendAirsList[i][j][k] - breakCount, 0);
+						}
 					}
 				}
 			}
 		}
 		// ステージ2撃墜処理(敵軍)
-		private static void St2EnemyBreak(Fleet enemy, Fleet friend, AirsList enemyAirsList) {
-
+		private static void St2EnemyBreak(Fleet enemy, Fleet friend, int unitCount, AirsList enemyAirsList) {
+			// 迎撃艦を一覧を算出し、それぞれの撃墜量を出す
+			var breakPer = friend.BreakPer;
+			var breakFixed = friend.BreakFixed;
+			// 撃墜処理
+			for (int i = 0; i < unitCount; ++i) {
+				for (int j = 0; j < enemy.Unit[i].Kammusu.Count; ++j) {
+					for (int k = 0; k < enemy.Unit[i].Kammusu[j].Weapon.Count; ++k) {
+						string type = enemy.Unit[i].Kammusu[j].Weapon[k].Type;
+						if (type != "艦上攻撃機"
+						&& type != "艦上爆撃機"
+						&& type != "水上爆撃機"
+						&& type != "噴式戦闘爆撃機") {
+							continue;
+						}
+						// 迎撃艦を選択する
+						int selectKammusuIndex = RandInt(0, breakPer.Count - 1);
+						// 割合撃墜
+						if (RandInt(0, 1) == 1) {
+							int breakCount = (int)(breakPer[selectKammusuIndex] * enemyAirsList[i][j][k]);
+							enemyAirsList[i][j][k] -= breakCount;
+						}
+						// 固定撃墜
+						if (RandInt(0, 1) == 1) {
+							int breakCount = breakFixed[selectKammusuIndex] + 1;
+							enemyAirsList[i][j][k] = Math.Max(enemyAirsList[i][j][k] - breakCount, 0);
+						}
+					}
+				}
+			}
 		}
 	}
 }
