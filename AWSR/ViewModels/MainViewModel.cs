@@ -1,5 +1,6 @@
 ﻿using AWSR.Models;
 using AWSR.Views;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Windows;
@@ -15,6 +16,8 @@ namespace AWSR.ViewModels
 		#region コマンドに関する処理
 		// デッキビルダーの画面を開く処理
 		public ICommand OpenDeckBuilderCommand { get; private set; }
+		// 敵艦隊を読み込む処理
+		public ICommand OpenEnemyFileCommand { get; private set; }
 		// 自艦隊の情報を表示する処理
 		public ICommand ShowFriendFleetInfoCommand { get; private set; }
 		// 敵艦隊の情報を表示する処理
@@ -164,6 +167,23 @@ namespace AWSR.ViewModels
 				System.Diagnostics.Process.Start("http://kancolle-calc.net/deckbuilder.html");
 			}
 		}
+		// 敵艦隊のデータを開く処理
+		private void OpenEnemyFile() {
+			var ofd = new OpenFileDialog();
+			ofd.FileName = "enemy.json";
+			ofd.Filter = "敵艦隊データファイル(*.json)|*.json|すべてのファイル(*.*)|*.*";
+			ofd.AddExtension = true;
+			if ((bool)ofd.ShowDialog()) {
+				try {
+					using (var stream = ofd.OpenFile())
+					using (var sr = new System.IO.StreamReader(stream))
+						InputEnemyDataText = sr.ReadToEnd();
+				}
+				catch {
+					MessageBox.Show("敵艦隊データの読み込みに失敗しました.", "航空戦シミュレーションR", MessageBoxButton.OK, MessageBoxImage.Warning);
+				}
+			}
+		}
 		// 自艦隊の情報を表示する処理
 		private void ShowFriendFleetInfo() {
 			try {
@@ -277,7 +297,7 @@ namespace AWSR.ViewModels
 		// 動的解析を行う処理
 		private void RunMonteCarlo() {
 			string output = "";
-			//try {
+			try {
 				// 艦隊を読み込み
 				var friendFleet = FriendFleet(InputDeckBuilderText);
 				var enemyFleet = EnemyFleet(InputEnemyDataText);
@@ -299,10 +319,10 @@ namespace AWSR.ViewModels
 				var rvm = new ResultViewModel(nameList, histList);
 				rv.DataContext = rvm;
 				rv.Show();
-			/*}
+			}
 			catch {
 				output = "自艦隊 or 敵艦隊が正常に読み込めませんでした.";
-			}*/
+			}
 			// 表示
 			MessageBox.Show(output, "航空戦シミュレーションR");
 		}
@@ -321,6 +341,7 @@ namespace AWSR.ViewModels
 			SimulationSizeIndex = 0;
 			// コマンドを登録する
 			OpenDeckBuilderCommand = new CommandBase(OpenDeckBuilder);
+			OpenEnemyFileCommand = new CommandBase(OpenEnemyFile);
 			ShowFriendFleetInfoCommand = new CommandBase(ShowFriendFleetInfo);
 			ShowEnemyFleetInfoCommand = new CommandBase(ShowEnemyFleetInfo);
 			ShowAirValueCommand = new CommandBase(ShowAirValue);

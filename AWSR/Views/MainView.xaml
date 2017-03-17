@@ -5,7 +5,7 @@
 		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		xmlns:local="clr-namespace:AWSR.Views"
 		mc:Ignorable="d"
-		Title="航空戦シミュレーションR" Height="400" Width="550" MinHeight="400" MinWidth="550">
+		Title="航空戦シミュレーションR Ver.0.8 (2017/03/18)" Height="400" Width="550" MinHeight="400" MinWidth="550">
 	<Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition />
@@ -66,7 +66,9 @@
 						<RowDefinition Height="auto" />
 						<RowDefinition Height="auto" />
 					</Grid.RowDefinitions>
-					<Button Grid.Row="0" Content="ファイルから読み込み" Height="24" Margin="10,10,10,5" HorizontalAlignment="Stretch" />
+					<Button Grid.Row="0" Content="ファイルから読み込み"
+							Height="24" Margin="10,10,10,5" HorizontalAlignment="Stretch" 
+							Command="{Binding OpenEnemyFileCommand}"/>
 					<TextBox Grid.Row="1" Text="{Binding InputEnemyDataText}"
 							 Margin="10,5,10,5" HorizontalAlignment="Stretch" AcceptsReturn="True" AcceptsTab="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" />
 					<ComboBox Grid.Row="2" Margin="10,5,10,5" SelectedIndex="{Binding EnemyFleetType}">
