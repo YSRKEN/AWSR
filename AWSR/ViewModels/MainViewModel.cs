@@ -1,6 +1,7 @@
 ﻿using AWSR.Models;
 using AWSR.Views;
 using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
 using static AWSR.Models.Constant;
@@ -292,7 +293,10 @@ namespace AWSR.ViewModels
 				// 結果を表示する
 				rv?.Close();
 				rv = new ResultView();
-				var rvm = new ResultViewModel(Simulator.ResultText);
+				List<string> nameList;
+				List<List<List<double>>> histList;
+				Simulator.ResultData(friendFleet, enemyFleet, simulationSize[SimulationSizeIndex], out nameList, out histList);
+				var rvm = new ResultViewModel(nameList, histList);
 				rv.DataContext = rvm;
 				rv.Show();
 			/*}

@@ -53,8 +53,8 @@ namespace AWSR.Models
 				St2EnemyBreak(enemy, friend, unitCount,  enemyAirsList);
 				#endregion
 				// 残数を記録する
-				MemoLeaveList(friendAirsList, friendKammusuList, friendLeaveAirsList);
-				MemoLeaveList(enemyAirsList, enemyKammusuList, enemyLeaveAirsList);
+				MemoLeaveList(friend, enemy, friendAirsList, friendKammusuList, friendLeaveAirsList);
+				MemoLeaveList(enemy, friend, enemyAirsList, enemyKammusuList, enemyLeaveAirsList);
 			}
 			// 結果を書き出す
 			output += "【制空状態】\n";
@@ -124,6 +124,42 @@ namespace AWSR.Models
 				return output;
 			}
 		}
+		public static void ResultData(Fleet friendFleet, Fleet enemyFleet, int simulationSize, out List<string> nameList, out List<List<List<double>>> perList) {
+			nameList = new List<string>();
+			perList = new List<List<List<double>>>();
+			for (int i = 0; i < friendLeaveAirsList.Count; ++i) {
+				for (int j = 0; j < friendLeaveAirsList[i].Count; ++j) {
+					nameList.Add($"{i + 1}-{j + 1} {friendFleet.Unit[i].Kammusu[j].Name}");
+					var tempList1 = new List<List<double>>();
+					for (int k = 0; k < friendLeaveAirsList[i][j].Count; ++k) {
+						if (friendLeaveAirsList[i][j][k].Count == 1)
+							continue;
+						var tempList2 = new List<double>();
+						for (int m = 0; m < friendLeaveAirsList[i][j][k].Count; ++m) {
+							tempList2.Add(100.0 * friendLeaveAirsList[i][j][k][m] / simulationSize);
+						}
+						tempList1.Add(tempList2);
+					}
+					perList.Add(tempList1);
+				}
+			}
+			for (int i = 0; i < enemyLeaveAirsList.Count; ++i) {
+				for (int j = 0; j < enemyLeaveAirsList[i].Count; ++j) {
+					nameList.Add($"{i + 1}-{j + 1} {enemyFleet.Unit[i].Kammusu[j].Name}");
+					var tempList1 = new List<List<double>>();
+					for (int k = 0; k < enemyLeaveAirsList[i][j].Count; ++k) {
+						if (enemyLeaveAirsList[i][j][k].Count == 1)
+							continue;
+						var tempList2 = new List<double>();
+						for (int m = 0; m < enemyLeaveAirsList[i][j][k].Count; ++m) {
+							tempList2.Add(100.0 * enemyLeaveAirsList[i][j][k][m] / simulationSize);
+						}
+						tempList1.Add(tempList2);
+					}
+					perList.Add(tempList1);
+				}
+			}
+		}
 		// 乱数を初期化する
 		public static void Initialize() {
 			rand = new Random();
@@ -161,13 +197,22 @@ namespace AWSR.Models
 			}
 		}
 		// AirsListをLeaveAirsListに記録する
-		private static void MemoLeaveList(AirsList airsList, KammusuList kammusuList, LeaveAirsList leaveAirsList) {
+		private static void MemoLeaveList(Fleet friendFleet, Fleet enemyFleet, AirsList airsList, KammusuList kammusuList, LeaveAirsList leaveAirsList) {
 			for (int i = 0; i < airsList.Count; ++i) {
 				for (int j = 0; j < airsList[i].Count; ++j) {
 					bool allBrokenFlg = true;
 					for (int k = 0; k < airsList[i][j].Count; ++k) {
-						if (airsList[i][j][k] != 0)
-							allBrokenFlg = false;
+						if (airsList[i][j][k] != 0) {
+							if (friendFleet.Unit[i].Kammusu[j].SlotCount > k) {
+								var type = friendFleet.Unit[i].Kammusu[j].Weapon[k].Type;
+								if (type == "艦上攻撃機"
+								|| type == "艦上爆撃機"
+								|| type == "水上爆撃機"
+								|| type == "噴式戦闘爆撃機") {
+									allBrokenFlg = false;
+								}
+							}
+						}
 						++leaveAirsList[i][j][k][airsList[i][j][k]];
 					}
 					if (allBrokenFlg) {
