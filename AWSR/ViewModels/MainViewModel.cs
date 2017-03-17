@@ -184,11 +184,18 @@ namespace AWSR.ViewModels
 		// 制空値を表示する処理
 		private void ShowAirValue() {
 			string output = "【制空計算】\n";
+			// 仮読み込み
+			int unitCount = 1;
+			try {
+				var friendFleet = FriendFleet(InputDeckBuilderText);
+				var enemyFleet = EnemyFleet(InputEnemyDataText);
+				unitCount = UnitCount(friendFleet.Unit.Count, enemyFleet.Unit.Count);
+			}catch {}
 			// 自艦隊
 			output += "自艦隊：";
 			try {
 				var friendFleet = FriendFleet(InputDeckBuilderText);
-				output += friendFleet.AirValue.ToString();
+				output += friendFleet.AirValue(unitCount).ToString();
 			}
 			catch{
 				output += "(入力データに誤りがあります)";
@@ -198,7 +205,7 @@ namespace AWSR.ViewModels
 			output += "敵艦隊：";
 			try {
 				var enemyFleet = EnemyFleet(InputEnemyDataText);
-				output += enemyFleet.AirValue.ToString();
+				output += enemyFleet.AirValue(unitCount).ToString();
 			}
 			catch {
 				output += "(入力データに誤りがあります)";
@@ -209,6 +216,14 @@ namespace AWSR.ViewModels
 		// 撃墜計算を表示する処理
 		private void ShowAntiAirPower() {
 			string output = "【撃墜計算】\n";
+			// 仮読み込み
+			int unitCount = 1;
+			try {
+				var friendFleet = FriendFleet(InputDeckBuilderText);
+				var enemyFleet = EnemyFleet(InputEnemyDataText);
+				unitCount = UnitCount(friendFleet.Unit.Count, enemyFleet.Unit.Count);
+			}
+			catch { }
 			// 自艦隊
 			output += "自艦隊：\n";
 			try {

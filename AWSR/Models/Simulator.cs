@@ -28,20 +28,21 @@ namespace AWSR.Models
 			var friendAirsList = DeepCopyHelper.DeepCopy(firstFriendAirsList);
 			var enemyAirsList = DeepCopyHelper.DeepCopy(firstEnemyAirsList);
 			var AirWarStatusCount = new List<int> { 0,0,0,0,0 };
+			int unitCount = UnitCount(enemy.Unit.Count, friend.Unit.Count);
 			for(int i = 0; i < simulationSize; ++i) {
 				// 状態を初期化する
 				CopyAirsList(firstFriendAirsList, friendAirsList);
 				CopyAirsList(firstEnemyAirsList, enemyAirsList);
 				#region ステージ1：航空戦
 				// 制空値を計算する
-				int friendAirValue = NowAirValue(friend, friendAirsList);
-				int enemyAirValue = NowAirValue(enemy, enemyAirsList);
+				int friendAirValue = NowAirValue(friend, unitCount, friendAirsList);
+				int enemyAirValue = NowAirValue(enemy, unitCount, enemyAirsList);
 				// 制空状態を判断する
 				AirWarStatus airWarStatus = CalcAirWarStatus(friendAirValue, enemyAirValue);
 				++AirWarStatusCount[(int)airWarStatus];
 				// 割合撃墜を行う
-				St1FriendBreak(friend, friendAirsList, airWarStatus);
-				St1EnemyBreak(enemy, enemyAirsList, airWarStatus);
+				St1FriendBreak(friend, unitCount, friendAirsList, airWarStatus);
+				St1EnemyBreak(enemy, unitCount, enemyAirsList, airWarStatus);
 				#endregion
 				#region ステージ2：対空砲火
 				St2FriendBreak(friend, enemy, friendAirsList);
@@ -145,9 +146,9 @@ namespace AWSR.Models
 			}
 		}
 		// 現在の制空値を計算する
-		private static int NowAirValue(Fleet fleet, AirsList airslist) {
+		private static int NowAirValue(Fleet fleet, int unitCount, AirsList airslist) {
 			int airValue = 0;
-			for (int ui = 0; ui < fleet.Unit.Count; ++ui) {
+			for (int ui = 0; ui < unitCount; ++ui) {
 				var kammusuList = fleet.Unit[ui].Kammusu;
 				for (int ki = 0; ki < kammusuList.Count; ++ki) {
 					var weaponList = kammusuList[ki].Weapon;
@@ -177,8 +178,8 @@ namespace AWSR.Models
 			}
 		}
 		// ステージ1撃墜処理(自軍)
-		private static void St1FriendBreak(Fleet friend, AirsList friendAirsList, AirWarStatus airWarStatus) {
-			for (int i = 0; i < friend.Unit.Count; ++i) {
+		private static void St1FriendBreak(Fleet friend, int unitCount, AirsList friendAirsList, AirWarStatus airWarStatus) {
+			for (int i = 0; i < unitCount; ++i) {
 				for (int j = 0; j < friend.Unit[i].Kammusu.Count; ++j) {
 					for (int k = 0; k < friend.Unit[i].Kammusu[j].Weapon.Count; ++k) {
 						string type = friend.Unit[i].Kammusu[j].Weapon[k].Type;
@@ -197,8 +198,8 @@ namespace AWSR.Models
 			}
 		}
 		// ステージ1撃墜処理(敵軍)
-		private static void St1EnemyBreak(Fleet enemy, AirsList enemyAirsList, AirWarStatus airWarStatus) {
-			for (int i = 0; i < enemy.Unit.Count; ++i) {
+		private static void St1EnemyBreak(Fleet enemy, int unitCount, AirsList enemyAirsList, AirWarStatus airWarStatus) {
+			for (int i = 0; i < unitCount; ++i) {
 				for (int j = 0; j < enemy.Unit[i].Kammusu.Count; ++j) {
 					for (int k = 0; k < enemy.Unit[i].Kammusu[j].Weapon.Count; ++k) {
 						string type = enemy.Unit[i].Kammusu[j].Weapon[k].Type;
@@ -219,7 +220,21 @@ namespace AWSR.Models
 		}
 		// ステージ2撃墜処理(自軍)
 		private static void St2FriendBreak(Fleet friend, Fleet enemy, AirsList friendAirsList) {
-
+			// 撃墜処理
+			for (int i = 0; i < UnitCount(enemy.Unit.Count, friend.Unit.Count); ++i) {
+				for (int j = 0; j < friend.Unit[i].Kammusu.Count; ++j) {
+					for (int k = 0; k < friend.Unit[i].Kammusu[j].Weapon.Count; ++k) {
+						string type = friend.Unit[i].Kammusu[j].Weapon[k].Type;
+						if (type != "艦上攻撃機"
+						&& type != "艦上爆撃機"
+						&& type != "水上爆撃機"
+						&& type != "噴式戦闘爆撃機") {
+							continue;
+						}
+						
+					}
+				}
+			}
 		}
 		// ステージ2撃墜処理(敵軍)
 		private static void St2EnemyBreak(Fleet enemy, Fleet friend, AirsList enemyAirsList) {

@@ -76,5 +76,9 @@
 			string[] name = { "", "|", "||", "|||", "/", "//", "///", ">>" };
 			return name[(mas < 0 || mas > 7 ? 0 : mas)];
 		}
+		// 航空戦参加艦隊数
+		public static int UnitCount(int x, int y) {
+			return ((x - 1) & (y - 1)) + 1;
+		}
 	}
 }

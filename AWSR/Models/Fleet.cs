@@ -17,19 +17,17 @@ namespace AWSR.Models
 		// 陣形
 		public Formation Formation { get; set; }
 		// 制空値
-		public int AirValue {
-			get {
-				int airValue = 0;
-				foreach (var unit in Unit) {
-					foreach (var kammusu in unit.Kammusu) {
-						// データベースに存在しない艦娘における制空値は0とする
-						foreach (var weapon in kammusu.Weapon.Select((v, i) => new { v, i })) {
-							airValue += weapon.v.AirValue(kammusu.Airs[weapon.i]);
-						}
+		public int AirValue(int unitCount) {
+			int airValue = 0;
+			for (int ui = 0; ui <unitCount; ++ui) {
+				foreach (var kammusu in Unit[ui].Kammusu) {
+					// データベースに存在しない艦娘における制空値は0とする
+					foreach (var weapon in kammusu.Weapon.Select((v, i) => new { v, i })) {
+						airValue += weapon.v.AirValue(kammusu.Airs[weapon.i]);
 					}
 				}
-				return airValue;
 			}
+			return airValue;
 		}
 		// 艦隊防空値
 		private double FleetAntiAir {
@@ -236,6 +234,18 @@ namespace AWSR.Models
 			output += "}";
 			// 出力
 			return output;
+		}
+		// 迎撃可能な艦娘一覧
+		public List<Kammusu> AvailableKammusu(int unitCount) {
+			var availableKammusu = new List<Kammusu>();
+			for (int i = 0; i < unitCount; ++i) {
+				foreach (var kammusu in Unit[i].Kammusu) {
+					if (DataBase.ContainsKammusu(kammusu.Id)) {
+						availableKammusu.Add(kammusu);
+					}
+				}
+			}
+			return availableKammusu;
 		}
 		// コンストラクタ
 		public Fleet() {
