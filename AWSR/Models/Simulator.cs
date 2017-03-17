@@ -49,8 +49,10 @@ namespace AWSR.Models
 				St1EnemyBreak(enemy, unitCount, enemyAirsList, airWarStatus);
 				#endregion
 				#region ステージ2：対空砲火
-				St2FriendBreak(friend, enemy, unitCount, friendAirsList);
-				St2EnemyBreak(enemy, friend, unitCount,  enemyAirsList);
+				var friendCutInType = GetCutInType(friend);
+				var enemyCutInType = GetCutInType(enemy);
+				St2FriendBreak(friend, enemy, unitCount, friendAirsList, enemyCutInType);
+				St2EnemyBreak(enemy, friend, unitCount,  enemyAirsList, friendCutInType);
 				#endregion
 				// 残数を記録する
 				MemoLeaveList(friend, enemy, friendAirsList, friendKammusuList, friendLeaveAirsList);
@@ -256,11 +258,33 @@ namespace AWSR.Models
 				}
 			}
 		}
+		// 対空カットインの種別を決定する
+		private static CutInType GetCutInType(Fleet fleet) {
+			// リストを取得する
+			var cutInList = new List<KeyValuePair<CutInType, double>>();
+			foreach (var unit in fleet.Unit) {
+				foreach (var kammusu in unit.Kammusu) {
+					if(kammusu.CutInType != CutInType.None) {
+						// 「0.6」はテキトー適当な値
+						cutInList.Add(new KeyValuePair<CutInType, double>(kammusu.CutInType, 0.6));
+					}
+				}
+			}
+			// リストをソートする
+			cutInList.Sort((a, b) => (int)b.Key - (int)a.Key);
+			// 上から順に判定する
+			foreach(var cutIn in cutInList) {
+				if(cutIn.Value > rand.NextDouble()) {
+					return cutIn.Key;
+				}
+			}
+			return CutInType.None;
+		}
 		// ステージ2撃墜処理(自軍)
-		private static void St2FriendBreak(Fleet friend, Fleet enemy, int unitCount, AirsList friendAirsList) {
+		private static void St2FriendBreak(Fleet friend, Fleet enemy, int unitCount, AirsList friendAirsList, CutInType cutInType) {
 			// 迎撃艦を一覧を算出し、それぞれの撃墜量を出す
 			var breakPer = enemy.BreakPer;
-			var breakFixed = enemy.BreakFixed;
+			var breakFixed = enemy.BreakFixed(cutInType);
 			// 撃墜処理
 			for (int i = 0; i < unitCount; ++i) {
 				for (int j = 0; j < friend.Unit[i].Kammusu.Count; ++j) {
@@ -282,6 +306,7 @@ namespace AWSR.Models
 						// 固定撃墜
 						if (RandInt(0, 1) == 1) {
 							int breakCount = breakFixed[selectKammusuIndex];
+							breakCount += CutInAddBonus[(int)cutInType];
 							friendAirsList[i][j][k] = Math.Max(friendAirsList[i][j][k] - breakCount, 0);
 						}
 					}
@@ -289,10 +314,10 @@ namespace AWSR.Models
 			}
 		}
 		// ステージ2撃墜処理(敵軍)
-		private static void St2EnemyBreak(Fleet enemy, Fleet friend, int unitCount, AirsList enemyAirsList) {
+		private static void St2EnemyBreak(Fleet enemy, Fleet friend, int unitCount, AirsList enemyAirsList, CutInType cutInType) {
 			// 迎撃艦を一覧を算出し、それぞれの撃墜量を出す
 			var breakPer = friend.BreakPer;
-			var breakFixed = friend.BreakFixed;
+			var breakFixed = friend.BreakFixed(cutInType);
 			// 撃墜処理
 			for (int i = 0; i < unitCount; ++i) {
 				for (int j = 0; j < enemy.Unit[i].Kammusu.Count; ++j) {
@@ -314,6 +339,7 @@ namespace AWSR.Models
 						// 固定撃墜
 						if (RandInt(0, 1) == 1) {
 							int breakCount = breakFixed[selectKammusuIndex] + 1;
+							breakCount += CutInAddBonus[(int)cutInType];
 							enemyAirsList[i][j][k] = Math.Max(enemyAirsList[i][j][k] - breakCount, 0);
 						}
 					}
