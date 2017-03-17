@@ -62,6 +62,13 @@
 			1.25,1.0,1.45,1.3,1.4,1.25,
 			1.2,1.45,1.25,
 		};
+		// 発動率
+		public static double[] CutInPer = new double[] {
+			0.0,0.67,0.57,0.62,0.50,0.62,
+			0.50,0.45,0.40,0.43,0.62,0.56,
+			0.50,0.50,0.50,0.50,0.50,0.50,
+			0.50,0.50,0.50,
+		};
 		#endregion
 		#region 制空状態
 		public enum AirWarStatus { Best, Good, Balance, Bad, Worst, Size };

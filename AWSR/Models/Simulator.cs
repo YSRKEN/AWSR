@@ -264,9 +264,9 @@ namespace AWSR.Models
 			var cutInList = new List<KeyValuePair<CutInType, double>>();
 			foreach (var unit in fleet.Unit) {
 				foreach (var kammusu in unit.Kammusu) {
-					if(kammusu.CutInType != CutInType.None) {
-						// 「0.6」はテキトー適当な値
-						cutInList.Add(new KeyValuePair<CutInType, double>(kammusu.CutInType, 0.6));
+					var cutInType = kammusu.CutInType;
+					if (cutInType != CutInType.None) {
+						cutInList.Add(new KeyValuePair<CutInType, double>(cutInType, CutInPer[(int)cutInType]));
 					}
 				}
 			}
