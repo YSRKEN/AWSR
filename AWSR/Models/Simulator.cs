@@ -11,7 +11,9 @@ namespace AWSR.Models
 	using LeaveAirsList = List<List<List<List<int>>>>;
 	static class Simulator
 	{
-		static Random rand;
+		private static Random rand = null;
+		private static LeaveAirsList friendLeaveAirsList = null;
+		private static LeaveAirsList enemyLeaveAirsList = null;
 		// モンテカルロシミュレーションを行う
 		public static string MonteCarlo(Fleet friend, Fleet enemy, int simulationSize) {
 			string output =  "【モンテカルロシミュレーション】\n";
@@ -20,8 +22,8 @@ namespace AWSR.Models
 			var firstFriendAirsList = friend.AirsList;
 			var firstEnemyAirsList = enemy.AirsList;
 			// 保存用バッファを用意する
-			var friendLeaveAirsList = MakeLeaveList(firstFriendAirsList);
-			var enemyLeaveAirsList = MakeLeaveList(firstEnemyAirsList);
+			friendLeaveAirsList = MakeLeaveList(firstFriendAirsList);
+			enemyLeaveAirsList = MakeLeaveList(firstEnemyAirsList);
 			// 反復計算を行う
 			var friendAirsList = DeepCopyHelper.DeepCopy(firstFriendAirsList);
 			var enemyAirsList = DeepCopyHelper.DeepCopy(firstEnemyAirsList);
@@ -42,39 +44,12 @@ namespace AWSR.Models
 				St1EnemyBreak(enemy, enemyAirsList, airWarStatus);
 				#endregion
 				#region ステージ2：対空砲火
+				St2FriendBreak(friend, enemy, friendAirsList);
+				St2EnemyBreak(enemy, friend, enemyAirsList);
 				#endregion
 				// 残数を記録する
 				MemoLeaveList(friendAirsList, friendLeaveAirsList);
 				MemoLeaveList(enemyAirsList, enemyLeaveAirsList);
-			}
-			//
-			Console.WriteLine("自艦隊");
-			for (int i = 0; i < firstFriendAirsList.Count; ++i) {
-				for (int j = 0; j < firstFriendAirsList[i].Count; ++j) {
-					for (int k = 0; k < firstFriendAirsList[i][j].Count; ++k) {
-						if(firstFriendAirsList[i][j][k] > 0) {
-							Console.Write($"{i + 1}-{j + 1}-{k + 1} ");
-							for (int m = 0; m <= firstFriendAirsList[i][j][k]; ++m) {
-								Console.Write($"{friendLeaveAirsList[i][j][k][m]},");
-							}
-							Console.WriteLine("");
-						}
-					}
-				}
-			}
-			Console.WriteLine("敵艦隊");
-			for (int i = 0; i < firstEnemyAirsList.Count; ++i) {
-				for (int j = 0; j < firstEnemyAirsList[i].Count; ++j) {
-					for (int k = 0; k < firstEnemyAirsList[i][j].Count; ++k) {
-						if(firstEnemyAirsList[i][j][k] > 0) {
-							Console.Write($"{i + 1}-{j + 1}-{k + 1} ");
-							for (int m = 0; m <= firstEnemyAirsList[i][j][k]; ++m) {
-								Console.Write($"{enemyLeaveAirsList[i][j][k][m]},");
-							}
-							Console.WriteLine("");
-						}
-					}
-				}
 			}
 			// 結果を書き出す
 			output += "制空状態：\n";
@@ -85,6 +60,43 @@ namespace AWSR.Models
 			}
 			output += "\n";
 			return output;
+		}
+		// 結果を出力する
+		public static string ResultText {
+			get {
+				if (friendLeaveAirsList == null || enemyLeaveAirsList == null)
+					return "";
+				string output = "";
+				output += "自艦隊\n";
+				for (int i = 0; i < friendLeaveAirsList.Count; ++i) {
+					for (int j = 0; j < friendLeaveAirsList[i].Count; ++j) {
+						for (int k = 0; k < friendLeaveAirsList[i][j].Count; ++k) {
+							if (friendLeaveAirsList[i][j][k].Count == 1)
+								continue;
+							output += $"{i + 1}-{j + 1}-{k + 1} ";
+							for (int m = 0; m < friendLeaveAirsList[i][j][k].Count; ++m) {
+								output += $"{friendLeaveAirsList[i][j][k][m]},";
+							}
+							output += "\n";
+						}
+					}
+				}
+				output += "敵艦隊\n";
+				for (int i = 0; i < enemyLeaveAirsList.Count; ++i) {
+					for (int j = 0; j < enemyLeaveAirsList[i].Count; ++j) {
+						for (int k = 0; k < enemyLeaveAirsList[i][j].Count; ++k) {
+							if (enemyLeaveAirsList[i][j][k].Count == 1)
+								continue;
+							output += $"{i + 1}-{j + 1}-{k + 1} ";
+							for (int m = 0; m < enemyLeaveAirsList[i][j][k].Count; ++m) {
+								output += $"{enemyLeaveAirsList[i][j][k][m]},";
+							}
+							output += "\n";
+						}
+					}
+				}
+				return output;
+			}
 		}
 		// 乱数を初期化する
 		public static void Initialize() {
@@ -179,9 +191,6 @@ namespace AWSR.Models
 							continue;
 						}
 						int breakCount = friendAirsList[i][j][k] * RandInt(St1FriendBreakMin[(int)airWarStatus], St1FriendBreakMax[(int)airWarStatus]) / 256;
-						if(breakCount < 0) {
-							int a = 0;
-						}
 						friendAirsList[i][j][k] -= breakCount;
 					}
 				}
@@ -207,6 +216,14 @@ namespace AWSR.Models
 					}
 				}
 			}
+		}
+		// ステージ2撃墜処理(自軍)
+		private static void St2FriendBreak(Fleet friend, Fleet enemy, AirsList friendAirsList) {
+
+		}
+		// ステージ2撃墜処理(敵軍)
+		private static void St2EnemyBreak(Fleet enemy, Fleet friend, AirsList enemyAirsList) {
+
 		}
 	}
 }

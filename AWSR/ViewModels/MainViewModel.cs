@@ -1,4 +1,5 @@
 ﻿using AWSR.Models;
+using AWSR.Views;
 using System;
 using System.Windows;
 using System.Windows.Input;
@@ -271,10 +272,15 @@ namespace AWSR.ViewModels
 				// 先頭に計算時間を追加する
 				sw.Stop();
 				output = $"経過時間：{Math.Round(sw.Elapsed.TotalSeconds, 1)}秒\n" + output;
-			//}
-			//catch {
-			//	output = "自艦隊 or 敵艦隊が正常に読み込めませんでした.";
-			//}
+				// 結果を表示する
+				var rv = new ResultView();
+				var rvm = new ResultViewModel(Simulator.ResultText);
+				rv.DataContext = rvm;
+				rv.Show();
+			/*}
+			catch {
+				output = "自艦隊 or 敵艦隊が正常に読み込めませんでした.";
+			}*/
 			// 表示
 			MessageBox.Show(output, "航空戦シミュレーションR");
 		}
