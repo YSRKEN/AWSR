@@ -5,6 +5,8 @@ using static AWSR.Models.Constant;
 
 namespace AWSR.Models
 {
+	// KammusuList[ユニット番号][艦娘番号]
+	using KammusuList = List<List<int>>;
 	// AirsList[ユニット番号][艦娘番号][装備番号]
 	using AirsList = List<List<List<int>>>;
 	// LeaveAirsList[ユニット番号][艦娘番号][装備番号][0～最大搭載数]
@@ -12,6 +14,8 @@ namespace AWSR.Models
 	static class Simulator
 	{
 		private static Random rand = null;
+		private static KammusuList friendKammusuList = null;
+		private static KammusuList enemyKammusuList = null;
 		private static LeaveAirsList friendLeaveAirsList = null;
 		private static LeaveAirsList enemyLeaveAirsList = null;
 		// モンテカルロシミュレーションを行う
@@ -22,8 +26,8 @@ namespace AWSR.Models
 			var firstFriendAirsList = friend.AirsList;
 			var firstEnemyAirsList = enemy.AirsList;
 			// 保存用バッファを用意する
-			friendLeaveAirsList = MakeLeaveList(firstFriendAirsList);
-			enemyLeaveAirsList = MakeLeaveList(firstEnemyAirsList);
+			MakeLists(firstFriendAirsList, out friendKammusuList, out friendLeaveAirsList);
+			MakeLists(firstEnemyAirsList, out enemyKammusuList, out enemyLeaveAirsList);
 			// 反復計算を行う
 			var friendAirsList = DeepCopyHelper.DeepCopy(firstFriendAirsList);
 			var enemyAirsList = DeepCopyHelper.DeepCopy(firstEnemyAirsList);
@@ -49,17 +53,36 @@ namespace AWSR.Models
 				St2EnemyBreak(enemy, friend, unitCount,  enemyAirsList);
 				#endregion
 				// 残数を記録する
-				MemoLeaveList(friendAirsList, friendLeaveAirsList);
-				MemoLeaveList(enemyAirsList, enemyLeaveAirsList);
+				MemoLeaveList(friendAirsList, friendKammusuList, friendLeaveAirsList);
+				MemoLeaveList(enemyAirsList, enemyKammusuList, enemyLeaveAirsList);
 			}
 			// 結果を書き出す
-			output += "制空状態：\n";
+			output += "【制空状態】\n";
 			output += "本隊";
 			for(int i = 0; i < (int)AirWarStatus.Size; ++i) {
 				var i2 = (AirWarStatus)i;
 				output += $"　{i2.ToStr()}：{Math.Round(100.0 * AirWarStatusCount[i] / simulationSize, 1)}％";
 			}
 			output += "\n";
+			output += "【全滅率】\n";
+			output += "自艦隊：\n";
+			for (int i = 0; i < friendKammusuList.Count; ++i) {
+				for (int j = 0; j < friendKammusuList[i].Count; ++j) {
+					int sum = firstFriendAirsList[i][j].Sum();
+					if(sum > 0) {
+						output += $"{friend.Unit[i].Kammusu[j].Name}→{Math.Round(100.0 * friendKammusuList[i][j] / simulationSize, 1)}％\n";
+					}
+				}
+			}
+			output += "敵艦隊：\n";
+			for (int i = 0; i < enemyKammusuList.Count; ++i) {
+				for (int j = 0; j < enemyKammusuList[i].Count; ++j) {
+					int sum = firstEnemyAirsList[i][j].Sum();
+					if (sum > 0) {
+						output += $"{enemy.Unit[i].Kammusu[j].Name}→{Math.Round(100.0 * enemyKammusuList[i][j] / simulationSize, 1)}％\n";
+					}
+				}
+			}
 			return output;
 		}
 		// 結果を出力する
@@ -68,10 +91,8 @@ namespace AWSR.Models
 				if (friendLeaveAirsList == null || enemyLeaveAirsList == null)
 					return "";
 				string output = "";
-				// 全滅率
-				output += "自艦隊\n";
-				output += "敵艦隊\n";
 				// 残数
+				output += "\n【残数】\n";
 				output += "自艦隊\n";
 				for (int i = 0; i < friendLeaveAirsList.Count; ++i) {
 					for (int j = 0; j < friendLeaveAirsList[i].Count; ++j) {
@@ -121,11 +142,13 @@ namespace AWSR.Models
 				}
 			}
 		}
-		// LeaveAirsListをAirsListから作成する
-		private static LeaveAirsList MakeLeaveList(AirsList airsList) {
-			var leaveAirsList = new LeaveAirsList();
+		// KammusuListとLeaveAirsListをAirsListから作成する
+		private static void MakeLists(AirsList airsList, out KammusuList kammusuList, out LeaveAirsList leaveAirsList) {
+			kammusuList = new KammusuList();
+			leaveAirsList = new LeaveAirsList();
 			for (int i = 0; i < airsList.Count; ++i) {
 				var tempList = new List<List<List<int>>>();
+				kammusuList.Add(Enumerable.Repeat(0, airsList[i].Count).ToList());
 				for (int j = 0; j < airsList[i].Count; ++j) {
 					var tempList2 = new List<List<int>>();
 					for (int k = 0; k < airsList[i][j].Count; ++k) {
@@ -136,15 +159,19 @@ namespace AWSR.Models
 				}
 				leaveAirsList.Add(tempList);
 			}
-			return leaveAirsList;
 		}
 		// AirsListをLeaveAirsListに記録する
-		private static void MemoLeaveList(AirsList airsList, LeaveAirsList leaveAirsList) {
+		private static void MemoLeaveList(AirsList airsList, KammusuList kammusuList, LeaveAirsList leaveAirsList) {
 			for (int i = 0; i < airsList.Count; ++i) {
 				for (int j = 0; j < airsList[i].Count; ++j) {
+					bool allBrokenFlg = true;
 					for (int k = 0; k < airsList[i][j].Count; ++k) {
-						int a = airsList[i][j][k];
+						if (airsList[i][j][k] != 0)
+							allBrokenFlg = false;
 						++leaveAirsList[i][j][k][airsList[i][j][k]];
+					}
+					if (allBrokenFlg) {
+						++kammusuList[i][j];
 					}
 				}
 			}

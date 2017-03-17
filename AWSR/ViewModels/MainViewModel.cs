@@ -9,6 +9,8 @@ namespace AWSR.ViewModels
 {
 	class MainViewModel : ViewModelBase
 	{
+		ResultView rv = null;
+
 		#region コマンドに関する処理
 		// デッキビルダーの画面を開く処理
 		public ICommand OpenDeckBuilderCommand { get; private set; }
@@ -288,7 +290,8 @@ namespace AWSR.ViewModels
 				sw.Stop();
 				output = $"経過時間：{Math.Round(sw.Elapsed.TotalSeconds, 1)}秒\n" + output;
 				// 結果を表示する
-				var rv = new ResultView();
+				rv?.Close();
+				rv = new ResultView();
 				var rvm = new ResultViewModel(Simulator.ResultText);
 				rv.DataContext = rvm;
 				rv.Show();
