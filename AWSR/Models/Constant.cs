@@ -7,6 +7,12 @@
 		public static readonly int MaxLuck = 100;
 		public static readonly int MaxImprovement = 10;
 		public static readonly int MaxProficiency = 7;
+		// ステージ1の自軍撃墜割合
+		// (味方に比べて敵の撃墜割合はまだ検証中らしい)
+		public static int[] St1FriendBreakMin = { 7, 20, 30, 45, 65 };
+		public static int[] St1FriendBreakMax = { 15, 45, 75, 105, 150 };
+		public static int[] St1EnemyBreakMin = { 0, 0, 0, 0, 0 };
+		public static int[] St1EnemyBreakMax = { 100, 80, 60, 40, 10 };
 		#region 艦種
 		// ただし、浮遊要塞・護衛要塞・泊地棲鬼/姫・南方棲鬼は「重巡洋艦」、
 		// 南方棲戦鬼は「航空巡洋艦」、装甲空母鬼/姫・戦艦レ級は「航空戦艦」、
@@ -57,10 +63,22 @@
 			1.2,1.45,1.25,
 		};
 		#endregion
+		#region 制空状態
+		public enum AirWarStatus { Best, Good, Balance, Bad, Worst, Size };
+		// 制空状態を文字列に変換する
+		public static string ToStr(this AirWarStatus airWarStatus) {
+			string[] name = { "確保", "優勢", "均衡", "劣勢", "喪失" };
+			return name[(int)airWarStatus];
+		}
+		#endregion
 		// 数値を熟練度文字列に変換する
 		public static string ToMasStr(int mas) {
 			string[] name = { "", "|", "||", "|||", "/", "//", "///", ">>" };
 			return name[(mas < 0 || mas > 7 ? 0 : mas)];
+		}
+		// 航空戦参加艦隊数
+		public static int UnitCount(int x, int y) {
+			return ((x - 1) & (y - 1)) + 1;
 		}
 	}
 }

@@ -14,18 +14,20 @@
 		protected override void OnStartup(StartupEventArgs e)
 		{
 			base.OnStartup(e);
-			// メイン画面を再生して表示する
-			var w = new MainView();
-			var vm = new MainViewModel();
-			w.DataContext = vm;
-			w.Show();
+			// メイン画面を作成して表示する
+			var mv = new MainView();
+			var mvm = new MainViewModel();
+			mv.DataContext = mvm;
+			mv.Show();
+			// 乱数を初期化
+			Simulator.Initialize();
 			// データベースを読み込む
 			try {
 				DataBase.Initialize();
 			}
 			catch {
 				MessageBox.Show("データベースが正常に読み込めませんでした.\nアプリを終了します.", "航空戦シミュレーションR", MessageBoxButton.OK, MessageBoxImage.Exclamation);
-				w.Close();
+				mv.Close();
 			}
 		}
 	}

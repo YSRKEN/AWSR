@@ -5,6 +5,7 @@ using static AWSR.Models.Constant;
 
 namespace AWSR.Models
 {
+	using AirsList = List<List<List<int>>>;
 	/// <summary>
 	/// 大艦隊クラス
 	/// (連合艦隊＝艦隊×2と考える)
@@ -16,19 +17,17 @@ namespace AWSR.Models
 		// 陣形
 		public Formation Formation { get; set; }
 		// 制空値
-		public int AirValue {
-			get {
-				int airValue = 0;
-				foreach (var unit in Unit) {
-					foreach (var kammusu in unit.Kammusu) {
-						// データベースに存在しない艦娘における制空値は0とする
-						foreach (var weapon in kammusu.Weapon.Select((v, i) => new { v, i })) {
-							airValue += weapon.v.AirValue(kammusu.Airs[weapon.i]);
-						}
+		public int AirValue(int unitCount) {
+			int airValue = 0;
+			for (int ui = 0; ui <unitCount; ++ui) {
+				foreach (var kammusu in Unit[ui].Kammusu) {
+					// データベースに存在しない艦娘における制空値は0とする
+					foreach (var weapon in kammusu.Weapon.Select((v, i) => new { v, i })) {
+						airValue += weapon.v.AirValue(kammusu.Airs[weapon.i]);
 					}
 				}
-				return airValue;
 			}
+			return airValue;
 		}
 		// 艦隊防空値
 		private double FleetAntiAir {
@@ -104,6 +103,24 @@ namespace AWSR.Models
 				return fleetAntiAir;
 			}
 		}
+		// 全搭載数
+		public AirsList AirsList {
+			get {
+				var airsList = new AirsList();
+				foreach (var unit in Unit) {
+					var airsUnit = new List<List<int>>();
+					foreach (var kammusu in unit.Kammusu) {
+						var airs = new List<int>();
+						foreach(int a in kammusu.Airs) {
+							airs.Add(a);
+						}
+						airsUnit.Add(airs);
+;					}
+					airsList.Add(airsUnit);
+				}
+				return airsList;
+			}
+		}
 		// 文字情報
 		public string InfoText() {
 			string output = "";
@@ -163,6 +180,47 @@ namespace AWSR.Models
 			output += $"艦隊防空：{fleetAntiAir}\n";
 			return output;
 		}
+		public List<double> BreakPer {
+			get {
+				var breakPer = new List<double>();
+				// 艦隊防空値
+				double fleetAntiAir = FleetAntiAir;
+				// 計算しつつ出力する
+				foreach (var unit in Unit.Select((v, i) => new { v, i })) {
+					foreach (var kammusu in unit.v.Kammusu) {
+						// 加重対空値
+						int weightAntiAir = kammusu.WeightAntiAir;
+						// 割合撃墜
+						double cf = (Unit.Count < 2 ? 1.0 : unit.i == 0 ? 0.72 : 0.48);
+						breakPer.Add(cf * weightAntiAir / 400);
+					}
+				}
+				return breakPer;
+			}
+		}
+		public List<int> BreakFixed {
+			get {
+				var breakFixed = new List<int>();
+				// 艦隊防空値
+				double fleetAntiAir = FleetAntiAir;
+				// 計算しつつ出力する
+				foreach (var unit in Unit.Select((v, i) => new { v, i })) {
+					foreach (var kammusu in unit.v.Kammusu) {
+						// 加重対空値
+						int weightAntiAir = kammusu.WeightAntiAir;
+						// 固定撃墜
+						double cf = (Unit.Count < 2 ? 1.0 : unit.i == 0 ? 0.72 : 0.48);
+						if (kammusu.IsKammusu) {
+							breakFixed.Add((int)((weightAntiAir + fleetAntiAir) * cf / 10));
+						}
+						else {
+							breakFixed.Add((int)((weightAntiAir + fleetAntiAir) * cf / 10.6));
+						}
+					}
+				}
+				return breakFixed;
+			}
+		}
 		// 対空カットイン情報
 		public string CutInText() {
 			string output = "";
@@ -217,6 +275,20 @@ namespace AWSR.Models
 			output += "}";
 			// 出力
 			return output;
+		}
+		// 迎撃可能な艦娘一覧
+		public List<Kammusu> AvailableKammusu {
+			get {
+				var availableKammusu = new List<Kammusu>();
+				foreach (var unit in Unit) {
+					foreach (var kammusu in unit.Kammusu) {
+						if (DataBase.ContainsKammusu(kammusu.Id)) {
+							availableKammusu.Add(kammusu);
+						}
+					}
+				}
+				return availableKammusu;
+			}
 		}
 		// コンストラクタ
 		public Fleet() {

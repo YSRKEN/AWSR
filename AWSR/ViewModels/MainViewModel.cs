@@ -1,4 +1,7 @@
 ﻿using AWSR.Models;
+using AWSR.Views;
+using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
 using static AWSR.Models.Constant;
@@ -7,6 +10,8 @@ namespace AWSR.ViewModels
 {
 	class MainViewModel : ViewModelBase
 	{
+		ResultView rv = null;
+
 		#region コマンドに関する処理
 		// デッキビルダーの画面を開く処理
 		public ICommand OpenDeckBuilderCommand { get; private set; }
@@ -20,6 +25,8 @@ namespace AWSR.ViewModels
 		public ICommand ShowAntiAirPowerCommand { get; private set; }
 		// 対空カットイン可否を表示する処理
 		public ICommand ShowCutInTypeCommand { get; private set; }
+		// 動的解析を行う処理
+		public ICommand RunMonteCarloCommand { get; private set; }
 		#endregion
 
 		#region プロパティに関する処理
@@ -81,13 +88,19 @@ namespace AWSR.ViewModels
 		int enemyFleetType;
 		public int EnemyFleetType {
 			get { return enemyFleetType; }
-			set { enemyFleetType = value; }
+			set { enemyFleetType = value; NotifyPropertyChanged(nameof(EnemyFleetType)); }
 		}
 		// 敵艦隊の陣形
 		int enemyFleetFormation;
 		public int EnemyFleetFormation {
 			get { return enemyFleetFormation; }
-			set { enemyFleetFormation = value; }
+			set { enemyFleetFormation = value; NotifyPropertyChanged(nameof(EnemyFleetFormation)); }
+		}
+		// 反復回数
+		int simulationSizeIndex;
+		public int SimulationSizeIndex {
+			get { return simulationSizeIndex; }
+			set { simulationSizeIndex = value; NotifyPropertyChanged(nameof(SimulationSizeIndex)); }
 		}
 		#endregion
 
@@ -174,11 +187,18 @@ namespace AWSR.ViewModels
 		// 制空値を表示する処理
 		private void ShowAirValue() {
 			string output = "【制空計算】\n";
+			// 仮読み込み
+			int unitCount = 1;
+			try {
+				var friendFleet = FriendFleet(InputDeckBuilderText);
+				var enemyFleet = EnemyFleet(InputEnemyDataText);
+				unitCount = UnitCount(friendFleet.Unit.Count, enemyFleet.Unit.Count);
+			}catch {}
 			// 自艦隊
 			output += "自艦隊：";
 			try {
 				var friendFleet = FriendFleet(InputDeckBuilderText);
-				output += friendFleet.AirValue.ToString();
+				output += friendFleet.AirValue(unitCount).ToString();
 			}
 			catch{
 				output += "(入力データに誤りがあります)";
@@ -188,7 +208,7 @@ namespace AWSR.ViewModels
 			output += "敵艦隊：";
 			try {
 				var enemyFleet = EnemyFleet(InputEnemyDataText);
-				output += enemyFleet.AirValue.ToString();
+				output += enemyFleet.AirValue(unitCount).ToString();
 			}
 			catch {
 				output += "(入力データに誤りがあります)";
@@ -199,6 +219,14 @@ namespace AWSR.ViewModels
 		// 撃墜計算を表示する処理
 		private void ShowAntiAirPower() {
 			string output = "【撃墜計算】\n";
+			// 仮読み込み
+			int unitCount = 1;
+			try {
+				var friendFleet = FriendFleet(InputDeckBuilderText);
+				var enemyFleet = EnemyFleet(InputEnemyDataText);
+				unitCount = UnitCount(friendFleet.Unit.Count, enemyFleet.Unit.Count);
+			}
+			catch { }
 			// 自艦隊
 			output += "自艦隊：\n";
 			try {
@@ -246,6 +274,38 @@ namespace AWSR.ViewModels
 			// 表示
 			MessageBox.Show(output, "航空戦シミュレーションR");
 		}
+		// 動的解析を行う処理
+		private void RunMonteCarlo() {
+			string output = "";
+			//try {
+				// 艦隊を読み込み
+				var friendFleet = FriendFleet(InputDeckBuilderText);
+				var enemyFleet = EnemyFleet(InputEnemyDataText);
+				// 時間を記録する
+				var sw = new System.Diagnostics.Stopwatch();
+				sw.Start();
+				// モンテカルロシミュレーションを行う
+				var simulationSize = new int[]{ 10000, 100000, 1000000, 10000000, 100000000};
+				output = Simulator.MonteCarlo(friendFleet, enemyFleet, simulationSize[SimulationSizeIndex]);
+				// 先頭に計算時間を追加する
+				sw.Stop();
+				output = $"経過時間：{Math.Round(sw.Elapsed.TotalSeconds, 1)}秒\n" + output;
+				// 結果を表示する
+				rv?.Close();
+				rv = new ResultView();
+				List<string> nameList;
+				List<List<List<double>>> histList;
+				Simulator.ResultData(friendFleet, enemyFleet, simulationSize[SimulationSizeIndex], out nameList, out histList);
+				var rvm = new ResultViewModel(nameList, histList);
+				rv.DataContext = rvm;
+				rv.Show();
+			/*}
+			catch {
+				output = "自艦隊 or 敵艦隊が正常に読み込めませんでした.";
+			}*/
+			// 表示
+			MessageBox.Show(output, "航空戦シミュレーションR");
+		}
 		#endregion
 
 		// コンストラクタ
@@ -258,6 +318,7 @@ namespace AWSR.ViewModels
 			InputEnemyDataText = "{\n\t\"formation\": \"circle\",\n	\"fleet\": [\n\t\t[544,544,528,554,515,515]\n\t]\n}\n";
 			EnemyFleetType = 0;
 			EnemyFleetFormation = 0;
+			SimulationSizeIndex = 0;
 			// コマンドを登録する
 			OpenDeckBuilderCommand = new CommandBase(OpenDeckBuilder);
 			ShowFriendFleetInfoCommand = new CommandBase(ShowFriendFleetInfo);
@@ -265,6 +326,7 @@ namespace AWSR.ViewModels
 			ShowAirValueCommand = new CommandBase(ShowAirValue);
 			ShowAntiAirPowerCommand = new CommandBase(ShowAntiAirPower);
 			ShowCutInTypeCommand = new CommandBase(ShowCutInType);
+			RunMonteCarloCommand = new CommandBase(RunMonteCarlo);
 		}
 	}
 }
