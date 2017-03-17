@@ -86,44 +86,6 @@ namespace AWSR.Models
 			return output;
 		}
 		// 結果を出力する
-		public static string ResultText {
-			get {
-				if (friendLeaveAirsList == null || enemyLeaveAirsList == null)
-					return "";
-				string output = "";
-				// 残数
-				output += "\n【残数】\n";
-				output += "自艦隊\n";
-				for (int i = 0; i < friendLeaveAirsList.Count; ++i) {
-					for (int j = 0; j < friendLeaveAirsList[i].Count; ++j) {
-						for (int k = 0; k < friendLeaveAirsList[i][j].Count; ++k) {
-							if (friendLeaveAirsList[i][j][k].Count == 1)
-								continue;
-							output += $"{i + 1}-{j + 1}-{k + 1} ";
-							for (int m = 0; m < friendLeaveAirsList[i][j][k].Count; ++m) {
-								output += $"{friendLeaveAirsList[i][j][k][m]},";
-							}
-							output += "\n";
-						}
-					}
-				}
-				output += "敵艦隊\n";
-				for (int i = 0; i < enemyLeaveAirsList.Count; ++i) {
-					for (int j = 0; j < enemyLeaveAirsList[i].Count; ++j) {
-						for (int k = 0; k < enemyLeaveAirsList[i][j].Count; ++k) {
-							if (enemyLeaveAirsList[i][j][k].Count == 1)
-								continue;
-							output += $"{i + 1}-{j + 1}-{k + 1} ";
-							for (int m = 0; m < enemyLeaveAirsList[i][j][k].Count; ++m) {
-								output += $"{enemyLeaveAirsList[i][j][k][m]},";
-							}
-							output += "\n";
-						}
-					}
-				}
-				return output;
-			}
-		}
 		public static void ResultData(Fleet friendFleet, Fleet enemyFleet, int simulationSize, out List<string> nameList, out List<List<List<double>>> perList) {
 			nameList = new List<string>();
 			perList = new List<List<List<double>>>();
@@ -201,21 +163,21 @@ namespace AWSR.Models
 			for (int i = 0; i < airsList.Count; ++i) {
 				for (int j = 0; j < airsList[i].Count; ++j) {
 					bool allBrokenFlg = true;
-					for (int k = 0; k < airsList[i][j].Count; ++k) {
-						if (airsList[i][j][k] != 0) {
-							if (friendFleet.Unit[i].Kammusu[j].SlotCount > k) {
-								var type = friendFleet.Unit[i].Kammusu[j].Weapon[k].Type;
-								if (type == "艦上攻撃機"
-								|| type == "艦上爆撃機"
-								|| type == "水上爆撃機"
-								|| type == "噴式戦闘爆撃機") {
-									allBrokenFlg = false;
-								}
+					bool hasPAPBWB = false;
+					for (int k = 0; k < friendFleet.Unit[i].Kammusu[j].SlotCount; ++k) {
+						string type = friendFleet.Unit[i].Kammusu[j].Weapon[k].Type;
+						if (type == "艦上攻撃機"
+						|| type == "艦上爆撃機"
+						|| type == "水上爆撃機"
+						|| type == "噴式戦闘爆撃機") {
+							hasPAPBWB = true;
+							if (airsList[i][j][k] != 0) {
+								allBrokenFlg = false;
 							}
 						}
 						++leaveAirsList[i][j][k][airsList[i][j][k]];
 					}
-					if (allBrokenFlg) {
+					if (allBrokenFlg && hasPAPBWB) {
 						++kammusuList[i][j];
 					}
 				}
