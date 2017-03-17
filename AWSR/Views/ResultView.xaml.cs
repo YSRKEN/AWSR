@@ -59,12 +59,12 @@ namespace AWSR.Views
 				var axisX = ProbChart.ChartAreas[0].AxisX;
 				axisX.Title = "残存数";
 				axisX.Minimum = 0.0;
-				axisX.Maximum = (maximumX + 9) / 10 * 10;
+				axisX.Maximum = (maximumX + 4) / 5 * 5;
 				axisX.Interval = 5.0;
 			}
 			{
 				var axisY = ProbChart.ChartAreas[0].AxisY;
-				axisY.Title = "積み上げ比率[％]";
+				axisY.Title = "累積分布関数[％]";
 				axisY.Minimum = 0.0;
 				axisY.Maximum = 110.0;
 				axisY.Interval = 10.0;

@@ -107,9 +107,18 @@ namespace AWSR.Models
 				for (int j = 0; j < friendLeaveAirsList[i].Count; ++j) {
 					nameList.Add($"{i + 1}-{j + 1} {friendFleet.Unit[i].Kammusu[j].Name}");
 					var tempList1 = new List<List<double>>();
-					for (int k = 0; k < friendLeaveAirsList[i][j].Count; ++k) {
+					for (int k = 0; k < friendFleet.Unit[i].Kammusu[j].SlotCount; ++k) {
 						if (friendLeaveAirsList[i][j][k].Count == 1)
 							continue;
+						string type = friendFleet.Unit[i].Kammusu[j].Weapon[k].Type;
+						if (type != "艦上戦闘機"
+						&& type != "艦上攻撃機"
+						&& type != "艦上爆撃機"
+						&& type != "水上爆撃機"
+						&& type != "水上戦闘機"
+						&& type != "噴式戦闘爆撃機") {
+							continue;
+						}
 						var tempList2 = new List<double>();
 						for (int m = 0; m < friendLeaveAirsList[i][j][k].Count; ++m) {
 							tempList2.Add(100.0 * friendLeaveAirsList[i][j][k][m] / simulationSize);
@@ -123,9 +132,18 @@ namespace AWSR.Models
 				for (int j = 0; j < enemyLeaveAirsList[i].Count; ++j) {
 					nameList.Add($"{i + 1}-{j + 1} {enemyFleet.Unit[i].Kammusu[j].Name}");
 					var tempList1 = new List<List<double>>();
-					for (int k = 0; k < enemyLeaveAirsList[i][j].Count; ++k) {
+					for (int k = 0; k < enemyFleet.Unit[i].Kammusu[j].SlotCount; ++k) {
 						if (enemyLeaveAirsList[i][j][k].Count == 1)
 							continue;
+						string type = enemyFleet.Unit[i].Kammusu[j].Weapon[k].Type;
+						if (type != "艦上戦闘機"
+						&& type != "艦上攻撃機"
+						&& type != "艦上爆撃機"
+						&& type != "水上爆撃機"
+						&& type != "水上戦闘機"
+						&& type != "噴式戦闘爆撃機") {
+							continue;
+						}
 						var tempList2 = new List<double>();
 						for (int m = 0; m < enemyLeaveAirsList[i][j][k].Count; ++m) {
 							tempList2.Add(100.0 * enemyLeaveAirsList[i][j][k][m] / simulationSize);
