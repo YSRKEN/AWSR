@@ -66,13 +66,19 @@ namespace AWSR.Models
 				output += $"　{i2.ToStr()}：{Math.Round(100.0 * AirWarStatusCount[i] / simulationSize, 1)}％";
 			}
 			output += "\n";
-			output += "【全滅率】\n";
+			output += "【棒立ち率　[スロット毎の全滅率]】\n";
 			output += "自艦隊：\n";
 			for (int i = 0; i < friendKammusuList.Count; ++i) {
 				for (int j = 0; j < friendKammusuList[i].Count; ++j) {
 					int sum = firstFriendAirsList[i][j].Sum();
 					if(sum > 0) {
-						output += $"{friend.Unit[i].Kammusu[j].Name}→{Math.Round(100.0 * friendKammusuList[i][j] / simulationSize, 1)}％\n";
+						output += $"{friend.Unit[i].Kammusu[j].Name}→{Math.Round(100.0 * friendKammusuList[i][j] / simulationSize, 1)}％";
+						for (int k = 0; k < friend.Unit[i].Kammusu[j].SlotCount; ++k) {
+							if(firstFriendAirsList[i][j][k] > 0) {
+								output += $"　{k+1}：[{Math.Round(100.0 * friendLeaveAirsList[i][j][k][0]/ simulationSize, 1)}％]";
+							}
+						}
+						output += "\n";
 					}
 				}
 			}
@@ -81,7 +87,13 @@ namespace AWSR.Models
 				for (int j = 0; j < enemyKammusuList[i].Count; ++j) {
 					int sum = firstEnemyAirsList[i][j].Sum();
 					if (sum > 0) {
-						output += $"{enemy.Unit[i].Kammusu[j].Name}→{Math.Round(100.0 * enemyKammusuList[i][j] / simulationSize, 1)}％\n";
+						output += $"{enemy.Unit[i].Kammusu[j].Name}→{Math.Round(100.0 * enemyKammusuList[i][j] / simulationSize, 1)}％";
+						for (int k = 0; k < enemy.Unit[i].Kammusu[j].SlotCount; ++k) {
+							if (firstEnemyAirsList[i][j][k] > 0) {
+								output += $"　{k + 1}：[{Math.Round(100.0 * enemyLeaveAirsList[i][j][k][0] / simulationSize, 1)}％]";
+							}
+						}
+						output += "\n";
 					}
 				}
 			}
