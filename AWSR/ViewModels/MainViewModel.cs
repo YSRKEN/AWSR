@@ -171,7 +171,7 @@ namespace AWSR.ViewModels
 		private void OpenEnemyFile() {
 			var ofd = new OpenFileDialog();
 			ofd.FileName = "enemy.json";
-			ofd.Filter = "敵艦隊データファイル(*.json)|*.json|すべてのファイル(*.*)|*.*";
+			ofd.Filter = "敵艦隊データファイル(*.json)|*.json|敵艦隊データファイル(*.enm)|*.enm|すべてのファイル(*.*)|*.*";
 			ofd.AddExtension = true;
 			if ((bool)ofd.ShowDialog()) {
 				try {

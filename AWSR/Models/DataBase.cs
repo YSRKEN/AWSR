@@ -9,10 +9,13 @@ namespace AWSR.Models
 		// データベースの内部表現(Dictionary)
 		private static Dictionary<int, KammusuData> kammusuDictionary;
 		private static Dictionary<int, WeaponData> weaponDictionary;
+		private static Dictionary<string, int> kammusuNameDictionary;
+		private static Dictionary<string, int> weaponNameDictionary;
 		// データベースを初期化
 		public static void Initialize() {
 			// 艦娘側のデータベースを読み込む
 			kammusuDictionary = new Dictionary<int, KammusuData>();
+			kammusuNameDictionary = new Dictionary<string, int>();
 			using (var sr = new System.IO.StreamReader(@"ships.csv")) {
 				while (!sr.EndOfStream) {
 					// 1行を読み込む
@@ -50,6 +53,20 @@ namespace AWSR.Models
 							new int[] { weaponId1, weaponId2, weaponId3, weaponId4, weaponId5 },
 							isKammusu);
 						kammusuDictionary[number] = kammusuData;
+						// もう一つのDictionaryにも登録する
+						if (kammusuNameDictionary.ContainsKey(name)) {
+							for(int i = 2; ; ++i) {
+								string key = $"{name}-{i}";
+								if (!kammusuNameDictionary.ContainsKey(key)) {
+									kammusuNameDictionary[key] = number;
+									break;
+								}
+							}
+						}
+						else {
+							kammusuNameDictionary[name] = number;
+							kammusuNameDictionary[$"{name}-1"] = number;
+						}
 					}
 					catch {
 						continue;
@@ -58,6 +75,7 @@ namespace AWSR.Models
 			}
 			// 装備側のデータベースを読み込む
 			weaponDictionary = new Dictionary<int, WeaponData>();
+			weaponNameDictionary = new Dictionary<string, int>();
 			using (var sr = new System.IO.StreamReader(@"slotitems.csv")) {
 				while (!sr.EndOfStream) {
 					// 1行を読み込む
@@ -80,6 +98,8 @@ namespace AWSR.Models
 						// WeaponData型を生成し、Dictionaryに登録する
 						var weaponData = new WeaponData(name, type, antiAir, antiBomb, intercept);
 						weaponDictionary[number] = weaponData;
+						// もう一つのDictionaryにも登録する
+						weaponNameDictionary[name] = number;
 					}
 					catch {
 						continue;
@@ -87,7 +107,7 @@ namespace AWSR.Models
 				}
 			}
 		}
-		// そのID()の艦娘・装備が存在するかを判定する
+		// そのIDの艦娘・装備が存在するかを判定する
 		public static bool ContainsKammusu(int id) {
 			return kammusuDictionary.ContainsKey(id);
 		}
@@ -111,6 +131,41 @@ namespace AWSR.Models
 			}
 			else {
 				return new WeaponData();
+			}
+		}
+		// その名前の艦娘・装備が存在するかを判定する
+		public static bool ContainsKammusu(string name) {
+			return kammusuNameDictionary.ContainsKey(name);
+		}
+		public static bool ContainsWeapon(string name) {
+			return weaponNameDictionary.ContainsKey(name);
+		}
+		// データを読み込む
+		public static KammusuData Kammusu(string name) {
+			int index;
+			if (kammusuNameDictionary.TryGetValue(name, out index)) {
+				return kammusuDictionary[index];
+			}
+			else {
+				return new KammusuData();
+			}
+		}
+		public static int KammusuId(string name) {
+			int index;
+			if (kammusuNameDictionary.TryGetValue(name, out index)) {
+				return index;
+			}
+			else {
+				return -1;
+			}
+		}
+		public static int WeaponId(string name) {
+			int index;
+			if (weaponNameDictionary.TryGetValue(name, out index)) {
+				return index;
+			}
+			else {
+				return -1;
 			}
 		}
 	}
