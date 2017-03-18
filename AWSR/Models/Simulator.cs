@@ -110,15 +110,8 @@ namespace AWSR.Models
 					for (int k = 0; k < friendFleet.Unit[i].Kammusu[j].SlotCount; ++k) {
 						if (friendLeaveAirsList[i][j][k].Count == 1)
 							continue;
-						string type = friendFleet.Unit[i].Kammusu[j].Weapon[k].Type;
-						if (type != "艦上戦闘機"
-						&& type != "艦上攻撃機"
-						&& type != "艦上爆撃機"
-						&& type != "水上爆撃機"
-						&& type != "水上戦闘機"
-						&& type != "噴式戦闘爆撃機") {
+						if (!friendFleet.Unit[i].Kammusu[j].Weapon[k].IsStage1)
 							continue;
-						}
 						var tempList2 = new List<double>();
 						for (int m = 0; m < friendLeaveAirsList[i][j][k].Count; ++m) {
 							tempList2.Add(100.0 * friendLeaveAirsList[i][j][k][m] / simulationSize);
@@ -135,15 +128,8 @@ namespace AWSR.Models
 					for (int k = 0; k < enemyFleet.Unit[i].Kammusu[j].SlotCount; ++k) {
 						if (enemyLeaveAirsList[i][j][k].Count == 1)
 							continue;
-						string type = enemyFleet.Unit[i].Kammusu[j].Weapon[k].Type;
-						if (type != "艦上戦闘機"
-						&& type != "艦上攻撃機"
-						&& type != "艦上爆撃機"
-						&& type != "水上爆撃機"
-						&& type != "水上戦闘機"
-						&& type != "噴式戦闘爆撃機") {
+						if (!enemyFleet.Unit[i].Kammusu[j].Weapon[k].IsStage1)
 							continue;
-						}
 						var tempList2 = new List<double>();
 						for (int m = 0; m < enemyLeaveAirsList[i][j][k].Count; ++m) {
 							tempList2.Add(100.0 * enemyLeaveAirsList[i][j][k][m] / simulationSize);
@@ -197,11 +183,7 @@ namespace AWSR.Models
 					bool allBrokenFlg = true;
 					bool hasPAPBWB = false;
 					for (int k = 0; k < friendFleet.Unit[i].Kammusu[j].SlotCount; ++k) {
-						string type = friendFleet.Unit[i].Kammusu[j].Weapon[k].Type;
-						if (type == "艦上攻撃機"
-						|| type == "艦上爆撃機"
-						|| type == "水上爆撃機"
-						|| type == "噴式戦闘爆撃機") {
+						if (friendFleet.Unit[i].Kammusu[j].Weapon[k].IsStage2) {
 							hasPAPBWB = true;
 							if (airsList[i][j][k] != 0) {
 								allBrokenFlg = false;
@@ -252,15 +234,8 @@ namespace AWSR.Models
 			for (int i = 0; i < unitCount; ++i) {
 				for (int j = 0; j < friend.Unit[i].Kammusu.Count; ++j) {
 					for (int k = 0; k < friend.Unit[i].Kammusu[j].Weapon.Count; ++k) {
-						string type = friend.Unit[i].Kammusu[j].Weapon[k].Type;
-						if(type != "艦上戦闘機"
-						&& type != "艦上攻撃機"
-						&& type != "艦上爆撃機"
-						&& type != "水上爆撃機"
-						&& type != "水上戦闘機"
-						&& type != "噴式戦闘爆撃機") {
+						if (!friend.Unit[i].Kammusu[j].Weapon[k].IsStage1)
 							continue;
-						}
 						int breakCount = friendAirsList[i][j][k] * RandInt(St1FriendBreakMin[(int)airWarStatus], St1FriendBreakMax[(int)airWarStatus]) / 256;
 						friendAirsList[i][j][k] -= breakCount;
 					}
@@ -272,15 +247,8 @@ namespace AWSR.Models
 			for (int i = 0; i < unitCount; ++i) {
 				for (int j = 0; j < enemy.Unit[i].Kammusu.Count; ++j) {
 					for (int k = 0; k < enemy.Unit[i].Kammusu[j].Weapon.Count; ++k) {
-						string type = enemy.Unit[i].Kammusu[j].Weapon[k].Type;
-						if (type != "艦上戦闘機"
-						&& type != "艦上攻撃機"
-						&& type != "艦上爆撃機"
-						&& type != "水上爆撃機"
-						&& type != "水上戦闘機"
-						&& type != "噴式戦闘爆撃機") {
+						if (!enemy.Unit[i].Kammusu[j].Weapon[k].IsStage1)
 							continue;
-						}
 						// St1自軍と違い、未検証なので適当に整数一様乱数で処理しています
 						int breakCount = enemyAirsList[i][j][k] * RandInt(St1EnemyBreakMin[(int)airWarStatus], St1EnemyBreakMax[(int)airWarStatus]) / 100;
 						enemyAirsList[i][j][k] -= breakCount;
@@ -319,13 +287,8 @@ namespace AWSR.Models
 			for (int i = 0; i < unitCount; ++i) {
 				for (int j = 0; j < friend.Unit[i].Kammusu.Count; ++j) {
 					for (int k = 0; k < friend.Unit[i].Kammusu[j].Weapon.Count; ++k) {
-						string type = friend.Unit[i].Kammusu[j].Weapon[k].Type;
-						if (type != "艦上攻撃機"
-						&& type != "艦上爆撃機"
-						&& type != "水上爆撃機"
-						&& type != "噴式戦闘爆撃機") {
+						if (!friend.Unit[i].Kammusu[j].Weapon[k].IsStage2)
 							continue;
-						}
 						// 迎撃艦を選択する
 						int selectKammusuIndex = RandInt(0, breakPer.Count - 1);
 						// 割合撃墜
@@ -352,13 +315,8 @@ namespace AWSR.Models
 			for (int i = 0; i < unitCount; ++i) {
 				for (int j = 0; j < enemy.Unit[i].Kammusu.Count; ++j) {
 					for (int k = 0; k < enemy.Unit[i].Kammusu[j].Weapon.Count; ++k) {
-						string type = enemy.Unit[i].Kammusu[j].Weapon[k].Type;
-						if (type != "艦上攻撃機"
-						&& type != "艦上爆撃機"
-						&& type != "水上爆撃機"
-						&& type != "噴式戦闘爆撃機") {
+						if (!enemy.Unit[i].Kammusu[j].Weapon[k].IsStage2)
 							continue;
-						}
 						// 迎撃艦を選択する
 						int selectKammusuIndex = RandInt(0, breakPer.Count - 1);
 						// 割合撃墜

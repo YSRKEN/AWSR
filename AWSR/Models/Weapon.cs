@@ -44,12 +44,53 @@ namespace AWSR.Models
 				return type;
 			}
 		}
+
+		// St1で撃墜されうるか
+		private bool isStage1;
+		private bool CalcIsStage1() {
+			if (Type == "艦上戦闘機"
+			|| Type == "艦上攻撃機"
+			|| Type == "艦上爆撃機"
+			|| Type == "水上爆撃機"
+			|| Type == "水上戦闘機"
+			|| Type == "噴式戦闘爆撃機") {
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+		public bool IsStage1 {
+			get {
+				return isStage1;
+			}
+		}
+
+		// St2で撃墜されうるか
+		private bool isStage2;
+		private bool CalcIsStage2() {
+			if (Type == "艦上攻撃機"
+			|| Type == "艦上爆撃機"
+			|| Type == "水上爆撃機"
+			|| Type == "噴式戦闘爆撃機") {
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+		public bool IsStage2 {
+			get {
+				return isStage2;
+			}
+		}
 		// 対空値
 		public int AntiAir {
 			get {
 				return DataBase.Weapon(Id).AntiAir;
 			}
 		}
+		// 制空値
 		public List<int> airValue;
 		private List<int> CalcAirValue() {
 			var airValue = new List<int>();
@@ -71,14 +112,8 @@ namespace AWSR.Models
 			if (!DataBase.ContainsWeapon(Id))
 				return 0;
 			// 艦戦・艦攻・艦爆・水爆・水戦・噴式以外は制空値0とする
-			if (Type != "艦上戦闘機"
-			&& Type != "艦上攻撃機"
-			&& Type != "艦上爆撃機"
-			&& Type != "水上爆撃機"
-			&& Type != "水上戦闘機"
-			&& Type != "噴式戦闘爆撃機") {
+			if (!IsStage1)
 				return 0;
-			}
 			// 素対空値と改修度
 			double airValue = AntiAir;
 			switch (Type) {
@@ -117,6 +152,8 @@ namespace AWSR.Models
 		// 事前計算した値を確定させる
 		public void Complete() {
 			type = DataBase.Weapon(Id).Type;
+			isStage1 = CalcIsStage1();
+			isStage2 = CalcIsStage2();
 			airValue = CalcAirValue();
 		}
 	}
