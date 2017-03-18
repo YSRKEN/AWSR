@@ -5,7 +5,7 @@
 		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		xmlns:local="clr-namespace:AWSR.Views"
 		mc:Ignorable="d"
-		Title="AWSR Ver.0.8.1 (2017/03/18)" Height="400" Width="550" MinHeight="400" MinWidth="550">
+		Title="AWSR Ver.0.9.0 (2017/03/19)" Height="400" Width="550" MinHeight="400" MinWidth="550">
 	<Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition />
