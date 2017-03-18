@@ -77,6 +77,7 @@ namespace AWSR.Models
 					}
 					outputFleet.Unit.Add(tempUnit);
 				}
+				outputFleet.Complete();
 				return outputFleet;
 			}
 		}
