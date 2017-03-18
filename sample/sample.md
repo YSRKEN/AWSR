@@ -12,9 +12,11 @@
 |sample1_friend|防空最優先で固めた編成|
 |sample2_friend|5-4周回用の編成|
 |sample3_friend|6-5用の編成|
+|sample4_friend|2017冬E3用水上編成|
 |sample1_enemy|5-4(2マス目)の編成例|
 |sample2_enemy|6-5(Cマス・ラスダン)の編成例|
 |sample3_enemy|6-5(ボスMマス・ラスダン)の編成例|
+|sample4_enemy|2017冬E3甲(ボスマス・削り)の編成例|
 
 # ファイルフォーマットについて
 ## JSON形式(デッキビルダー形式)
