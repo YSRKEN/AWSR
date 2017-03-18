@@ -73,6 +73,30 @@ namespace AWSR.Models
 					}
 				}
 			}
+			// 艦娘のエイリアス名称を設定する
+			if (System.IO.File.Exists(@"ships_alias.csv")) {
+				using (var sr = new System.IO.StreamReader(@"ships_alias.csv")) {
+					while (!sr.EndOfStream) {
+						// 1行を読み込む
+						string line = sr.ReadLine();
+						// マッチさせてから各数値を取り出す
+						string pattern = "(?<Name>[^,]+),[^\\d,]*(?<Number>\\d+)";
+						var match = Regex.Match(line, pattern);
+						if (!match.Success) {
+							continue;
+						}
+						// 取り出した数値を元に、kammusuDictionaryに代入する
+						try {
+							string name = match.Groups["Name"].Value;
+							int number = int.Parse(match.Groups["Number"].Value);
+							kammusuNameDictionary[name] = number;
+						}
+						catch {
+							continue;
+						}
+					}
+				}
+			}
 			// 装備側のデータベースを読み込む
 			weaponDictionary = new Dictionary<int, WeaponData>();
 			weaponNameDictionary = new Dictionary<string, int>();
