@@ -215,26 +215,34 @@ namespace AWSR.Models
 			return breakPer;
 		}
 		// 固定撃墜量
-		public List<int> BreakFixed(CutInType cutInType) {
-			var breakFixed = new List<int>();
-			// 艦隊防空値
-			double fleetAntiAir = FleetAntiAir;
-			// 計算しつつ出力する
-			foreach (var unit in Unit.Select((v, i) => new { v, i })) {
-				foreach (var kammusu in unit.v.Kammusu) {
-					// 加重対空値
-					int weightAntiAir = kammusu.WeightAntiAir;
-					// 固定撃墜
-					double cf = (Unit.Count < 2 ? 1.0 : unit.i == 0 ? 0.72 : 0.48);
-					if (kammusu.IsKammusu) {
-						breakFixed.Add((int)((weightAntiAir + fleetAntiAir) * cf * CutInMulBonus[(int)cutInType] / 10));
-					}
-					else {
-						breakFixed.Add((int)((weightAntiAir + fleetAntiAir) * cf * CutInMulBonus[(int)cutInType] / 10.6));
+		private List<List<int>> breakFixed;
+		private List<List<int>> CalcBreakFixed() {
+			var breakFixed = new List<List<int>>();
+			for(int ci = 0; ci < (int)CutInType.Size; ++ci) {
+				var breakFixed2 = new List<int>();
+				// 艦隊防空値
+				double fleetAntiAir = FleetAntiAir;
+				// 計算しつつ出力する
+				foreach (var unit in Unit.Select((v, i) => new { v, i })) {
+					foreach (var kammusu in unit.v.Kammusu) {
+						// 加重対空値
+						int weightAntiAir = kammusu.WeightAntiAir;
+						// 固定撃墜
+						double cf = (Unit.Count < 2 ? 1.0 : unit.i == 0 ? 0.72 : 0.48);
+						if (kammusu.IsKammusu) {
+							breakFixed2.Add((int)((weightAntiAir + fleetAntiAir) * cf * CutInMulBonus[ci] / 10));
+						}
+						else {
+							breakFixed2.Add((int)((weightAntiAir + fleetAntiAir) * cf * CutInMulBonus[ci] / 10.6));
+						}
 					}
 				}
+				breakFixed.Add(breakFixed2);
 			}
 			return breakFixed;
+		}
+		public List<int> BreakFixed(CutInType cutInType) {
+			return breakFixed[(int)cutInType];
 		}
 		// 対空カットイン情報
 		public string CutInText() {
@@ -308,6 +316,7 @@ namespace AWSR.Models
 		// 事前計算した値を確定させる
 		public void Complete() {
 			breakPer = CalcBreakPer();
+			breakFixed = CalcBreakFixed();
 		}
 		// コンストラクタ
 		public Fleet() {

@@ -47,7 +47,7 @@
 			None, Akiduki1, Akiduki2, Akiduki3, BattleShip1, Normal1,
 			BattleShip2, Normal2, Normal3, Normal4, Maya1, Maya2,
 			Normal5, Unknown, Isuzu1, Isuzu2, Kasumi1, Kasumi2,
-			Satsuki, Kinu1, Kinu2};
+			Satsuki, Kinu1, Kinu2, Size};
 		// 固定ボーナス
 		public static int[] CutInAddBonus = new int[] {
 			0,7,6,4,6,4,
