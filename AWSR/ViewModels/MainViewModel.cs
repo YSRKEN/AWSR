@@ -111,7 +111,15 @@ namespace AWSR.ViewModels
 		// 自艦隊のデータを作成する
 		private Fleet FriendFleet(string inputDeckBuilderText) {
 			// とりあえず読み込む
-			var friendFleet = DeckBuilder.ToFleet(inputDeckBuilderText);
+			Fleet friendFleet = null;
+			try {
+				// デッキビルダー形式と仮定
+				friendFleet = DeckBuilder.ToFleet(inputDeckBuilderText);
+			}
+			catch {
+				// 独自形式と仮定
+				friendFleet = FriendData.ToFleet(inputDeckBuilderText);
+			}
 			// 陣形を設定する
 			friendFleet.Formation = (Formation)friendFleetFormation;
 			// 艦隊の陣容を設定する
@@ -186,13 +194,13 @@ namespace AWSR.ViewModels
 		}
 		// 自艦隊の情報を表示する処理
 		private void ShowFriendFleetInfo() {
-			try {
+			//try {
 				var friendFleet = FriendFleet(InputDeckBuilderText);
 				MessageBox.Show($"【自艦隊】\n{friendFleet.InfoText()}", "AWSR");
-			}
-			catch {
-				MessageBox.Show("入力データに誤りがあります.", "AWSR", MessageBoxButton.OK, MessageBoxImage.Exclamation);
-			}
+			//}
+			//catch {
+			//	MessageBox.Show("入力データに誤りがあります.", "AWSR", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+			//}
 		}
 		// 敵艦隊の情報を表示する処理
 		private void ShowEnemyFleetInfo() {
@@ -297,7 +305,7 @@ namespace AWSR.ViewModels
 		// 動的解析を行う処理
 		private void RunMonteCarlo() {
 			string output = "";
-			//try {
+			try {
 				// 艦隊を読み込み
 				var friendFleet = FriendFleet(InputDeckBuilderText);
 				var enemyFleet = EnemyFleet(InputEnemyDataText);
@@ -319,10 +327,10 @@ namespace AWSR.ViewModels
 				var rvm = new ResultViewModel(nameList, histList);
 				rv.DataContext = rvm;
 				rv.Show();
-			//}
-			//catch {
-			//	output = "自艦隊 or 敵艦隊が正常に読み込めませんでした.";
-			//}
+			}
+			catch {
+				output = "自艦隊 or 敵艦隊が正常に読み込めませんでした.";
+			}
 			// 表示
 			MessageBox.Show(output, "AWSR");
 		}

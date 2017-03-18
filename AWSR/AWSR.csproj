@@ -72,6 +72,7 @@
     <Compile Include="Models\DeepCopyHelper.cs" />
     <Compile Include="Models\EnemyData.cs" />
     <Compile Include="Models\Fleet.cs" />
+    <Compile Include="Models\FriendData.cs" />
     <Compile Include="Models\Kammusu.cs" />
     <Compile Include="Models\Simulator.cs" />
     <Compile Include="Models\Unit.cs" />
