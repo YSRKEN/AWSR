@@ -16,10 +16,14 @@ namespace AWSR.ViewModels
 		#region コマンドに関する処理
 		// デッキビルダーの画面を開く処理
 		public ICommand OpenDeckBuilderCommand { get; private set; }
+		// 基地航空隊を読み込む処理
+		public ICommand OpenLandBaseFileCommand { get; private set; }
 		// 敵艦隊を読み込む処理
 		public ICommand OpenEnemyFileCommand { get; private set; }
 		// 自艦隊の情報を表示する処理
 		public ICommand ShowFriendFleetInfoCommand { get; private set; }
+		// 基地航空隊の情報を表示する処理
+		public ICommand ShowLandBaseInfoCommand { get; private set; }
 		// 敵艦隊の情報を表示する処理
 		public ICommand ShowEnemyFleetInfoCommand { get; private set; }
 		// 制空値を表示する処理
@@ -175,11 +179,28 @@ namespace AWSR.ViewModels
 				System.Diagnostics.Process.Start("http://kancolle-calc.net/deckbuilder.html");
 			}
 		}
+		// 基地航空隊のデータを開く処理
+		private void OpenLandBaseFile() {
+			var ofd = new OpenFileDialog();
+			ofd.FileName = "enemy.bas";
+			ofd.Filter = "基地航空隊データファイル(*.bas)|*.bas|すべてのファイル(*.*)|*.*";
+			ofd.AddExtension = true;
+			if ((bool)ofd.ShowDialog()) {
+				try {
+					using (var stream = ofd.OpenFile())
+					using (var sr = new System.IO.StreamReader(stream))
+						InputAirBaseText = sr.ReadToEnd();
+				}
+				catch {
+					MessageBox.Show("基地航空隊データの読み込みに失敗しました.", "AWSR", MessageBoxButton.OK, MessageBoxImage.Warning);
+				}
+			}
+		}
 		// 敵艦隊のデータを開く処理
 		private void OpenEnemyFile() {
 			var ofd = new OpenFileDialog();
-			ofd.FileName = "enemy.json";
-			ofd.Filter = "敵艦隊データファイル(*.json)|*.json|敵艦隊データファイル(*.enm)|*.enm|すべてのファイル(*.*)|*.*";
+			ofd.FileName = "enemy.enm";
+			ofd.Filter = "敵艦隊データファイル(*.enm)|*.enm|敵艦隊データファイル(*.json)|*.json|すべてのファイル(*.*)|*.*";
 			ofd.AddExtension = true;
 			if ((bool)ofd.ShowDialog()) {
 				try {
@@ -194,13 +215,17 @@ namespace AWSR.ViewModels
 		}
 		// 自艦隊の情報を表示する処理
 		private void ShowFriendFleetInfo() {
-			//try {
+			try {
 				var friendFleet = FriendFleet(InputDeckBuilderText);
 				MessageBox.Show($"【自艦隊】\n{friendFleet.InfoText()}", "AWSR");
-			//}
-			//catch {
-			//	MessageBox.Show("入力データに誤りがあります.", "AWSR", MessageBoxButton.OK, MessageBoxImage.Exclamation);
-			//}
+			}
+			catch {
+				MessageBox.Show("入力データに誤りがあります.", "AWSR", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+			}
+		}
+		// 基地航空隊の情報を表示する処理
+		private void ShowLandBaseInfo() {
+
 		}
 		// 敵艦隊の情報を表示する処理
 		private void ShowEnemyFleetInfo() {
@@ -349,8 +374,10 @@ namespace AWSR.ViewModels
 			SimulationSizeIndex = 0;
 			// コマンドを登録する
 			OpenDeckBuilderCommand = new CommandBase(OpenDeckBuilder);
+			OpenLandBaseFileCommand = new CommandBase(OpenLandBaseFile);
 			OpenEnemyFileCommand = new CommandBase(OpenEnemyFile);
 			ShowFriendFleetInfoCommand = new CommandBase(ShowFriendFleetInfo);
+			ShowLandBaseInfoCommand = new CommandBase(ShowLandBaseInfo);
 			ShowEnemyFleetInfoCommand = new CommandBase(ShowEnemyFleetInfo);
 			ShowAirValueCommand = new CommandBase(ShowAirValue);
 			ShowAntiAirPowerCommand = new CommandBase(ShowAntiAirPower);

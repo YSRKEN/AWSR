@@ -49,13 +49,13 @@
 						<RowDefinition />
 					</Grid.RowDefinitions>
 					<Button Grid.Row="0" Content="ファイルから読み込み"
-							Height="24" Margin="10,10,10,5" HorizontalAlignment="Stretch" 
-							IsEnabled="False"/>
+							Height="24" Margin="10,10,10,5" HorizontalAlignment="Stretch"
+							Command="{Binding OpenLandBaseFileCommand}"/>
 					<TextBox Grid.Row="1" Text="{Binding InputAirBaseText}"
-							 Margin="10,5,10,5" HorizontalAlignment="Stretch"
-							 AcceptsReturn="True" AcceptsTab="True"
-							 HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" 
-							 IsEnabled="False"/>
+							Margin="10,5,10,5" HorizontalAlignment="Stretch"
+							AcceptsReturn="True" AcceptsTab="True"
+							HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"
+							/>
 				</Grid>
 			</GroupBox>
 			<GroupBox Grid.Column="2" Header="敵艦隊" Margin="5,0,10,5">
@@ -107,7 +107,8 @@
 							Command="{Binding ShowFriendFleetInfoCommand}"
 							FontSize="14" Margin="5,5,5,5"/>
 					<Button Grid.Row="0" Grid.Column="1" Content="【基地航空隊】"
-							FontSize="14" Margin="5,5,5,5" IsEnabled="False"/>
+							FontSize="14" Margin="5,5,5,5"
+							Command="{Binding ShowLandBaseInfoCommand}"/>
 					<Button Grid.Row="0" Grid.Column="2" Content="【敵艦隊】"
 							Command="{Binding ShowEnemyFleetInfoCommand}"
 							FontSize="14" Margin="5,5,5,5"/>
