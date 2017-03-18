@@ -23,3 +23,6 @@ Air War Simulator Returns for Kantai Collection
 - 計算精度については保証しません
 - 当ソフトはまだプロトタイプです。チューニングしてないので処理速度が遅いです
 - 各種対空カットインの発動率はwikiとかを見ながら適当に設定しています
+
+# サンプルデータについて
+　sampleフォルダ内のsample.mdを参照してください
