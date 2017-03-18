@@ -49,6 +49,7 @@ namespace AWSR.Models
 							tempWeapon.Proficiency = 0;
 							tempKammusu.Weapon.Add(tempWeapon);
 						}
+						tempKammusu.Complete();
 						tempUnit.Kammusu.Add(tempKammusu);
 					}
 					outputFleet.Unit.Add(tempUnit);

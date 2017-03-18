@@ -72,6 +72,7 @@ namespace AWSR.Models
 							}
 							tempKammusu.Weapon.Add(tempWeapon);
 						}
+						tempKammusu.Complete();
 						tempUnit.Kammusu.Add(tempKammusu);
 					}
 					outputFleet.Unit.Add(tempUnit);
