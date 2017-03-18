@@ -111,8 +111,19 @@ namespace AWSR.Models
 					var airsUnit = new List<List<int>>();
 					foreach (var kammusu in unit.Kammusu) {
 						var airs = new List<int>();
-						foreach(int a in kammusu.Airs) {
-							airs.Add(a);
+						for (int i = 0; i < kammusu.SlotCount; ++i) {
+							string type = kammusu.Weapon[i].Type;
+							if (type != "艦上戦闘機"
+							&& type != "艦上攻撃機"
+							&& type != "艦上爆撃機"
+							&& type != "水上爆撃機"
+							&& type != "水上戦闘機"
+							&& type != "噴式戦闘爆撃機") {
+								airs.Add(0);
+							}
+							else {
+								airs.Add(kammusu.Airs[i]);
+							}
 						}
 						airsUnit.Add(airs);
 ;					}

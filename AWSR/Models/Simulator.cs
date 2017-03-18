@@ -222,7 +222,7 @@ namespace AWSR.Models
 				var kammusuList = fleet.Unit[ui].Kammusu;
 				for (int ki = 0; ki < kammusuList.Count; ++ki) {
 					var weaponList = kammusuList[ki].Weapon;
-					for (int wi = 0; wi < weaponList.Count; ++wi) {
+					for (int wi = 0; wi < kammusuList[ki].SlotCount; ++wi) {
 						airValue += weaponList[wi].AirValue(airslist[ui][ki][wi]);
 					}
 				}
