@@ -57,9 +57,10 @@ namespace AWSR.Models
 			}
 		}
 		// スロット数
+		private int slotCount;
 		public int SlotCount {
 			get {
-				return DataBase.Kammusu(Id).SlotCount;
+				return slotCount;
 			}
 		}
 		// 対空値
@@ -126,6 +127,7 @@ namespace AWSR.Models
 		// 事前計算した値を確定させる
 		public void Complete() {
 			cutInType = CalcCutInType();
+			slotCount = DataBase.Kammusu(Id).SlotCount;
 		}
 		private CutInType CalcCutInType() {
 			// 「効果が高い順」に判定する

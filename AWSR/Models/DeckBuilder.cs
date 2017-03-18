@@ -70,6 +70,7 @@ namespace AWSR.Models
 								tempWeapon.Improvement = 0;
 								tempWeapon.Proficiency = 0;
 							}
+							tempWeapon.Complete();
 							tempKammusu.Weapon.Add(tempWeapon);
 						}
 						tempKammusu.Complete();

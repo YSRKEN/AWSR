@@ -37,9 +37,10 @@ namespace AWSR.Models
 			}
 		}
 		// 種類
+		private string type;
 		public string Type {
 			get {
-				return DataBase.Weapon(Id).Type;
+				return type;
 			}
 		}
 		// 対空値
@@ -100,6 +101,10 @@ namespace AWSR.Models
 				break;
 			}
 			return (int)(airValue);
+		}
+		// 事前計算した値を確定させる
+		public void Complete() {
+			type = DataBase.Weapon(Id).Type;
 		}
 	}
 }
