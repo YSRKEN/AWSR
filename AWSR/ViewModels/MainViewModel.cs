@@ -180,7 +180,7 @@ namespace AWSR.ViewModels
 						InputEnemyDataText = sr.ReadToEnd();
 				}
 				catch {
-					MessageBox.Show("敵艦隊データの読み込みに失敗しました.", "航空戦シミュレーションR", MessageBoxButton.OK, MessageBoxImage.Warning);
+					MessageBox.Show("敵艦隊データの読み込みに失敗しました.", "AWSR", MessageBoxButton.OK, MessageBoxImage.Warning);
 				}
 			}
 		}
@@ -188,20 +188,20 @@ namespace AWSR.ViewModels
 		private void ShowFriendFleetInfo() {
 			try {
 				var friendFleet = FriendFleet(InputDeckBuilderText);
-				MessageBox.Show($"【自艦隊】\n{friendFleet.InfoText()}", "航空戦シミュレーションR");
+				MessageBox.Show($"【自艦隊】\n{friendFleet.InfoText()}", "AWSR");
 			}
 			catch {
-				MessageBox.Show("入力データに誤りがあります.", "航空戦シミュレーションR", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+				MessageBox.Show("入力データに誤りがあります.", "AWSR", MessageBoxButton.OK, MessageBoxImage.Exclamation);
 			}
 		}
 		// 敵艦隊の情報を表示する処理
 		private void ShowEnemyFleetInfo() {
 			try {
 				var enemyFleet = EnemyFleet(InputEnemyDataText);
-				MessageBox.Show($"【敵艦隊】\n{enemyFleet.InfoText()}", "航空戦シミュレーションR");
+				MessageBox.Show($"【敵艦隊】\n{enemyFleet.InfoText()}", "AWSR");
 			}
 			catch {
-				MessageBox.Show("入力データに誤りがあります.", "航空戦シミュレーションR", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+				MessageBox.Show("入力データに誤りがあります.", "AWSR", MessageBoxButton.OK, MessageBoxImage.Exclamation);
 			}
 		}
 		// 制空値を表示する処理
@@ -234,7 +234,7 @@ namespace AWSR.ViewModels
 				output += "(入力データに誤りがあります)";
 			}
 			// 表示
-			MessageBox.Show(output, "航空戦シミュレーションR");
+			MessageBox.Show(output, "AWSR");
 		}
 		// 撃墜計算を表示する処理
 		private void ShowAntiAirPower() {
@@ -267,7 +267,7 @@ namespace AWSR.ViewModels
 				output += "(入力データに誤りがあります)";
 			}
 			// 表示
-			MessageBox.Show(output, "航空戦シミュレーションR");
+			MessageBox.Show(output, "AWSR");
 		}
 		// 対空カットイン可否を表示する処理
 		private void ShowCutInType() {
@@ -292,7 +292,7 @@ namespace AWSR.ViewModels
 				output += "(入力データに誤りがあります)";
 			}
 			// 表示
-			MessageBox.Show(output, "航空戦シミュレーションR");
+			MessageBox.Show(output, "AWSR");
 		}
 		// 動的解析を行う処理
 		private void RunMonteCarlo() {
@@ -324,7 +324,7 @@ namespace AWSR.ViewModels
 				output = "自艦隊 or 敵艦隊が正常に読み込めませんでした.";
 			}
 			// 表示
-			MessageBox.Show(output, "航空戦シミュレーションR");
+			MessageBox.Show(output, "AWSR");
 		}
 		#endregion
 

@@ -26,7 +26,7 @@
 				DataBase.Initialize();
 			}
 			catch {
-				MessageBox.Show("データベースが正常に読み込めませんでした.\nアプリを終了します.", "航空戦シミュレーションR", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+				MessageBox.Show("データベースが正常に読み込めませんでした.\nアプリを終了します.", "AWSR", MessageBoxButton.OK, MessageBoxImage.Exclamation);
 				mv.Close();
 			}
 		}
