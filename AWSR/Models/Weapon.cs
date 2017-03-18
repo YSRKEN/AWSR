@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using static AWSR.Models.Constant;
 
 namespace AWSR.Models
@@ -49,12 +50,23 @@ namespace AWSR.Models
 				return DataBase.Weapon(Id).AntiAir;
 			}
 		}
+		public List<int> airValue;
+		private List<int> CalcAirValue() {
+			var airValue = new List<int>();
+			for(int i = 0; i < 300; ++i) {
+				airValue.Add(CalcAirValueImpl(i));
+			}
+			return airValue;
+		}
+		public int AirValue(int airSize) {
+			return airValue[airSize];
+		}
 		/// <summary>
 		/// その艦載機における制空値を計算する
 		/// </summary>
 		/// <param name="airSize">スロットの搭載数数</param>
 		/// <returns><制空値/returns>
-		public int AirValue(int airSize) {
+		private int CalcAirValueImpl(int airSize) {
 			// データベースに存在しない装備における制空値は0とする
 			if (!DataBase.ContainsWeapon(Id))
 				return 0;
@@ -105,6 +117,7 @@ namespace AWSR.Models
 		// 事前計算した値を確定させる
 		public void Complete() {
 			type = DataBase.Weapon(Id).Type;
+			airValue = CalcAirValue();
 		}
 	}
 }
