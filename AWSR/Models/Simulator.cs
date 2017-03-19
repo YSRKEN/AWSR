@@ -259,21 +259,20 @@ namespace AWSR.Models
 		// 対空カットインの種別を決定する
 		private static CutInType GetCutInType(Fleet fleet) {
 			// リストを取得する
-			var cutInList = new List<KeyValuePair<CutInType, double>>();
+			var cutInList = new List<CutInType>();
 			foreach (var unit in fleet.Unit) {
 				foreach (var kammusu in unit.Kammusu) {
 					var cutInType = kammusu.CutInType;
-					if (cutInType != CutInType.None) {
-						cutInList.Add(new KeyValuePair<CutInType, double>(cutInType, CutInPer[(int)cutInType]));
-					}
+					if (cutInType != CutInType.None)
+						cutInList.Add(cutInType);
 				}
 			}
 			// リストをソートする
-			cutInList.Sort((a, b) => (int)b.Key - (int)a.Key);
+			cutInList.Sort((a, b) => (int)b - (int)a);
 			// 上から順に判定する
 			foreach(var cutIn in cutInList) {
-				if(cutIn.Value > rand.NextDouble()) {
-					return cutIn.Key;
+				if(CutInPer[(int)cutIn] > rand.NextDouble()) {
+					return cutIn;
 				}
 			}
 			return CutInType.None;
