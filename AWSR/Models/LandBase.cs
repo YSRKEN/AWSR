@@ -66,7 +66,7 @@ namespace AWSR.Models
 			get {
 				int airValue = 0;
 				for(int wi = 0; wi < 4; ++wi) {
-					airValue += Weapon[wi].AirValue(Airs[wi]);
+					airValue += Weapon[wi].AirValueX(Airs[wi]);
 				}
 				return airValue;
 			}

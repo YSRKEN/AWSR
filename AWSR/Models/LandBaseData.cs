@@ -36,6 +36,8 @@ namespace AWSR.Models
 								tempWeapon.Proficiency = int.Parse(column[3 + i * 3]);
 								tempWeapon.Complete();
 								landBaseTeam.Weapon[i] = tempWeapon;
+								if (tempWeapon.Type.Contains("偵察機"))
+									landBaseTeam.Airs[i] = 4;
 							}
 						}
 						landBaseTeam.Complete();
