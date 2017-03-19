@@ -7,6 +7,8 @@ using static AWSR.Models.Constant;
 
 namespace AWSR.Models
 {
+	// LandBaseAirsList[中隊番号][装備番号]
+	using LandBaseAirsList = List<List<int>>;
 	/// <summary>
 	/// 基地航空隊クラス
 	/// </summary>
@@ -31,6 +33,20 @@ namespace AWSR.Models
 					output += $"{team.v.AirValue}";
 				}
 				return output;
+			}
+		}
+		// 全搭載数
+		public LandBaseAirsList AirsList {
+			get {
+				var airsList = new LandBaseAirsList();
+				foreach (var team in Team) {
+					var airs = new List<int>();
+					foreach (int a in team.Airs) {
+						airs.Add(a);
+					}
+					airsList.Add(airs);
+				}
+				return airsList;
 			}
 		}
 		// 情報テキスト
@@ -61,7 +77,7 @@ namespace AWSR.Models
 		public List<Weapon> Weapon { get; set; }
 		// 発艦数
 		public List<int> Airs { get; set; }
-		// 制空値を
+		// 制空値
 		public int AirValue {
 			get {
 				int airValue = 0;
