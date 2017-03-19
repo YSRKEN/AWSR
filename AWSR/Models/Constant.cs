@@ -8,11 +8,13 @@
 		public static readonly int MaxImprovement = 10;
 		public static readonly int MaxProficiency = 7;
 		// ステージ1の自軍撃墜割合
-		// (味方に比べて敵の撃墜割合はまだ検証中らしい)
 		public static int[] St1FriendBreakMin = { 7, 20, 30, 45, 65 };
 		public static int[] St1FriendBreakMax = { 15, 45, 75, 105, 150 };
-		public static int[] St1EnemyBreakMin = { 0, 0, 0, 0, 0 };
-		public static int[] St1EnemyBreakMax = { 100, 80, 60, 40, 10 };
+		// ステージ1の敵軍撃墜係数
+		// 空から降ってきたものを検証して適合することを確かめた格好
+		// https://docs.google.com/spreadsheets/d/1RTOztxst5pFGCi-Qr8dw6DZwYw0jd8fkymGg44dapAk/edit
+		// 計算用に数字を弄っている
+		public static int[] St1EnemyBreakConstant = { 10, 8, 6, 4, 1 };
 		#region 艦種
 		// ただし、浮遊要塞・護衛要塞・泊地棲鬼/姫・南方棲鬼は「重巡洋艦」、
 		// 南方棲戦鬼は「航空巡洋艦」、装甲空母鬼/姫・戦艦レ級は「航空戦艦」、
