@@ -305,21 +305,23 @@ namespace AWSR.Models
 					perList.Add(tempList1);
 				}
 			}
-			for (int ti = 0; ti < landBase.TeamCount; ++ti) {
-				nameList.Add($"基地-{ti + 1}");
-				var tempList1 = new List<List<double>>();
-				for (int wi = 0; wi < landBase.Team[ti].Weapon.Count; ++wi) {
-					if (landBaseLeaveAirsList[ti][wi].Count == 1)
-						continue;
-					if (!landBase.Team[ti].Weapon[wi].IsStage1X)
-						continue;
-					var tempList2 = new List<double>();
-					for (int m = 0; m < landBaseLeaveAirsList[ti][wi].Count; ++m) {
-						tempList2.Add(100.0 * landBaseLeaveAirsList[ti][wi][m] / simulationSize);
+			if(landBase != null) {
+				for (int ti = 0; ti < landBase.TeamCount; ++ti) {
+					nameList.Add($"基地-{ti + 1}");
+					var tempList1 = new List<List<double>>();
+					for (int wi = 0; wi < landBase.Team[ti].Weapon.Count; ++wi) {
+						if (landBaseLeaveAirsList[ti][wi].Count == 1)
+							continue;
+						if (!landBase.Team[ti].Weapon[wi].IsStage1X)
+							continue;
+						var tempList2 = new List<double>();
+						for (int m = 0; m < landBaseLeaveAirsList[ti][wi].Count; ++m) {
+							tempList2.Add(100.0 * landBaseLeaveAirsList[ti][wi][m] / simulationSize);
+						}
+						tempList1.Add(tempList2);
 					}
-					tempList1.Add(tempList2);
+					perList.Add(tempList1);
 				}
-				perList.Add(tempList1);
 			}
 			for (int i = 0; i < enemyLeaveAirsList.Count; ++i) {
 				for (int j = 0; j < enemyLeaveAirsList[i].Count; ++j) {
