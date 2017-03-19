@@ -376,7 +376,7 @@ namespace AWSR.ViewModels
 				rv = new ResultView();
 				List<string> nameList;
 				List<List<List<double>>> histList;
-				Simulator.ResultData(friendFleet, enemyFleet, simulationSize[SimulationSizeIndex], out nameList, out histList);
+				Simulator.ResultData(friendFleet, enemyFleet, landBase, simulationSize[SimulationSizeIndex], out nameList, out histList);
 				var rvm = new ResultViewModel(nameList, histList);
 				rv.DataContext = rvm;
 				rv.Show();

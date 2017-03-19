@@ -147,21 +147,21 @@ namespace AWSR.Models
 					for(int ai = 0; ai < landBase.AttackCount[ti]; ++ai) {
 						#region ステージ1：航空戦
 						// 制空値を計算する
-						int landBaseAirValue = NowAirValueX(landBase, landBaseAirsList, ai);
+						int landBaseAirValue = NowAirValueX(landBase, landBaseAirsList, ti);
 						int enemyAirValue_ = NowAirValueX(enemy, enemy.Unit.Count, enemyAirsList);
 						// 制空状態を判断する
 						AirWarStatus airWarStatus_ = CalcAirWarStatus(landBaseAirValue, enemyAirValue_);
 						// 割合撃墜を行う
 						if (landBase.TeamCount == 1 || ai == 1) {
 							++AirWarStatusCount[ti][(int)airWarStatus_];
-							St1LandBaseBreak(landBase, landBaseAirsList, ai, airWarStatus_);
+							St1LandBaseBreak(landBase, landBaseAirsList, ti, airWarStatus_);
 						}
 						St1EnemyBreak(enemy, enemy.Unit.Count, enemyAirsList, airWarStatus_);
 						#endregion
 						if (landBase.TeamCount == 1 || ai == 1) {
 							#region ステージ2：対空砲火
 							var enemyCutInType_ = GetCutInType(enemy);
-							St2LandBaseBreak(landBase, enemy, landBaseAirsList, ai, enemyCutInType_);
+							St2LandBaseBreak(landBase, enemy, landBaseAirsList, ti, enemyCutInType_);
 							#endregion
 						}
 					}
@@ -215,6 +215,16 @@ namespace AWSR.Models
 					}
 				}
 			}
+			output += "基地航空隊：\n";
+			for (int ti = 0; ti < landBase.TeamCount; ++ti) {
+				output += $"基地-{ti + 1}→{Math.Round(100.0 * landBaseList[ti] / simulationSize, 1)}％";
+				for (int wi = 0; wi < landBase.Team[ti].Weapon.Count; ++wi) {
+					if (firstLandBaseAirsList[ti][wi] > 0) {
+						output += $"　{wi + 1}：[{Math.Round(100.0 * landBaseLeaveAirsList[ti][wi][0] / simulationSize, 1)}％]";
+					}
+				}
+				output += "\n";
+			}
 			output += "敵艦隊：\n";
 			for (int i = 0; i < enemyKammusuList.Count; ++i) {
 				for (int j = 0; j < enemyKammusuList[i].Count; ++j) {
@@ -253,6 +263,63 @@ namespace AWSR.Models
 					}
 					perList.Add(tempList1);
 				}
+			}
+			for (int i = 0; i < enemyLeaveAirsList.Count; ++i) {
+				for (int j = 0; j < enemyLeaveAirsList[i].Count; ++j) {
+					nameList.Add($"{i + 1}-{j + 1} {enemyFleet.Unit[i].Kammusu[j].Name}");
+					var tempList1 = new List<List<double>>();
+					for (int k = 0; k < enemyFleet.Unit[i].Kammusu[j].SlotCount; ++k) {
+						if (enemyLeaveAirsList[i][j][k].Count == 1)
+							continue;
+						if (!enemyFleet.Unit[i].Kammusu[j].Weapon[k].IsStage1)
+							continue;
+						var tempList2 = new List<double>();
+						for (int m = 0; m < enemyLeaveAirsList[i][j][k].Count; ++m) {
+							tempList2.Add(100.0 * enemyLeaveAirsList[i][j][k][m] / simulationSize);
+						}
+						tempList1.Add(tempList2);
+					}
+					perList.Add(tempList1);
+				}
+			}
+		}
+		// 結果を出力する
+		public static void ResultData(Fleet friendFleet, Fleet enemyFleet, LandBase landBase, int simulationSize, out List<string> nameList, out List<List<List<double>>> perList) {
+			nameList = new List<string>();
+			perList = new List<List<List<double>>>();
+			for (int i = 0; i < friendLeaveAirsList.Count; ++i) {
+				for (int j = 0; j < friendLeaveAirsList[i].Count; ++j) {
+					nameList.Add($"{i + 1}-{j + 1} {friendFleet.Unit[i].Kammusu[j].Name}");
+					var tempList1 = new List<List<double>>();
+					for (int k = 0; k < friendFleet.Unit[i].Kammusu[j].SlotCount; ++k) {
+						if (friendLeaveAirsList[i][j][k].Count == 1)
+							continue;
+						if (!friendFleet.Unit[i].Kammusu[j].Weapon[k].IsStage1)
+							continue;
+						var tempList2 = new List<double>();
+						for (int m = 0; m < friendLeaveAirsList[i][j][k].Count; ++m) {
+							tempList2.Add(100.0 * friendLeaveAirsList[i][j][k][m] / simulationSize);
+						}
+						tempList1.Add(tempList2);
+					}
+					perList.Add(tempList1);
+				}
+			}
+			for (int ti = 0; ti < landBase.TeamCount; ++ti) {
+				nameList.Add($"基地-{ti + 1}");
+				var tempList1 = new List<List<double>>();
+				for (int wi = 0; wi < landBase.Team[ti].Weapon.Count; ++wi) {
+					if (landBaseLeaveAirsList[ti][wi].Count == 1)
+						continue;
+					if (!landBase.Team[ti].Weapon[wi].IsStage1X)
+						continue;
+					var tempList2 = new List<double>();
+					for (int m = 0; m < landBaseLeaveAirsList[ti][wi].Count; ++m) {
+						tempList2.Add(100.0 * landBaseLeaveAirsList[ti][wi][m] / simulationSize);
+					}
+					tempList1.Add(tempList2);
+				}
+				perList.Add(tempList1);
 			}
 			for (int i = 0; i < enemyLeaveAirsList.Count; ++i) {
 				for (int j = 0; j < enemyLeaveAirsList[i].Count; ++j) {
