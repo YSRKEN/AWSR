@@ -16,11 +16,27 @@ namespace AWSR.Models
 		public List<LandBaseTeam> Team { get; set; }
 		// 攻撃回数
 		public List<int> AttackCount { get; set; }
+		// 中隊の数
+		public int TeamCount {
+			get {
+				return Team.Count;
+			}
+		}
+		// 制空値
+		public string AirValueText {
+			get {
+				string output = "";
+				foreach (var team in Team.Select((v, i) => new { v, i })) {
+					output += (team.i != 0 ? "," : "");
+					output += $"{team.v.AirValue}";
+				}
+				return output;
+			}
+		}
 		// 情報テキスト
 		public string InfoText() {
 			string output = "";
-			int teamCount = Team.Count;
-			for(int ti = 0; ti < teamCount; ++ti) {
+			for(int ti = 0; ti < TeamCount; ++ti) {
 				output += $"({ti + 1})";
 				output += (AttackCount[ti] == 2 ? "集中" : "分散");
 				foreach (var weapon in Team[ti].Weapon.Select((v, i) => new { v, i })) {
@@ -45,6 +61,16 @@ namespace AWSR.Models
 		public List<Weapon> Weapon { get; set; }
 		// 発艦数
 		public List<int> Airs { get; set; }
+		// 制空値を
+		public int AirValue {
+			get {
+				int airValue = 0;
+				for(int wi = 0; wi < 4; ++wi) {
+					airValue += Weapon[wi].AirValue(Airs[wi]);
+				}
+				return airValue;
+			}
+		}
 		// 計算可能な値を事前に計算しておく
 		public void Complete() {
 
