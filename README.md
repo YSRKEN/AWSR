@@ -1,6 +1,15 @@
 # AWSR
 Air War Simulator Returns for Kantai Collection
 
+# 概要
+- 艦これにおける航空戦をシミュレートして、次のような結果を返します。
+  - 基地航空隊および本隊と敵艦隊との交戦による、各交戦状態の確率
+  - 空母の各スロットにおける全滅率、および攻撃可能な艦載機が全滅する確率(棒立ち率)
+  - 艦娘・基地航空隊・深海棲艦における各スロットの残存分布のグラフ表示
+- このソフトウェアを作成するため、次のソフトウェアを参考にしました。
+  - [pokopii](https://twitter.com/galpokopii)氏の「基地航空隊シミュレーション」
+  - [さかさま](https://twitter.com/mif_syo)氏の「[航空戦シミュレーション](http://ux.getuploader.com/airwarfaresimulation/download/31/dist.zip)」
+
 # 操作説明
 - **見たままです**
 
