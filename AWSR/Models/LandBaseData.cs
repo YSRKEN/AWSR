@@ -11,12 +11,12 @@ namespace AWSR.Models
 		/// <summary>
 		/// 入力された文字列を大艦隊クラスに変換する
 		/// </summary>
-		/// <param name="inputEnemyDataText">文字列</param>
+		/// <param name="inputAirBaseText">文字列</param>
 		/// <returns>大艦隊クラス</returns>
-		public static LandBase ToLandBase(string inputEnemyDataText) {
+		public static LandBase ToLandBase(string inputAirBaseText) {
 			var landbase = new LandBase();
 			// bas形式と考えて読み込む
-			using (var rs = new System.IO.StringReader(inputEnemyDataText)) {
+			using (var rs = new System.IO.StringReader(inputAirBaseText)) {
 				while (rs.Peek() > -1) {
 					try {
 						string getLine = rs.ReadLine();

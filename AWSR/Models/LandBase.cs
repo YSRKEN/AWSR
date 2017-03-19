@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static AWSR.Models.Constant;
 
 namespace AWSR.Models
 {
@@ -15,10 +16,27 @@ namespace AWSR.Models
 		public List<LandBaseTeam> Team { get; set; }
 		// 攻撃回数
 		public List<int> AttackCount { get; set; }
+		// 情報テキスト
 		public string InfoText() {
 			string output = "";
-
+			int teamCount = Team.Count;
+			for(int ti = 0; ti < teamCount; ++ti) {
+				output += $"({ti + 1})";
+				output += (AttackCount[ti] == 2 ? "集中" : "分散");
+				foreach (var weapon in Team[ti].Weapon.Select((v, i) => new { v, i })) {
+					output += (weapon.i == 0 ? "　" : ",");
+					output += weapon.v.Name;
+					output += ToMasStr(weapon.v.Proficiency);
+					output += (weapon.v.Improvement > 0 ? $"★{weapon.v.Improvement}" : "");
+				}
+				output += "\n";
+			}
 			return output;
+		}
+		// コンストラクタ
+		public LandBase() {
+			Team = new List<LandBaseTeam>();
+			AttackCount = new List<int>();
 		}
 	}
 	class LandBaseTeam

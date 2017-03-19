@@ -171,7 +171,7 @@ namespace AWSR.ViewModels
 		}
 		private LandBase LandBaseFleet(string inputAirBaseText) {
 			// とりあえず読み込む
-			var landBase = LandBaseData.ToLandBase(inputEnemyDataText);
+			var landBase = LandBaseData.ToLandBase(inputAirBaseText);
 			return landBase;
 		}
 		// デッキビルダーの画面を開く処理
@@ -230,13 +230,13 @@ namespace AWSR.ViewModels
 		}
 		// 基地航空隊の情報を表示する処理
 		private void ShowLandBaseInfo() {
-			try {
+			//try {
 				var landBase = LandBaseFleet(InputAirBaseText);
 				MessageBox.Show($"【基地航空隊】\n{landBase.InfoText()}", "AWSR");
-			}
-			catch {
-				MessageBox.Show("入力データに誤りがあります.", "AWSR", MessageBoxButton.OK, MessageBoxImage.Exclamation);
-			}
+			//}
+			//catch {
+			//	MessageBox.Show("入力データに誤りがあります.", "AWSR", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+			//}
 		}
 		// 敵艦隊の情報を表示する処理
 		private void ShowEnemyFleetInfo() {
