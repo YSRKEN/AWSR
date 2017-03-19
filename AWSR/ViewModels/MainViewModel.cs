@@ -78,7 +78,6 @@ namespace AWSR.ViewModels
 			}
 		}
 		// 基地航空隊を使用するか？
-		bool isLandBaseUse;
 		public bool IsLandBaseUse { get; set; }
 		// 入力する敵艦隊のデータ
 		string inputEnemyDataText;
