@@ -244,13 +244,15 @@ namespace AWSR.Models
 		}
 		// ステージ1撃墜処理(敵軍)
 		private static void St1EnemyBreak(Fleet enemy, int unitCount, AirsList enemyAirsList, AirWarStatus airWarStatus) {
+			int St1EnemyBreakConstantNow = St1EnemyBreakConstant[(int)airWarStatus];
 			for (int i = 0; i < unitCount; ++i) {
 				for (int j = 0; j < enemy.Unit[i].Kammusu.Count; ++j) {
 					for (int k = 0; k < enemy.Unit[i].Kammusu[j].Weapon.Count; ++k) {
 						if (!enemy.Unit[i].Kammusu[j].Weapon[k].IsStage1)
 							continue;
-						// St1自軍と違い、未検証なので適当に整数一様乱数で処理しています
-						int breakCount = enemyAirsList[i][j][k] * RandInt(St1EnemyBreakMin[(int)airWarStatus], St1EnemyBreakMax[(int)airWarStatus]) / 100;
+						// 例の式で計算
+						// https://docs.google.com/spreadsheets/d/1RTOztxst5pFGCi-Qr8dw6DZwYw0jd8fkymGg44dapAk/edit
+						int breakCount = (int)(enemyAirsList[i][j][k] * (0.35 * RandInt(0, St1EnemyBreakConstantNow) + 0.65 * RandInt(0, St1EnemyBreakConstantNow)) / 10);
 						enemyAirsList[i][j][k] -= breakCount;
 					}
 				}
