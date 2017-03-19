@@ -49,6 +49,8 @@ namespace AWSR.Models
 					}
 				}
 			}
+			if (landbase.TeamCount <= 0)
+				throw new Exception();
 			return landbase;
 		}
 	}

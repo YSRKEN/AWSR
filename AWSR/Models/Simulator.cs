@@ -19,7 +19,7 @@ namespace AWSR.Models
 		private static LeaveAirsList friendLeaveAirsList = null;
 		private static LeaveAirsList enemyLeaveAirsList = null;
 		// モンテカルロシミュレーションを行う
-		public static string MonteCarlo(Fleet friend, Fleet enemy, int simulationSize) {
+		public static string MonteCarlo(Fleet friend, Fleet enemy, LandBase landBase, int simulationSize) {
 			string output =  "【モンテカルロシミュレーション】\n";
 			output += $"反復回数：{simulationSize}回\n";
 			// 初期状態を記録する

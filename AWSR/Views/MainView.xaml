@@ -47,6 +47,7 @@
 					<Grid.RowDefinitions>
 						<RowDefinition Height="auto" />
 						<RowDefinition />
+						<RowDefinition Height="auto" />
 					</Grid.RowDefinitions>
 					<Button Grid.Row="0" Content="ファイルから読み込み"
 							Height="24" Margin="10,10,10,5" HorizontalAlignment="Stretch"
@@ -56,6 +57,8 @@
 							AcceptsReturn="True" AcceptsTab="True"
 							HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"
 							/>
+					<CheckBox Grid.Row="2" Margin="10,5,10,5" Content="基地航空隊を使用する"
+							  IsChecked="{Binding IsLandBaseUse}"/>
 				</Grid>
 			</GroupBox>
 			<GroupBox Grid.Column="2" Header="敵艦隊" Margin="5,0,10,5">

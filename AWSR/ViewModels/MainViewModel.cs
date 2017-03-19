@@ -77,6 +77,9 @@ namespace AWSR.ViewModels
 				NotifyPropertyChanged(nameof(InputAirBaseText));
 			}
 		}
+		// 基地航空隊を使用するか？
+		bool isLandBaseUse;
+		public bool IsLandBaseUse { get; set; }
 		// 入力する敵艦隊のデータ
 		string inputEnemyDataText;
 		public string InputEnemyDataText {
@@ -354,13 +357,17 @@ namespace AWSR.ViewModels
 			try {
 				// 艦隊を読み込み
 				var friendFleet = FriendFleet(InputDeckBuilderText);
+				LandBase landBase = null;
+				if (IsLandBaseUse) {
+					landBase = LandBaseFleet(InputAirBaseText);
+				}
 				var enemyFleet = EnemyFleet(InputEnemyDataText);
 				// 時間を記録する
 				var sw = new System.Diagnostics.Stopwatch();
 				sw.Start();
 				// モンテカルロシミュレーションを行う
 				var simulationSize = new int[]{ 10000, 100000, 1000000, 10000000, 100000000};
-				output = Simulator.MonteCarlo(friendFleet, enemyFleet, simulationSize[SimulationSizeIndex]);
+				output = Simulator.MonteCarlo(friendFleet, enemyFleet, landBase, simulationSize[SimulationSizeIndex]);
 				// 先頭に計算時間を追加する
 				sw.Stop();
 				output = $"経過時間：{Math.Round(sw.Elapsed.TotalSeconds, 1)}秒\n" + output;
@@ -389,6 +396,7 @@ namespace AWSR.ViewModels
 			FriendFleetType = 0;
 			FriendFleetFormation = 0;
 			InputAirBaseText = "航空戦回数,装備1,改修1,熟練1,装備2,改修2,熟練2,装備3,改修3,熟練3,装備4,改修4,熟練4\n2,零式艦戦52型(熟練),10,7,一式陸攻 二二型甲,0,0,一式陸攻 三四型,0,0,一式陸攻 三四型,0,0\n2,零式艦戦52型(熟練),10,7,銀河,0,0,一式陸攻 二二型甲,0,0,一式陸攻(野中隊),0,0\n";
+			IsLandBaseUse = false;
 			InputEnemyDataText = "輪形陣\n2\n深海双子棲姫-3,空母棲姫(艦載機赤),空母棲姫(艦載機赤),戦艦タ級flagship,戦艦タ級flagship,補給ワ級flagship\n軽巡ヘ級flagship,軽巡ツ級elite,駆逐ハ級後期型elite,駆逐ハ級後期型elite,駆逐ハ級後期型elite,駆逐ハ級後期型elite\n";
 			EnemyFleetType = 0;
 			EnemyFleetFormation = 0;
