@@ -169,6 +169,11 @@ namespace AWSR.ViewModels
 			}
 			return enemyFleet;
 		}
+		private LandBase LandBaseFleet(string inputAirBaseText) {
+			// とりあえず読み込む
+			var landBase = LandBaseData.ToLandBase(inputEnemyDataText);
+			return landBase;
+		}
 		// デッキビルダーの画面を開く処理
 		private void OpenDeckBuilder() {
 			try {
@@ -225,7 +230,13 @@ namespace AWSR.ViewModels
 		}
 		// 基地航空隊の情報を表示する処理
 		private void ShowLandBaseInfo() {
-
+			try {
+				var landBase = LandBaseFleet(InputAirBaseText);
+				MessageBox.Show($"【基地航空隊】\n{landBase.InfoText()}", "AWSR");
+			}
+			catch {
+				MessageBox.Show("入力データに誤りがあります.", "AWSR", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+			}
 		}
 		// 敵艦隊の情報を表示する処理
 		private void ShowEnemyFleetInfo() {
@@ -364,11 +375,11 @@ namespace AWSR.ViewModels
 		// コンストラクタ
 		public MainViewModel() {
 			// フィールドに初期値を設定する
-			InputDeckBuilderText = "{\"version\":4,\"f1\":{\"s1\":{\"id\":\"330\",\"lv\":99,\"luck\":-1,\"items\":{\"i1\":{\"id\":122,\"rf\":\"10\"},\"i2\":{\"id\":122,\"rf\":\"10\"},\"i3\":{\"id\":106,\"rf\":\"10\"}}},\"s2\":{\"id\":\"346\",\"lv\":99,\"luck\":-1,\"items\":{\"i1\":{\"id\":122,\"rf\":\"10\"},\"i2\":{\"id\":122,\"rf\":\"10\"},\"i3\":{\"id\":106,\"rf\":\"10\"}}},\"s3\":{\"id\":\"357\",\"lv\":99,\"luck\":-1,\"items\":{\"i1\":{\"id\":122,\"rf\":\"10\"},\"i2\":{\"id\":122,\"rf\":\"10\"},\"i3\":{\"id\":106,\"rf\":\"10\"}}},\"s4\":{\"id\":\"428\",\"lv\":99,\"luck\":-1,\"items\":{\"i1\":{\"id\":135,\"rf\":\"10\"},\"i2\":{\"id\":173,\"rf\":0},\"i3\":{\"id\":124,\"rf\":0},\"i4\":{\"id\":135,\"rf\":\"10\"}}},\"s5\":{\"id\":\"278\",\"lv\":99,\"luck\":-1,\"items\":{\"i1\":{\"id\":191,\"rf\":0},\"i2\":{\"id\":53,\"rf\":0,\"mas\":7},\"i3\":{\"id\":157,\"rf\":0,\"mas\":7},\"i4\":{\"id\":189,\"rf\":0,\"mas\":7}}},\"s6\":{\"id\":\"461\",\"lv\":99,\"luck\":-1,\"items\":{\"i1\":{\"id\":191,\"rf\":0},\"i2\":{\"id\":110,\"rf\":0,\"mas\":7},\"i3\":{\"id\":56,\"rf\":0,\"mas\":7},\"i4\":{\"id\":110,\"rf\":0,\"mas\":7}}}}}";
+			InputDeckBuilderText = "艦隊,艦番,艦名,レベル,装備1,改修1,熟練1,装備2,改修2,熟練2,装備3,改修3,熟練3,装備4,改修4,熟練4,装備X,改修X,熟練X\n1,1,Iowa改,142,試製46cm連装砲,10,0,16inch三連装砲 Mk.7,10,0,紫雲,0,7,九一式徹甲弾,10,0,応急修理要員,0,0\n1,2,Italia,139,381mm/50 三連装砲,6,0,381mm/50 三連装砲,5,0,紫雲,0,7,一式徹甲弾,6,0,応急修理要員,0,0\n1,3,Roma改,140,381mm/50 三連装砲,5,0,381mm/50 三連装砲,6,0,紫雲,0,7,二式水戦改,0,7,応急修理要員,0,0\n1,4,Bismarck drei,153,38cm連装砲改,10,0,16inch三連装砲 Mk.7,6,0,紫雲,0,7,九一式徹甲弾,10,0,応急修理要員,0,0\n1,5,千歳航改二,133,零式艦戦53型(岩本隊),10,7,烈風改,0,7,烈風改,0,7,零式艦戦52型(熟練),10,7,応急修理要員,0,0\n1,6,千代田航改二,134,烈風(六〇一空),0,7,烈風改,0,7,零式艦戦52型(熟練),10,7,彩雲,0,7,応急修理要員,0,0\n2,1,綾波改二,125,61cm五連装(酸素)魚雷,4,0,61cm五連装(酸素)魚雷,6,0,探照灯,10,0,,,,応急修理要員,0,0\n2,2,摩耶改二,128,90mm単装高角砲,10,0,13号対空電探改,10,0,61cm五連装(酸素)魚雷,4,0,61cm五連装(酸素)魚雷,0,0,25mm三連装機銃 集中配備,8,0\n2,3,夕立改二,147,試製61cm六連装(酸素)魚雷,7,0,試製61cm六連装(酸素)魚雷,10,0,照明弾,0,0,,,,応急修理要員,0,0\n2,4,阿武隈改二,138,61cm五連装(酸素)魚雷,4,0,61cm五連装(酸素)魚雷,4,0,甲標的,0,0,,,,応急修理要員,0,0\n2,5,Prinz Eugen改,150,20.3cm(3号)連装砲,10,0,61cm五連装(酸素)魚雷,7,0,九八式水上偵察機(夜偵),10,7,61cm五連装(酸素)魚雷,6,0,応急修理要員,0,0\n2,6,北上改二,141,61cm五連装(酸素)魚雷,0,0,61cm五連装(酸素)魚雷,0,0,甲標的,0,0,,,,応急修理要員,0,0\n";
 			FriendFleetType = 0;
 			FriendFleetFormation = 0;
-			InputAirBaseText = "";
-			InputEnemyDataText = "{\n\t\"formation\": \"circle\",\n	\"fleet\": [\n\t\t[544,544,528,554,515,515]\n\t]\n}\n";
+			InputAirBaseText = "航空戦回数,装備1,改修1,熟練1,装備2,改修2,熟練2,装備3,改修3,熟練3,装備4,改修4,熟練4\n2,零式艦戦52型(熟練),10,7,一式陸攻 二二型甲,0,7,一式陸攻 三四型,0,7,一式陸攻 三四型,0,7\n2,零式艦戦52型(熟練),10,7,銀河,0,7,一式陸攻 二二型甲,0,7,一式陸攻(野中隊),0,7\n";
+			InputEnemyDataText = "輪形陣\n2\n深海双子棲姫-3,空母棲姫(艦載機赤),空母棲姫(艦載機赤),戦艦タ級flagship,戦艦タ級flagship,補給ワ級flagship\n軽巡ヘ級flagship,軽巡ツ級elite,駆逐ハ級後期型elite,駆逐ハ級後期型elite,駆逐ハ級後期型elite,駆逐ハ級後期型elite\n";
 			EnemyFleetType = 0;
 			EnemyFleetFormation = 0;
 			SimulationSizeIndex = 0;

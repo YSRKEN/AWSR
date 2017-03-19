@@ -74,6 +74,8 @@
     <Compile Include="Models\Fleet.cs" />
     <Compile Include="Models\FriendData.cs" />
     <Compile Include="Models\Kammusu.cs" />
+    <Compile Include="Models\LandBase.cs" />
+    <Compile Include="Models\LandBaseData.cs" />
     <Compile Include="Models\Simulator.cs" />
     <Compile Include="Models\Unit.cs" />
     <Compile Include="Models\Weapon.cs" />
