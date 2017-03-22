@@ -249,7 +249,6 @@ namespace AWSR.Models
 			perList = new List<List<List<double>>>();
 			for (int i = 0; i < friendLeaveAirsList.Count; ++i) {
 				for (int j = 0; j < friendLeaveAirsList[i].Count; ++j) {
-					nameList.Add($"{i + 1}-{j + 1} {friendFleet.Unit[i].Kammusu[j].Name}");
 					var tempList1 = new List<List<double>>();
 					for (int k = 0; k < friendFleet.Unit[i].Kammusu[j].SlotCount; ++k) {
 						if (friendLeaveAirsList[i][j][k].Count == 1)
@@ -262,12 +261,14 @@ namespace AWSR.Models
 						}
 						tempList1.Add(tempList2);
 					}
-					perList.Add(tempList1);
+					if(tempList1.Count > 0) {
+						nameList.Add($"{i + 1}-{j + 1} {friendFleet.Unit[i].Kammusu[j].Name}");
+						perList.Add(tempList1);
+					}
 				}
 			}
 			for (int i = 0; i < enemyLeaveAirsList.Count; ++i) {
 				for (int j = 0; j < enemyLeaveAirsList[i].Count; ++j) {
-					nameList.Add($"{i + 1}-{j + 1} {enemyFleet.Unit[i].Kammusu[j].Name}");
 					var tempList1 = new List<List<double>>();
 					for (int k = 0; k < enemyFleet.Unit[i].Kammusu[j].SlotCount; ++k) {
 						if (enemyLeaveAirsList[i][j][k].Count == 1)
@@ -280,7 +281,10 @@ namespace AWSR.Models
 						}
 						tempList1.Add(tempList2);
 					}
-					perList.Add(tempList1);
+					if (tempList1.Count > 0) {
+						nameList.Add($"{i + 1}-{j + 1} {enemyFleet.Unit[i].Kammusu[j].Name}");
+						perList.Add(tempList1);
+					}
 				}
 			}
 		}
@@ -290,7 +294,6 @@ namespace AWSR.Models
 			perList = new List<List<List<double>>>();
 			for (int i = 0; i < friendLeaveAirsList.Count; ++i) {
 				for (int j = 0; j < friendLeaveAirsList[i].Count; ++j) {
-					nameList.Add($"{i + 1}-{j + 1} {friendFleet.Unit[i].Kammusu[j].Name}");
 					var tempList1 = new List<List<double>>();
 					for (int k = 0; k < friendFleet.Unit[i].Kammusu[j].SlotCount; ++k) {
 						if (friendLeaveAirsList[i][j][k].Count == 1)
@@ -303,7 +306,10 @@ namespace AWSR.Models
 						}
 						tempList1.Add(tempList2);
 					}
-					perList.Add(tempList1);
+					if (tempList1.Count > 0) {
+						nameList.Add($"{i + 1}-{j + 1} {friendFleet.Unit[i].Kammusu[j].Name}");
+						perList.Add(tempList1);
+					}
 				}
 			}
 			if(landBase != null) {
@@ -326,7 +332,6 @@ namespace AWSR.Models
 			}
 			for (int i = 0; i < enemyLeaveAirsList.Count; ++i) {
 				for (int j = 0; j < enemyLeaveAirsList[i].Count; ++j) {
-					nameList.Add($"{i + 1}-{j + 1} {enemyFleet.Unit[i].Kammusu[j].Name}");
 					var tempList1 = new List<List<double>>();
 					for (int k = 0; k < enemyFleet.Unit[i].Kammusu[j].SlotCount; ++k) {
 						if (enemyLeaveAirsList[i][j][k].Count == 1)
@@ -339,7 +344,10 @@ namespace AWSR.Models
 						}
 						tempList1.Add(tempList2);
 					}
-					perList.Add(tempList1);
+					if (tempList1.Count > 0) {
+						nameList.Add($"{i + 1}-{j + 1} {enemyFleet.Unit[i].Kammusu[j].Name}");
+						perList.Add(tempList1);
+					}
 				}
 			}
 		}
@@ -422,7 +430,6 @@ namespace AWSR.Models
 				}
 			}
 		}
-
 		// 記録する
 		private static void MemoLeaveList(LandBase landBase, LandBaseAirsList landBaseAirsList, LandBaseList landBaseList, LeaveLandBaseAirsList landBaseLeaveAirsList) {
 			for (int ti = 0; ti < landBaseAirsList.Count; ++ti) {
@@ -442,7 +449,6 @@ namespace AWSR.Models
 				}
 			}
 		}
-
 		// 現在の制空値を計算する
 		private static int NowAirValue(Fleet fleet, int unitCount, AirsList airslist) {
 			int airValue = 0;
