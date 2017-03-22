@@ -29,3 +29,10 @@ Air War Simulator Returns for Kantai Collection
 
 # サンプルデータについて
 　sampleフォルダ内のsample.mdを参照してください
+
+# ライセンス
+
+|パート|作成者|ライセンス|
+|------|------|----------|
+|コード本体|YSR|MIT License|
+|乱数生成コード|Rei Hobara|MIT License|
