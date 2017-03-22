@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Rei.Random;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using static AWSR.Models.Constant;
@@ -19,7 +20,7 @@ namespace AWSR.Models
 	using LeaveLandBaseAirsList = List<List<List<int>>>;
 	static class Simulator
 	{
-		private static Random rand = null;
+		private static CompatilizedRandom rand = null;
 		private static KammusuList friendKammusuList = null;
 		private static KammusuList enemyKammusuList = null;
 		private static LeaveAirsList friendLeaveAirsList = null;
@@ -344,7 +345,7 @@ namespace AWSR.Models
 		}
 		// 乱数を初期化する
 		public static void Initialize() {
-			rand = new Random();
+			rand = new CompatilizedRandom(new SFMT());
 		}
 		// [a,b]の整数一様乱数を作成する
 		private static int RandInt(int a, int b) {
