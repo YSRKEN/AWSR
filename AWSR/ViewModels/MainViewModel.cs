@@ -16,6 +16,10 @@ namespace AWSR.ViewModels
 		#region コマンドに関する処理
 		// デッキビルダーの画面を開く処理
 		public ICommand OpenDeckBuilderCommand { get; private set; }
+		// デッキビルダー形式でコピーする処理
+		public ICommand CopyDeckBuilderFormatCommand { get; private set; }
+		// 独自形式でコピーする処理
+		public ICommand CopyFriendDataFormatCommand { get; private set; }
 		// 基地航空隊を読み込む処理
 		public ICommand OpenLandBaseFileCommand { get; private set; }
 		// 敵艦隊を読み込む処理
@@ -186,6 +190,37 @@ namespace AWSR.ViewModels
 				System.Diagnostics.Process.Start("http://kancolle-calc.net/deckbuilder.html");
 			}
 		}
+		// 
+		private void CopyDeckBuilderFormat() {
+			Fleet friendFleet = null;
+			try {
+				friendFleet = FriendFleet(InputDeckBuilderText);
+			}
+			catch {
+				MessageBox.Show("入力データに誤りがあります.", "AWSR", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+			}
+			try {
+				Clipboard.SetText(friendFleet.ToDeckBuilderText());
+			}
+			catch {
+				MessageBox.Show("クリップボードにコピーできませんでした.", "AWSR", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+			}
+		}
+		private void CopyFriendDataFormat() {
+			Fleet friendFleet = null;
+			try {
+				friendFleet = FriendFleet(InputDeckBuilderText);
+			}
+			catch {
+				MessageBox.Show("入力データに誤りがあります.", "AWSR", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+			}
+			try {
+				Clipboard.SetText(friendFleet.ToFriendDataText());
+			}
+			catch {
+				MessageBox.Show("クリップボードにコピーできませんでした.", "AWSR", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+			}
+		}
 		// 基地航空隊のデータを開く処理
 		private void OpenLandBaseFile() {
 			var ofd = new OpenFileDialog();
@@ -353,7 +388,7 @@ namespace AWSR.ViewModels
 		// 動的解析を行う処理
 		private void RunMonteCarlo() {
 			string output = "";
-			//try {
+			try {
 				// 艦隊を読み込み
 				var friendFleet = FriendFleet(InputDeckBuilderText);
 				LandBase landBase = null;
@@ -380,10 +415,10 @@ namespace AWSR.ViewModels
 				rv.DataContext = rvm;
 				rvm.SetDelegate(rv.DrawChart);
 				rv.Show();
-			//}
-			//catch {
-			//	output = "自艦隊 or 敵艦隊が正常に読み込めませんでした.";
-			//}
+			}
+			catch {
+				output = "自艦隊 or 敵艦隊が正常に読み込めませんでした.";
+			}
 			// 表示
 			MessageBox.Show(output, "AWSR");
 		}
@@ -403,6 +438,8 @@ namespace AWSR.ViewModels
 			SimulationSizeIndex = 0;
 			// コマンドを登録する
 			OpenDeckBuilderCommand = new CommandBase(OpenDeckBuilder);
+			CopyDeckBuilderFormatCommand = new CommandBase(CopyDeckBuilderFormat);
+			CopyFriendDataFormatCommand = new CommandBase(CopyFriendDataFormat);
 			OpenLandBaseFileCommand = new CommandBase(OpenLandBaseFile);
 			OpenEnemyFileCommand = new CommandBase(OpenEnemyFile);
 			ShowFriendFleetInfoCommand = new CommandBase(ShowFriendFleetInfo);

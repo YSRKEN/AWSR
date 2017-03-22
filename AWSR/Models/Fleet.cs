@@ -293,6 +293,12 @@ namespace AWSR.Models
 			// 出力
 			return output;
 		}
+		// 独自形式のテキストに変換
+		public string ToFriendDataText() {
+			string output = "";
+			//スタブ
+			return output;
+		}
 		// 迎撃可能な艦娘一覧
 		public List<Kammusu> AvailableKammusu {
 			get {
