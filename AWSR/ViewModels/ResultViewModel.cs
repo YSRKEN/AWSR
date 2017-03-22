@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Windows;
 using System.Windows.Input;
+using System.Linq;
 
 namespace AWSR.ViewModels
 {
+	delegate void copyChart();
 	delegate void drawChart(List<List<double>> drawHist);
 	class ResultViewModel : ViewModelBase
 	{
@@ -12,6 +15,10 @@ namespace AWSR.ViewModels
 		public ICommand ClickListBoxCommand { get; private set; }
 		// チェックボックスをクリックした際の動作
 		public ICommand ClickCheckBoxCommand { get; private set; }
+		// テキストをコピー
+		public ICommand CopyTextCommand { get; private set; }
+		// 画像をコピー
+		public ICommand CopyPictureCommand { get; private set; }
 
 		#region プロパティ
 		// 画面左のリストボックス
@@ -72,6 +79,7 @@ namespace AWSR.ViewModels
 			}
 		}
 		public drawChart DrawChart { get; set; }
+		public copyChart CopyChart { get; set; }
 		#endregion
 
 		#region メソッド
@@ -98,6 +106,49 @@ namespace AWSR.ViewModels
 			var drawHist = HistList[ListBoxSelectedIndex];
 			DrawChart(drawHist);
 		}
+		private void CopyText() {
+			if (ListBoxSelectedIndex < 0)
+				return;
+			try {
+				string output = $"{NameList[ListBoxSelectedIndex]}\n残存数";
+				var drawHist = HistList[ListBoxSelectedIndex];
+				for(int i = 0; i < drawHist.Count; ++i) {
+					output += $",{i + 1}スロット目";
+				}
+				output += "\n";
+				var temp = Enumerable.Repeat(0.0, drawHist.Count).ToList();
+				for(int n = 0; ; ++n) {
+					bool getDataFlg = false;
+					for(int i = 0; i < drawHist.Count; ++i) {
+						if(drawHist[i].Count > n) {
+							temp[i] += drawHist[i][n];
+							getDataFlg = true;
+						}
+					}
+					if (!getDataFlg)
+						break;
+					output += $"{n}";
+					for (int i = 0; i < drawHist.Count; ++i) {
+						output += $",{temp[i]}";
+					}
+					output += "\n";
+				}
+				Clipboard.SetText(output);
+			}
+			catch {
+				MessageBox.Show("クリップボードにコピーできませんでした.", "AWSR", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+			}
+		}
+		private void CopyPicture() {
+			if (ListBoxSelectedIndex < 0)
+				return;
+			try {
+				CopyChart();
+			}
+			catch {
+				MessageBox.Show("クリップボードにコピーできませんでした.", "AWSR", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+			}
+		}
 		#endregion
 
 		// コンストラクタ
@@ -109,9 +160,12 @@ namespace AWSR.ViewModels
 			// コマンドを初期化する
 			ClickListBoxCommand = new CommandBase(ClickListBox);
 			ClickCheckBoxCommand = new CommandBase(ClickCheckBox);
+			CopyTextCommand = new CommandBase(CopyText);
+			CopyPictureCommand = new CommandBase(CopyPicture);
 		}
-		public void SetDelegate(drawChart drawChart) {
+		public void SetDelegate(drawChart drawChart, copyChart copyChart) {
 			this.DrawChart = drawChart;
+			this.CopyChart = copyChart;
 		}
 	}
 }

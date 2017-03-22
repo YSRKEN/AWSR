@@ -413,7 +413,7 @@ namespace AWSR.ViewModels
 				var rvm = new ResultViewModel(nameList, histList);
 				rv = new ResultView();
 				rv.DataContext = rvm;
-				rvm.SetDelegate(rv.DrawChart);
+				rvm.SetDelegate(rv.DrawChart, rv.CopyChart);
 				rv.Show();
 			}
 			catch {

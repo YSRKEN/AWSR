@@ -68,6 +68,13 @@ namespace AWSR.Views
 				axisY.Interval = 10.0;
 			}
 		}
+		// グラフをコピーする
+		public void CopyChart() {
+			var stream = new System.IO.MemoryStream();
+			ProbChart.SaveImage(stream, System.Drawing.Imaging.ImageFormat.Bmp);
+			var bmp = new Bitmap(stream);
+			Clipboard.SetDataObject(bmp);
+		}
 		// コンストラクタ
 		public ResultView() {
 			InitializeComponent();
