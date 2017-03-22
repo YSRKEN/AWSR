@@ -295,8 +295,24 @@ namespace AWSR.Models
 		}
 		// 独自形式のテキストに変換
 		public string ToFriendDataText() {
-			string output = "";
-			//スタブ
+			string output = "艦隊,艦番,艦名,レベル,装備1,改修1,熟練1,装備2,改修2,熟練2,装備3,改修3,熟練3,装備4,改修4,熟練4,装備X,改修X,熟練X\n";
+			foreach (var unit in Unit.Select((v, i) => new { v, i })) {
+				foreach (var kammusu in unit.v.Kammusu.Select((v, i) => new { v, i })) {
+					output += $"{unit.i + 1},{kammusu.i + 1},{kammusu.v.Name},{kammusu.v.Level}";
+					foreach (var weapon in kammusu.v.Weapon.Select((v, i) => new { v, i })) {
+						if(weapon.v.Name != "―") {
+							output += $",{weapon.v.Name},{weapon.v.Improvement},{weapon.v.Proficiency}";
+						}
+						else {
+							output += ",,,";
+						}
+					}
+					for(int i = kammusu.v.Weapon.Count; i < 5; ++i) {
+						output += ",,,";
+					}
+					output += "\n";
+				}
+			}
 			return output;
 		}
 		// 迎撃可能な艦娘一覧
