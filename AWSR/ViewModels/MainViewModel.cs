@@ -16,6 +16,10 @@ namespace AWSR.ViewModels
 		#region コマンドに関する処理
 		// デッキビルダーの画面を開く処理
 		public ICommand OpenDeckBuilderCommand { get; private set; }
+		// デッキビルダー形式でコピーする処理
+		public ICommand CopyDeckBuilderFormatCommand { get; private set; }
+		// 独自形式でコピーする処理
+		public ICommand CopyFriendDataFormatCommand { get; private set; }
 		// 基地航空隊を読み込む処理
 		public ICommand OpenLandBaseFileCommand { get; private set; }
 		// 敵艦隊を読み込む処理
@@ -184,6 +188,37 @@ namespace AWSR.ViewModels
 			}
 			catch {
 				System.Diagnostics.Process.Start("http://kancolle-calc.net/deckbuilder.html");
+			}
+		}
+		// 
+		private void CopyDeckBuilderFormat() {
+			Fleet friendFleet = null;
+			try {
+				friendFleet = FriendFleet(InputDeckBuilderText);
+			}
+			catch {
+				MessageBox.Show("入力データに誤りがあります.", "AWSR", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+			}
+			try {
+				Clipboard.SetText(friendFleet.ToDeckBuilderText());
+			}
+			catch {
+				MessageBox.Show("クリップボードにコピーできませんでした.", "AWSR", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+			}
+		}
+		private void CopyFriendDataFormat() {
+			Fleet friendFleet = null;
+			try {
+				friendFleet = FriendFleet(InputDeckBuilderText);
+			}
+			catch {
+				MessageBox.Show("入力データに誤りがあります.", "AWSR", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+			}
+			try {
+				Clipboard.SetText(friendFleet.ToFriendDataText());
+			}
+			catch {
+				MessageBox.Show("クリップボードにコピーできませんでした.", "AWSR", MessageBoxButton.OK, MessageBoxImage.Exclamation);
 			}
 		}
 		// 基地航空隊のデータを開く処理
@@ -371,13 +406,14 @@ namespace AWSR.ViewModels
 				sw.Stop();
 				output = $"経過時間：{Math.Round(sw.Elapsed.TotalSeconds, 1)}秒\n" + output;
 				// 結果を表示する
-				rv?.Close();
-				rv = new ResultView();
 				List<string> nameList;
 				List<List<List<double>>> histList;
 				Simulator.ResultData(friendFleet, enemyFleet, landBase, simulationSize[SimulationSizeIndex], out nameList, out histList);
+				rv?.Close();
 				var rvm = new ResultViewModel(nameList, histList);
+				rv = new ResultView();
 				rv.DataContext = rvm;
+				rvm.SetDelegate(rv.DrawChart, rv.CopyChart);
 				rv.Show();
 			}
 			catch {
@@ -402,6 +438,8 @@ namespace AWSR.ViewModels
 			SimulationSizeIndex = 0;
 			// コマンドを登録する
 			OpenDeckBuilderCommand = new CommandBase(OpenDeckBuilder);
+			CopyDeckBuilderFormatCommand = new CommandBase(CopyDeckBuilderFormat);
+			CopyFriendDataFormatCommand = new CommandBase(CopyFriendDataFormat);
 			OpenLandBaseFileCommand = new CommandBase(OpenLandBaseFile);
 			OpenEnemyFileCommand = new CommandBase(OpenEnemyFile);
 			ShowFriendFleetInfoCommand = new CommandBase(ShowFriendFleetInfo);

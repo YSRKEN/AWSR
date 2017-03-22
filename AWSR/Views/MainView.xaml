@@ -5,7 +5,7 @@
 		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		xmlns:local="clr-namespace:AWSR.Views"
 		mc:Ignorable="d"
-		Title="AWSR Ver.1.0.0 (2017/03/19)" Height="400" Width="550" MinHeight="400" MinWidth="550">
+		Title="AWSR Ver.1.1.0 (2017/03/22)" Height="400" Width="550" MinHeight="400" MinWidth="550">
 	<Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition />
@@ -25,7 +25,14 @@
 						<RowDefinition Height="auto" />
 						<RowDefinition Height="auto" />
 					</Grid.RowDefinitions>
-					<Button Grid.Row="0" Content="デッキビルダーで開く" Command="{Binding OpenDeckBuilderCommand}" Height="24" Margin="10,10,10,5" HorizontalAlignment="Stretch" />
+					<Button Grid.Row="0" Content="デッキビルダーで開く" Command="{Binding OpenDeckBuilderCommand}" Height="24" Margin="10,10,10,5" HorizontalAlignment="Stretch">
+						<Button.ContextMenu>
+							<ContextMenu>
+								<MenuItem Header="デッキビルダー形式でコピー" Command="{Binding CopyDeckBuilderFormatCommand}"/>
+								<MenuItem Header="独自形式でコピー" Command="{Binding CopyFriendDataFormatCommand}"/>
+							</ContextMenu>
+						</Button.ContextMenu>
+					</Button>
 					<TextBox Grid.Row="1" Text="{Binding InputDeckBuilderText}"
 							 Margin="10,5,10,5" HorizontalAlignment="Stretch" AcceptsReturn="True" AcceptsTab="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" />
 					<ComboBox Grid.Row="2" Margin="10,5,10,5" SelectedIndex="{Binding FriendFleetType}">

@@ -66,6 +66,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Libraries\CompatilizedRandom.cs" />
+    <Compile Include="Libraries\RandomBase.cs" />
+    <Compile Include="Libraries\SFMT.cs" />
     <Compile Include="Models\Constant.cs" />
     <Compile Include="Models\DataBase.cs" />
     <Compile Include="Models\DeckBuilder.cs" />
