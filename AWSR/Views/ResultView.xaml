@@ -35,22 +35,58 @@
 					<CheckBox Grid.Row="2" Content="3スロット目" Height="20" Margin="0,5,5,5" IsEnabled="{Binding IsEnabledChartData[2]}" IsChecked="{Binding IsCheckedChartData[2]}" Command="{Binding ClickCheckBoxCommand}" />
 					<CheckBox Grid.Row="3" Content="4スロット目" Height="20" Margin="0,5,5,5" IsEnabled="{Binding IsEnabledChartData[3]}" IsChecked="{Binding IsCheckedChartData[3]}" Command="{Binding ClickCheckBoxCommand}" />
 				</Grid>
-				<Grid Grid.Column="1">
+				<Grid Grid.Column="1" Width="90">
 					<Grid.RowDefinitions>
 						<RowDefinition />
 						<RowDefinition />
+						<RowDefinition />
+						<RowDefinition />
 					</Grid.RowDefinitions>
-					<Button Grid.Row="0" Content="テキストをコピー" Margin="5,5,5,5" FontWeight="Bold" Command="{Binding CopyTextCommand}"/>
-					<Button Grid.Row="1" Content="画像をコピー" Margin="5,5,5,5" FontWeight="Bold" Command="{Binding CopyPictureCommand}"/>
+					<Button Grid.Row="0" Content="自艦隊をコピー" Height="24" Margin="5,5,5,5" FontWeight="Bold" Command="{Binding CopyFriendCommand}">
+						<Button.ContextMenu>
+							<ContextMenu>
+								<MenuItem Header="メイン画面に転送" Command="{Binding SendFriendCommand}" />
+							</ContextMenu>
+						</Button.ContextMenu>
+					</Button>
+					<Button Grid.Row="1" Content="基地隊をコピー" Height="24" Margin="5,5,5,5" FontWeight="Bold" Command="{Binding CopyLandBaseCommand}">
+						<Button.ContextMenu>
+							<ContextMenu>
+								<MenuItem Header="メイン画面に転送" Command="{Binding SendLandBaseCommand}" />
+							</ContextMenu>
+						</Button.ContextMenu>
+					</Button>
+					<Button Grid.Row="2" Content="敵艦隊をコピー" Height="24" Margin="5,5,5,5" FontWeight="Bold" Command="{Binding CopyEnemyCommand}">
+						<Button.ContextMenu>
+							<ContextMenu>
+								<MenuItem Header="メイン画面に転送" Command="{Binding SendEnemyCommand}" />
+							</ContextMenu>
+						</Button.ContextMenu>
+					</Button>
+					<Button Grid.Row="3" Content="解析した結果" Height="24" Margin="5,5,5,5" FontWeight="Bold" Command="{Binding ShowResultCommand}" />
 				</Grid>
 			</Grid>
 		</Grid>
-		<WindowsFormsHost Grid.Column="1" Margin="10,0,0,0">
-			<wfc:Chart x:Name="ProbChart">
-				<wfc:Chart.ChartAreas>
-					<wfc:ChartArea Name="ChartArea" />
-				</wfc:Chart.ChartAreas>
-			</wfc:Chart>
-		</WindowsFormsHost>
+		<Grid Grid.Column="1">
+			<Grid.RowDefinitions>
+				<RowDefinition />
+				<RowDefinition Height="auto" />
+			</Grid.RowDefinitions>
+			<WindowsFormsHost Grid.Row="0" Margin="10,0,0,5">
+				<wfc:Chart x:Name="ProbChart">
+					<wfc:Chart.ChartAreas>
+						<wfc:ChartArea Name="ChartArea" />
+					</wfc:Chart.ChartAreas>
+				</wfc:Chart>
+			</WindowsFormsHost>
+			<Grid Grid.Row="1">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition />
+					<ColumnDefinition />
+				</Grid.ColumnDefinitions>
+				<Button Grid.Column="0" Content="テキストをコピー" Margin="5,5,5,0" Width="80" Height="24" FontWeight="Bold" Command="{Binding CopyTextCommand}" />
+				<Button Grid.Column="1" Content="画像をコピー" Margin="5,5,5,0" Width="80" Height="24" FontWeight="Bold" Command="{Binding CopyPictureCommand}" />
+			</Grid>
+		</Grid>
 	</Grid>
 </Window>

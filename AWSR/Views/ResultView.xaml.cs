@@ -16,7 +16,6 @@ using System.Windows.Forms.DataVisualization.Charting;
 
 namespace AWSR.Views
 {
-	public delegate void drawChart(List<List<double>> drawHist);
 	/// <summary>
 	/// ResultView.xaml の相互作用ロジック
 	/// </summary>
@@ -78,10 +77,7 @@ namespace AWSR.Views
 		// コンストラクタ
 		public ResultView() {
 			InitializeComponent();
-		}
-		public void SetDelegate() {
-			var bindData = DataContext as ResultViewModel;
-			bindData.DrawChart = DrawChart;
+			MouseLeftButtonDown += (o, e) => DragMove();
 		}
 	}
 }
