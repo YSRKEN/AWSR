@@ -153,13 +153,15 @@ namespace AWSR.Models
 						// 制空状態を判断する
 						AirWarStatus airWarStatus_ = CalcAirWarStatus(landBaseAirValue, enemyAirValue_);
 						// 割合撃墜を行う
-						if (landBase.TeamCount == 1 || ai == 1) {
+						// 基地航空隊を集中運用した際、1回目に来た際撃墜された分は
+						// 2回目発動前に自動回復する(ここでの資源消費はないが熟練度はハゲる)
+						if (landBase.AttackCount[ti] == 1 || ai == 1) {
 							++AirWarStatusCount[ti][(int)airWarStatus_];
 							St1LandBaseBreak(landBase, landBaseAirsList, ti, airWarStatus_);
 						}
 						St1EnemyBreak(enemy, enemy.Unit.Count, enemyAirsList, airWarStatus_);
 						#endregion
-						if (landBase.TeamCount == 1 || ai == 1) {
+						if (landBase.AttackCount[ti] == 1 || ai == 1) {
 							#region ステージ2：対空砲火
 							var enemyCutInType_ = GetCutInType(enemy);
 							St2LandBaseBreak(landBase, enemy, landBaseAirsList, ti, enemyCutInType_);
