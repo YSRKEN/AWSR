@@ -409,7 +409,7 @@ namespace AWSR.ViewModels
 				List<string> nameList;
 				List<List<List<double>>> histList;
 				Simulator.ResultData(friendFleet, enemyFleet, landBase, simulationSize[SimulationSizeIndex], out nameList, out histList);
-				rv?.Close();
+				//rv?.Close();
 				var rvm = new ResultViewModel(
 					nameList,
 					histList,
