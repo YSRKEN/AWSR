@@ -39,18 +39,36 @@
 					<Grid.RowDefinitions>
 						<RowDefinition />
 						<RowDefinition />
+						<RowDefinition />
+						<RowDefinition />
 					</Grid.RowDefinitions>
-					<Button Grid.Row="0" Content="テキストをコピー" Margin="5,5,5,5" FontWeight="Bold" Command="{Binding CopyTextCommand}"/>
-					<Button Grid.Row="1" Content="画像をコピー" Margin="5,5,5,5" FontWeight="Bold" Command="{Binding CopyPictureCommand}"/>
+					<Button Grid.Row="0" Content="自艦隊をコピー" Margin="5,5,5,5" FontWeight="Bold" Command="{Binding CopyFriendCommand}" />
+					<Button Grid.Row="1" Content="基地隊をコピー" Margin="5,5,5,5" FontWeight="Bold" Command="{Binding CopyLandBaseCommand}" />
+					<Button Grid.Row="2" Content="敵艦隊をコピー" Margin="5,5,5,5" FontWeight="Bold" Command="{Binding CopyEnemyCommand}" />
+					<Button Grid.Row="3" Content="解析結果を表示" Margin="5,5,5,5" FontWeight="Bold" Command="{Binding ShowResultCommand}" />
 				</Grid>
 			</Grid>
 		</Grid>
-		<WindowsFormsHost Grid.Column="1" Margin="10,0,0,0">
-			<wfc:Chart x:Name="ProbChart">
-				<wfc:Chart.ChartAreas>
-					<wfc:ChartArea Name="ChartArea" />
-				</wfc:Chart.ChartAreas>
-			</wfc:Chart>
-		</WindowsFormsHost>
+		<Grid Grid.Column="1">
+			<Grid.RowDefinitions>
+				<RowDefinition />
+				<RowDefinition Height="auto" />
+			</Grid.RowDefinitions>
+			<WindowsFormsHost Grid.Row="0" Margin="10,0,0,5">
+				<wfc:Chart x:Name="ProbChart">
+					<wfc:Chart.ChartAreas>
+						<wfc:ChartArea Name="ChartArea" />
+					</wfc:Chart.ChartAreas>
+				</wfc:Chart>
+			</WindowsFormsHost>
+			<Grid Grid.Row="1">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition />
+					<ColumnDefinition />
+				</Grid.ColumnDefinitions>
+				<Button Grid.Column="0" Content="テキストをコピー" Margin="5,5,5,0" Width="80" Height="24" FontWeight="Bold" Command="{Binding CopyTextCommand}" />
+				<Button Grid.Column="1" Content="画像をコピー" Margin="5,5,5,0" Width="80" Height="24" FontWeight="Bold" Command="{Binding CopyPictureCommand}" />
+			</Grid>
+		</Grid>
 	</Grid>
 </Window>
