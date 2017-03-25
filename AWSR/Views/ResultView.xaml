@@ -35,17 +35,35 @@
 					<CheckBox Grid.Row="2" Content="3スロット目" Height="20" Margin="0,5,5,5" IsEnabled="{Binding IsEnabledChartData[2]}" IsChecked="{Binding IsCheckedChartData[2]}" Command="{Binding ClickCheckBoxCommand}" />
 					<CheckBox Grid.Row="3" Content="4スロット目" Height="20" Margin="0,5,5,5" IsEnabled="{Binding IsEnabledChartData[3]}" IsChecked="{Binding IsCheckedChartData[3]}" Command="{Binding ClickCheckBoxCommand}" />
 				</Grid>
-				<Grid Grid.Column="1">
+				<Grid Grid.Column="1" Width="90">
 					<Grid.RowDefinitions>
 						<RowDefinition />
 						<RowDefinition />
 						<RowDefinition />
 						<RowDefinition />
 					</Grid.RowDefinitions>
-					<Button Grid.Row="0" Content="自艦隊をコピー" Margin="5,5,5,5" FontWeight="Bold" Command="{Binding CopyFriendCommand}" />
-					<Button Grid.Row="1" Content="基地隊をコピー" Margin="5,5,5,5" FontWeight="Bold" Command="{Binding CopyLandBaseCommand}" />
-					<Button Grid.Row="2" Content="敵艦隊をコピー" Margin="5,5,5,5" FontWeight="Bold" Command="{Binding CopyEnemyCommand}" />
-					<Button Grid.Row="3" Content="解析結果を表示" Margin="5,5,5,5" FontWeight="Bold" Command="{Binding ShowResultCommand}" />
+					<Button Grid.Row="0" Content="自艦隊をコピー" Height="24" Margin="5,5,5,5" FontWeight="Bold" Command="{Binding CopyFriendCommand}">
+						<Button.ContextMenu>
+							<ContextMenu>
+								<MenuItem Header="メイン画面に転送" Command="{Binding SendFriendCommand}" />
+							</ContextMenu>
+						</Button.ContextMenu>
+					</Button>
+					<Button Grid.Row="1" Content="基地隊をコピー" Height="24" Margin="5,5,5,5" FontWeight="Bold" Command="{Binding CopyLandBaseCommand}">
+						<Button.ContextMenu>
+							<ContextMenu>
+								<MenuItem Header="メイン画面に転送" Command="{Binding SendLandBaseCommand}" />
+							</ContextMenu>
+						</Button.ContextMenu>
+					</Button>
+					<Button Grid.Row="2" Content="敵艦隊をコピー" Height="24" Margin="5,5,5,5" FontWeight="Bold" Command="{Binding CopyEnemyCommand}">
+						<Button.ContextMenu>
+							<ContextMenu>
+								<MenuItem Header="メイン画面に転送" Command="{Binding SendEnemyCommand}" />
+							</ContextMenu>
+						</Button.ContextMenu>
+					</Button>
+					<Button Grid.Row="3" Content="解析した結果" Height="24" Margin="5,5,5,5" FontWeight="Bold" Command="{Binding ShowResultCommand}" />
 				</Grid>
 			</Grid>
 		</Grid>

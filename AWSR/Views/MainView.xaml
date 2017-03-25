@@ -25,7 +25,8 @@
 						<RowDefinition Height="auto" />
 						<RowDefinition Height="auto" />
 					</Grid.RowDefinitions>
-					<Button Grid.Row="0" Content="デッキビルダーで開く" Command="{Binding OpenDeckBuilderCommand}" Height="24" Margin="10,10,10,5" HorizontalAlignment="Stretch">
+					<Button Grid.Row="0" Content="デッキビルダーで開く"
+							Command="{Binding OpenDeckBuilderCommand}" Height="24" Margin="10,10,10,5" HorizontalAlignment="Stretch">
 						<Button.ContextMenu>
 							<ContextMenu>
 								<MenuItem Header="デッキビルダー形式でコピー" Command="{Binding CopyDeckBuilderFormatCommand}"/>

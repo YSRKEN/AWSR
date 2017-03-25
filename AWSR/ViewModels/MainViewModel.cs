@@ -419,7 +419,7 @@ namespace AWSR.ViewModels
 					output);
 				rv = new ResultView();
 				rv.DataContext = rvm;
-				rvm.SetDelegate(rv.DrawChart, rv.CopyChart);
+				rvm.SetDelegate(rv.DrawChart, rv.CopyChart, SendFriend, SendLandBase, SendEnemy);
 				rv.Show();
 			}
 			catch {
@@ -427,6 +427,16 @@ namespace AWSR.ViewModels
 			}
 			// 表示
 			MessageBox.Show(output, "AWSR");
+		}
+		// 自艦隊・基地航空隊・敵艦隊を書き戻す処理
+		public void SendFriend(string str) {
+			InputDeckBuilderText = str;
+		}
+		public void SendLandBase(string str) {
+			InputAirBaseText = str;
+		}
+		public void SendEnemy(string str) {
+			InputEnemyDataText = str;
 		}
 		#endregion
 
