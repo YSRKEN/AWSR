@@ -78,6 +78,7 @@ namespace AWSR.Views
 		// コンストラクタ
 		public ResultView() {
 			InitializeComponent();
+			MouseLeftButtonDown += (o, e) => DragMove();
 		}
 		public void SetDelegate() {
 			var bindData = DataContext as ResultViewModel;
