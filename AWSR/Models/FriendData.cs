@@ -40,15 +40,15 @@ namespace AWSR.Models
 							tempKammusu.IsKammusu = true;
 							// 装備(データベースから情報を拾う)
 							for(int i = 0; i < 5; ++i) {
+								var tempWeapon = new Weapon();
 								int id2 = DataBase.WeaponId(column[4 + i * 3]);
-								if(id2 >= 0) {
-									var tempWeapon = new Weapon();
+								if (id2 >= 0) {
 									tempWeapon.Id = id2;
 									tempWeapon.Improvement = int.Parse(column[5 + i * 3]);
 									tempWeapon.Proficiency = int.Parse(column[6 + i * 3]);
-									tempWeapon.Complete();
-									tempKammusu.Weapon.Add(tempWeapon);
 								}
+								tempWeapon.Complete();
+								tempKammusu.Weapon.Add(tempWeapon);
 							}
 							tempKammusu.Complete();
 							kammusuList.Add(new KeyValuePair<int, int>(ui, ki));

@@ -388,7 +388,7 @@ namespace AWSR.ViewModels
 		// 動的解析を行う処理
 		private void RunMonteCarlo() {
 			string output = "";
-			try {
+			//try {
 				// 艦隊を読み込み
 				var friendFleet = FriendFleet(InputDeckBuilderText);
 				LandBase landBase = null;
@@ -415,10 +415,10 @@ namespace AWSR.ViewModels
 				rv.DataContext = rvm;
 				rvm.SetDelegate(rv.DrawChart, rv.CopyChart);
 				rv.Show();
-			}
-			catch {
-				output = "自艦隊 or 敵艦隊が正常に読み込めませんでした.";
-			}
+			//}
+			//catch {
+			//	output = "自艦隊 or 敵艦隊が正常に読み込めませんでした.";
+			//}
 			// 表示
 			MessageBox.Show(output, "AWSR");
 		}
