@@ -219,9 +219,10 @@ namespace AWSR.ViewModels
 			};
 			if ((bool)ofd.ShowDialog()) {
 				try {
-					using (var stream = ofd.OpenFile())
-					using (var sr = new System.IO.StreamReader(stream))
+					using (var stream = ofd.OpenFile()) {
+						var sr = new System.IO.StreamReader(stream);
 						InputAirBaseText = sr.ReadToEnd();
+					}
 				}
 				catch {
 					MessageBox.Show("基地航空隊データの読み込みに失敗しました.", "AWSR", MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -237,9 +238,10 @@ namespace AWSR.ViewModels
 			};
 			if ((bool)ofd.ShowDialog()) {
 				try {
-					using (var stream = ofd.OpenFile())
-					using (var sr = new System.IO.StreamReader(stream))
+					using (var stream = ofd.OpenFile()) {
+						var sr = new System.IO.StreamReader(stream);
 						InputEnemyDataText = sr.ReadToEnd();
+					}
 				}
 				catch {
 					MessageBox.Show("敵艦隊データの読み込みに失敗しました.", "AWSR", MessageBoxButton.OK, MessageBoxImage.Warning);
