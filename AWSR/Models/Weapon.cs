@@ -7,48 +7,36 @@ namespace AWSR.Models
 	/// <summary>
 	/// 装備クラス
 	/// </summary>
-	class Weapon
+	internal class Weapon
 	{
 		// 装備ID
 		public int Id { get; set; }
 		// 装備名
 		public string Name {
-			get {
-				return DataBase.Weapon(Id).Name;
-			}
+			get { return DataBase.Weapon(Id).Name; }
 		}
 		// 装備改修度
 		private int improvement;
-		public int Improvement{
-			get {
-				return improvement;
-			}
-			set {
-				improvement = (value < 0 ? 0 : value > MaxImprovement ? MaxImprovement : value);
-			}
+		public int Improvement {
+			get { return improvement; }
+
+			set { improvement = value < 0 ? 0 : value > MaxImprovement ? MaxImprovement : value; }
 		}
 		// 艦載機熟練度
 		private int proficiency;
 		public int Proficiency {
-			get {
-				return proficiency;
-			}
-			set {
-				proficiency = (value < 0 ? 0 : value > MaxProficiency ? MaxProficiency : value);
-			}
+			get { return proficiency; }
+
+			set { proficiency = value < 0 ? 0 : value > MaxProficiency ? MaxProficiency : value; }
 		}
 		// 迎撃値
 		public int Intercept {
-			get {
-				return DataBase.Weapon(Id).Intercept;
-			}
+			get { return DataBase.Weapon(Id).Intercept; }
 		}
 		// 種類
 		private string type;
 		public string Type {
-			get {
-				return type;
-			}
+			get { return type; }
 		}
 		// St1で撃墜されうるか
 		private bool isStage1;
@@ -65,10 +53,9 @@ namespace AWSR.Models
 				return false;
 			}
 		}
+
 		public bool IsStage1 {
-			get {
-				return isStage1;
-			}
+			get { return isStage1; }
 		}
 		// St1で撃墜されうるか(基地航空隊編)
 		private bool isStage1X;
@@ -90,28 +77,28 @@ namespace AWSR.Models
 				return false;
 			}
 		}
+
 		public bool IsStage1X {
-			get {
-				return isStage1X;
-			}
+			get { return isStage1X; }
 		}
 		// St2で撃墜されうるか
 		private bool isStage2;
-		private bool CalcIsStage2() {
-			if (Type == "艦上攻撃機"
+		private bool CalcIsStage2 {
+			get {
+				if (Type == "艦上攻撃機"
 			|| Type == "艦上爆撃機"
 			|| Type == "水上爆撃機"
 			|| Type == "噴式戦闘爆撃機") {
-				return true;
-			}
-			else {
-				return false;
+					return true;
+				}
+				else {
+					return false;
+				}
 			}
 		}
+
 		public bool IsStage2 {
-			get {
-				return isStage2;
-			}
+			get { return isStage2; }
 		}
 		// St2で撃墜されうるか(基地航空隊編)
 		private bool isStage2X;
@@ -127,19 +114,16 @@ namespace AWSR.Models
 				return false;
 			}
 		}
+
 		public bool IsStage2X {
-			get {
-				return isStage2X;
-			}
+			get { return isStage2X; }
 		}
 		// 対空値
 		public int AntiAir {
-			get {
-				return DataBase.Weapon(Id).AntiAir;
-			}
+			get { return DataBase.Weapon(Id).AntiAir; }
 		}
 		// 制空値
-		public List<int> airValue;
+		private List<int> airValue;
 		private List<int> CalcAirValue() {
 			var airValue = new List<int>();
 			for(int i = 0; i < 300; ++i) {
@@ -147,6 +131,7 @@ namespace AWSR.Models
 			}
 			return airValue;
 		}
+
 		public int AirValue(int airSize) {
 			return airValue[airSize];
 		}
@@ -207,7 +192,7 @@ namespace AWSR.Models
 			return (int)(airValue);
 		}
 		// 制空値(基地航空隊編)
-		public List<int> airValueX;
+		private List<int> airValueX;
 		private List<int> CalcAirValueX() {
 			var airValueX = new List<int>();
 			for (int i = 0; i < 300; ++i) {
@@ -215,6 +200,7 @@ namespace AWSR.Models
 			}
 			return airValueX;
 		}
+
 		public int AirValueX(int airSize) {
 			return airValueX[airSize];
 		}
@@ -296,7 +282,7 @@ namespace AWSR.Models
 		public void Complete() {
 			type = DataBase.Weapon(Id).Type;
 			isStage1 = CalcIsStage1();
-			isStage2 = CalcIsStage2();
+			isStage2 = CalcIsStage2;
 			airValue = CalcAirValue();
 			isStage1X = CalcIsStage1X();
 			isStage2X = CalcIsStage2X();

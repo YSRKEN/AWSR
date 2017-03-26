@@ -7,70 +7,65 @@ using System.Linq;
 
 namespace AWSR.ViewModels
 {
-	delegate void copyChart();
-	delegate void drawChart(List<List<double>> drawHist);
-	delegate void sendFriend(string str);
-	delegate void sendLandBase(string str);
-	delegate void sendEnemy(string str);
-	class ResultViewModel : ViewModelBase
+	internal delegate void copyChart();
+	internal delegate void drawChart(List<List<double>> drawHist);
+	internal delegate void sendFriend(string str);
+	internal delegate void sendLandBase(string str);
+	internal delegate void sendEnemy(string str);
+
+	internal class ResultViewModel : ViewModelBase
 	{
 		// リストボックスをクリックした際の動作
-		public ICommand ClickListBoxCommand { get; private set; }
+		public ICommand ClickListBoxCommand { get; }
 		// チェックボックスをクリックした際の動作
-		public ICommand ClickCheckBoxCommand { get; private set; }
+		public ICommand ClickCheckBoxCommand { get; }
 		// テキストをコピー
-		public ICommand CopyTextCommand { get; private set; }
+		public ICommand CopyTextCommand { get; }
 		// 画像をコピー
-		public ICommand CopyPictureCommand { get; private set; }
+		public ICommand CopyPictureCommand { get; }
 		// 自艦隊・基地航空隊・敵艦隊・解析結果をコピー
-		public ICommand CopyFriendCommand   { get; private set; }
-		public ICommand CopyLandBaseCommand { get; private set; }
-		public ICommand CopyEnemyCommand    { get; private set; }
-		public ICommand ShowResultCommand   { get; private set; }
+		public ICommand CopyFriendCommand   { get; }
+		public ICommand CopyLandBaseCommand { get; }
+		public ICommand CopyEnemyCommand    { get; }
+		public ICommand ShowResultCommand   { get; }
 		// 自艦隊・基地航空隊・敵艦隊をメイン画面に転送
-		public ICommand SendFriendCommand   { get; private set; }
-		public ICommand SendLandBaseCommand { get; private set; }
-		public ICommand SendEnemyCommand    { get; private set; }
+		public ICommand SendFriendCommand   { get; }
+		public ICommand SendLandBaseCommand { get; }
+		public ICommand SendEnemyCommand    { get; }
 
 		#region プロパティ
 		// 画面左のリストボックス
-		List<string> nameList;
+		private List<string> nameList;
 		public List<string> NameList {
-			get {
-				return nameList;
-			}
+			get { return nameList; }
+
 			set {
 				nameList = value;
 				NotifyPropertyChanged(nameof(NameList));
 			}
 		}
 		// 画面右のグラフデータ
-		List<List<List<double>>> histList;
+		private List<List<List<double>>> histList;
 		public List<List<List<double>>> HistList {
-			get {
-				return histList;
-			}
-			set {
-				histList = value;
-			}
+			get { return histList; }
+
+			set { histList = value; }
 		}
 		// nスロット目を有効にするかのフラグ
-		ObservableCollection<bool> isEnabledChartData = new ObservableCollection<bool>(new bool[] { false, false, false, false });
+		private ObservableCollection<bool> isEnabledChartData = new ObservableCollection<bool>(new bool[] { false, false, false, false });
 		public ObservableCollection<bool> IsEnabledChartData {
-			get {
-				return isEnabledChartData;
-			}
+			get { return isEnabledChartData; }
+
 			set {
 				isEnabledChartData = value;
 				NotifyPropertyChanged(nameof(IsEnabledChartData));
 			}
 		}
 		// nスロット目をチェックするかのフラグ
-		ObservableCollection<bool> isCheckedChartData = new ObservableCollection<bool>(new bool[] { false, false, false, false });
+		private ObservableCollection<bool> isCheckedChartData = new ObservableCollection<bool>(new bool[] { false, false, false, false });
 		public ObservableCollection<bool> IsCheckedChartData {
-			get {
-				return isCheckedChartData;
-			}
+			get { return isCheckedChartData; }
+
 			set {
 				isCheckedChartData = value;
 				ClickCheckBox();
@@ -80,11 +75,10 @@ namespace AWSR.ViewModels
 		// リストボックスの現在選択しているインデックス
 		private int listBoxSelectedIndex;
 		public int ListBoxSelectedIndex {
-			get {
-				return listBoxSelectedIndex;
-			}
+			get { return listBoxSelectedIndex; }
+
 			set {
-				if(listBoxSelectedIndex != value) {
+				if (listBoxSelectedIndex != value) {
 					listBoxSelectedIndex = value;
 					ClickListBox();
 				}
@@ -93,14 +87,14 @@ namespace AWSR.ViewModels
 		// チャート操作用デリゲート
 		public drawChart DrawChart { get; private set; }
 		public copyChart CopyChart { get; private set; }
-		public sendFriend dSendFriend { get; private set; }
-		public sendLandBase dSendLandBase { get; private set; }
-		public sendEnemy dSendEnemy { get; private set; }
+		public sendFriend DeleGateSendFriend { get; private set; }
+		public sendLandBase DeleGateSendLandBase { get; private set; }
+		public sendEnemy DeleGateSendEnemy { get; private set; }
 		// 入力及び出力テキスト
-		public string InputDeckBuilderText { get; private set; }
-		public string InputAirBaseText { get; private set; }
-		public string InputEnemyDataText { get; private set; }
-		public string ResultText { get; private set; }
+		public string InputDeckBuilderText { get; }
+		public string InputAirBaseText { get; }
+		public string InputEnemyDataText { get; }
+		public string ResultText { get; }
 		#endregion
 
 		#region メソッド
@@ -120,6 +114,7 @@ namespace AWSR.ViewModels
 			// グラフを描画する
 			DrawChart(drawHist);
 		}
+
 		private void ClickCheckBox() {
 			if (ListBoxSelectedIndex < 0)
 				return;
@@ -127,6 +122,7 @@ namespace AWSR.ViewModels
 			var drawHist = HistList[ListBoxSelectedIndex];
 			DrawChart(drawHist);
 		}
+
 		private void CopyText() {
 			if (ListBoxSelectedIndex < 0)
 				return;
@@ -160,6 +156,7 @@ namespace AWSR.ViewModels
 				MessageBox.Show("クリップボードにコピーできませんでした.", "AWSR", MessageBoxButton.OK, MessageBoxImage.Exclamation);
 			}
 		}
+
 		private void CopyPicture() {
 			if (ListBoxSelectedIndex < 0)
 				return;
@@ -170,6 +167,7 @@ namespace AWSR.ViewModels
 				MessageBox.Show("クリップボードにコピーできませんでした.", "AWSR", MessageBoxButton.OK, MessageBoxImage.Exclamation);
 			}
 		}
+
 		private void CopyFriend() {
 			try {
 				Clipboard.SetText(InputDeckBuilderText);
@@ -178,6 +176,7 @@ namespace AWSR.ViewModels
 				MessageBox.Show("クリップボードにコピーできませんでした.", "AWSR", MessageBoxButton.OK, MessageBoxImage.Exclamation);
 			}
 		}
+
 		private void CopyLandBase() {
 			try {
 				Clipboard.SetText(InputAirBaseText);
@@ -186,6 +185,7 @@ namespace AWSR.ViewModels
 				MessageBox.Show("クリップボードにコピーできませんでした.", "AWSR", MessageBoxButton.OK, MessageBoxImage.Exclamation);
 			}
 		}
+
 		private void CopyEnemy() {
 			try {
 				Clipboard.SetText(InputEnemyDataText);
@@ -194,17 +194,21 @@ namespace AWSR.ViewModels
 				MessageBox.Show("クリップボードにコピーできませんでした.", "AWSR", MessageBoxButton.OK, MessageBoxImage.Exclamation);
 			}
 		}
+
 		private void ShowResult() {
 			MessageBox.Show(ResultText, "AWSR", MessageBoxButton.OK);
 		}
+
 		private void SendFriend() {
-			dSendFriend(InputDeckBuilderText);
+			DeleGateSendFriend(InputDeckBuilderText);
 		}
+
 		private void SendLandBase() {
-			dSendLandBase(InputAirBaseText);
+			DeleGateSendLandBase(InputAirBaseText);
 		}
+
 		private void SendEnemy() {
-			dSendEnemy(InputEnemyDataText);
+			DeleGateSendEnemy(InputEnemyDataText);
 		}
 		#endregion
 
@@ -237,6 +241,7 @@ namespace AWSR.ViewModels
 			SendLandBaseCommand = new CommandBase(SendLandBase);
 			SendEnemyCommand    = new CommandBase(SendEnemy);
 		}
+
 		public void SetDelegate(
 			drawChart drawChart,
 			copyChart copyChart,
@@ -245,9 +250,9 @@ namespace AWSR.ViewModels
 			sendEnemy sendEnemy) {
 			this.DrawChart = drawChart;
 			this.CopyChart = copyChart;
-			this.dSendFriend = sendFriend;
-			this.dSendLandBase = sendLandBase;
-			this.dSendEnemy = sendEnemy;
+			this.DeleGateSendFriend = sendFriend;
+			this.DeleGateSendLandBase = sendLandBase;
+			this.DeleGateSendEnemy = sendEnemy;
 		}
 	}
 }

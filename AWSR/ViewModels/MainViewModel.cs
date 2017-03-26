@@ -9,44 +9,42 @@ using static AWSR.Models.Constant;
 
 namespace AWSR.ViewModels
 {
-	class MainViewModel : ViewModelBase
+	internal class MainViewModel : ViewModelBase
 	{
-		ResultView rv = null;
+		private ResultView rv;
 
 		#region コマンドに関する処理
 		// デッキビルダーの画面を開く処理
-		public ICommand OpenDeckBuilderCommand { get; private set; }
+		public ICommand OpenDeckBuilderCommand { get; }
 		// デッキビルダー形式でコピーする処理
-		public ICommand CopyDeckBuilderFormatCommand { get; private set; }
+		public ICommand CopyDeckBuilderFormatCommand { get; }
 		// 独自形式でコピーする処理
-		public ICommand CopyFriendDataFormatCommand { get; private set; }
+		public ICommand CopyFriendDataFormatCommand { get; }
 		// 基地航空隊を読み込む処理
-		public ICommand OpenLandBaseFileCommand { get; private set; }
+		public ICommand OpenLandBaseFileCommand { get; }
 		// 敵艦隊を読み込む処理
-		public ICommand OpenEnemyFileCommand { get; private set; }
+		public ICommand OpenEnemyFileCommand { get;　}
 		// 自艦隊の情報を表示する処理
-		public ICommand ShowFriendFleetInfoCommand { get; private set; }
+		public ICommand ShowFriendFleetInfoCommand { get;　}
 		// 基地航空隊の情報を表示する処理
-		public ICommand ShowLandBaseInfoCommand { get; private set; }
+		public ICommand ShowLandBaseInfoCommand { get; }
 		// 敵艦隊の情報を表示する処理
-		public ICommand ShowEnemyFleetInfoCommand { get; private set; }
+		public ICommand ShowEnemyFleetInfoCommand { get; }
 		// 制空値を表示する処理
-		public ICommand ShowAirValueCommand { get; private set; }
+		public ICommand ShowAirValueCommand { get; }
 		// 撃墜計算を表示する処理
-		public ICommand ShowAntiAirPowerCommand { get; private set; }
+		public ICommand ShowAntiAirPowerCommand { get; }
 		// 対空カットイン可否を表示する処理
-		public ICommand ShowCutInTypeCommand { get; private set; }
+		public ICommand ShowCutInTypeCommand { get; }
 		// 動的解析を行う処理
-		public ICommand RunMonteCarloCommand { get; private set; }
+		public ICommand RunMonteCarloCommand { get; }
 		#endregion
 
 		#region プロパティに関する処理
 		// 入力するデッキビルダーのデータ
-		string inputDeckBuilderText;
+		private string inputDeckBuilderText;
 		public string InputDeckBuilderText {
-			get {
-				return inputDeckBuilderText;
-			}
+			get { return inputDeckBuilderText; }
 			set {
 				if (inputDeckBuilderText == value)
 					return;
@@ -56,23 +54,13 @@ namespace AWSR.ViewModels
 			}
 		}
 		// 自艦隊の陣容
-		int friendFleetType;
-		public int FriendFleetType {
-			get { return friendFleetType; }
-			set { friendFleetType = value; }
-		}
+		public int FriendFleetType {get;set;}
 		// 自艦隊の陣形
-		int friendFleetFormation;
-		public int FriendFleetFormation {
-			get { return friendFleetFormation; }
-			set { friendFleetFormation = value; }
-		}
+		public int FriendFleetFormation { get; set; }
 		// 入力する基地航空隊のデータ
-		string inputAirBaseText;
+		private string inputAirBaseText;
 		public string InputAirBaseText {
-			get {
-				return inputAirBaseText;
-			}
+			get { return inputAirBaseText; }
 			set {
 				if (inputAirBaseText == value)
 					return;
@@ -84,11 +72,10 @@ namespace AWSR.ViewModels
 		// 基地航空隊を使用するか？
 		public bool IsLandBaseUse { get; set; }
 		// 入力する敵艦隊のデータ
-		string inputEnemyDataText;
+		private string inputEnemyDataText;
 		public string InputEnemyDataText {
-			get {
-				return inputEnemyDataText;
-			}
+			get { return inputEnemyDataText; }
+
 			set {
 				if (inputEnemyDataText == value)
 					return;
@@ -98,19 +85,19 @@ namespace AWSR.ViewModels
 			}
 		}
 		// 敵艦隊の陣容
-		int enemyFleetType;
+		private int enemyFleetType;
 		public int EnemyFleetType {
 			get { return enemyFleetType; }
 			set { enemyFleetType = value; NotifyPropertyChanged(nameof(EnemyFleetType)); }
 		}
 		// 敵艦隊の陣形
-		int enemyFleetFormation;
+		private int enemyFleetFormation;
 		public int EnemyFleetFormation {
 			get { return enemyFleetFormation; }
 			set { enemyFleetFormation = value; NotifyPropertyChanged(nameof(EnemyFleetFormation)); }
 		}
 		// 反復回数
-		int simulationSizeIndex;
+		private int simulationSizeIndex;
 		public int SimulationSizeIndex {
 			get { return simulationSizeIndex; }
 			set { simulationSizeIndex = value; NotifyPropertyChanged(nameof(SimulationSizeIndex)); }
@@ -131,9 +118,9 @@ namespace AWSR.ViewModels
 				friendFleet = FriendData.ToFleet(inputDeckBuilderText);
 			}
 			// 陣形を設定する
-			friendFleet.Formation = (Formation)friendFleetFormation;
+			friendFleet.Formation = (Formation)FriendFleetFormation;
 			// 艦隊の陣容を設定する
-			switch (friendFleetType) {
+			switch (FriendFleetType) {
 			case 0:
 				// 普段は何もしないが、第3艦隊以降が存在する際は切り捨てる
 				if(friendFleet.Unit.Count >= 3)
@@ -175,6 +162,7 @@ namespace AWSR.ViewModels
 			}
 			return enemyFleet;
 		}
+
 		private LandBase LandBaseFleet(string inputAirBaseText) {
 			// とりあえず読み込む
 			var landBase = LandBaseData.ToLandBase(inputAirBaseText);
@@ -206,6 +194,7 @@ namespace AWSR.ViewModels
 				MessageBox.Show("クリップボードにコピーできませんでした.", "AWSR", MessageBoxButton.OK, MessageBoxImage.Exclamation);
 			}
 		}
+
 		private void CopyFriendDataFormat() {
 			Fleet friendFleet = null;
 			try {
@@ -223,10 +212,11 @@ namespace AWSR.ViewModels
 		}
 		// 基地航空隊のデータを開く処理
 		private void OpenLandBaseFile() {
-			var ofd = new OpenFileDialog();
-			ofd.FileName = "enemy.bas";
-			ofd.Filter = "基地航空隊データファイル(*.bas)|*.bas|すべてのファイル(*.*)|*.*";
-			ofd.AddExtension = true;
+			var ofd = new OpenFileDialog {
+				FileName = "enemy.bas",
+				Filter = "基地航空隊データファイル(*.bas)|*.bas|すべてのファイル(*.*)|*.*",
+				AddExtension = true,
+			};
 			if ((bool)ofd.ShowDialog()) {
 				try {
 					using (var stream = ofd.OpenFile())
@@ -240,10 +230,11 @@ namespace AWSR.ViewModels
 		}
 		// 敵艦隊のデータを開く処理
 		private void OpenEnemyFile() {
-			var ofd = new OpenFileDialog();
-			ofd.FileName = "enemy.enm";
-			ofd.Filter = "敵艦隊データファイル(*.enm)|*.enm|敵艦隊データファイル(*.json)|*.json|すべてのファイル(*.*)|*.*";
-			ofd.AddExtension = true;
+			var ofd = new OpenFileDialog() {
+				FileName = "enemy.enm",
+				Filter = "敵艦隊データファイル(*.enm)|*.enm|敵艦隊データファイル(*.json)|*.json|すべてのファイル(*.*)|*.*",
+				AddExtension = true
+			};
 			if ((bool)ofd.ShowDialog()) {
 				try {
 					using (var stream = ofd.OpenFile())
@@ -294,7 +285,8 @@ namespace AWSR.ViewModels
 				var friendFleet = FriendFleet(InputDeckBuilderText);
 				var enemyFleet = EnemyFleet(InputEnemyDataText);
 				unitCount = UnitCount(friendFleet.Unit.Count, enemyFleet.Unit.Count);
-			}catch {}
+			}catch {
+			}
 			// 自艦隊
 			output += "自艦隊：";
 			try {
@@ -337,7 +329,8 @@ namespace AWSR.ViewModels
 				var enemyFleet = EnemyFleet(InputEnemyDataText);
 				unitCount = UnitCount(friendFleet.Unit.Count, enemyFleet.Unit.Count);
 			}
-			catch { }
+			catch {
+			}
 			// 自艦隊
 			output += "自艦隊：\n";
 			try {
@@ -406,9 +399,13 @@ namespace AWSR.ViewModels
 				sw.Stop();
 				output = $"経過時間：{Math.Round(sw.Elapsed.TotalSeconds, 1)}秒\n" + output;
 				// 結果を表示する
-				List<string> nameList;
-				List<List<List<double>>> histList;
-				Simulator.ResultData(friendFleet, enemyFleet, landBase, simulationSize[SimulationSizeIndex], out nameList, out histList);
+				Simulator.ResultData(
+					friendFleet,
+					enemyFleet,
+					landBase,
+					simulationSize[SimulationSizeIndex],
+					out List<string> nameList,
+					out List<List<List<double>>> histList);
 				//rv?.Close();
 				var rvm = new ResultViewModel(
 					nameList,
@@ -417,8 +414,9 @@ namespace AWSR.ViewModels
 					InputAirBaseText,
 					InputEnemyDataText,
 					output);
-				rv = new ResultView();
-				rv.DataContext = rvm;
+				rv = new ResultView() {
+					DataContext = rvm
+				};
 				rvm.SetDelegate(rv.DrawChart, rv.CopyChart, SendFriend, SendLandBase, SendEnemy);
 				rv.Show();
 			}
@@ -432,9 +430,11 @@ namespace AWSR.ViewModels
 		public void SendFriend(string str) {
 			InputDeckBuilderText = str;
 		}
+
 		public void SendLandBase(string str) {
 			InputAirBaseText = str;
 		}
+
 		public void SendEnemy(string str) {
 			InputEnemyDataText = str;
 		}

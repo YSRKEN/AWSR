@@ -1,6 +1,7 @@
-﻿namespace AWSR.Models
+﻿#pragma warning disable RCS1161 // Enum member should declare explicit value.
+namespace AWSR.Models
 {
-	static class Constant
+	internal static class Constant
 	{
 		// 読み込み用定数(最大のレベル・運・改修度・熟練度)
 		public static readonly int MaxLevel = 155;
@@ -23,7 +24,7 @@
 			None, PT, DD, CL, CLT, CA,
 			CAV, CVL, CC, BB, BBV, CV,
 			AF, SS, SSV, LST, AV, LHA,
-			ACV, AR, AS, CP, AO};
+			ACV, AR, AS, CP, AO}
 		// 艦種を文字列に変換する
 		public static string ToStr(this FleetType fleetType)
 		{
@@ -36,7 +37,7 @@
 		}
 		#endregion
 		#region 陣形
-		public enum Formation { Trail, SubTrail, Circle, Echelon, Abreast };
+		public enum Formation { Trail, SubTrail, Circle, Echelon, Abreast }
 		// 陣形を文字列に変換する
 		public static string ToStr(this Formation formation) {
 			string[] name = { "単縦陣", "複縦陣", "輪形陣", "梯形陣", "単横陣" };
@@ -49,7 +50,7 @@
 			None, Akiduki1, Akiduki2, Akiduki3, BattleShip1, Normal1,
 			BattleShip2, Normal2, Normal3, Normal4, Maya1, Maya2,
 			Normal5, Unknown, Isuzu1, Isuzu2, Kasumi1, Kasumi2,
-			Satsuki, Kinu1, Kinu2, Size};
+			Satsuki, Kinu1, Kinu2, Size}
 		// 固定ボーナス
 		public static int[] CutInAddBonus = new int[] {
 			0,7,6,4,6,4,
@@ -73,7 +74,7 @@
 		};
 		#endregion
 		#region 制空状態
-		public enum AirWarStatus { Best, Good, Balance, Bad, Worst, Size };
+		public enum AirWarStatus { Best, Good, Balance, Bad, Worst, Size }
 		// 制空状態を文字列に変換する
 		public static string ToStr(this AirWarStatus airWarStatus) {
 			string[] name = { "確保", "優勢", "均衡", "劣勢", "喪失" };
@@ -83,7 +84,7 @@
 		// 数値を熟練度文字列に変換する
 		public static string ToMasStr(int mas) {
 			string[] name = { "", "|", "||", "|||", "/", "//", "///", ">>" };
-			return name[(mas < 0 || mas > 7 ? 0 : mas)];
+			return name[mas < 0 || mas > 7 ? 0 : mas];
 		}
 		// 航空戦参加艦隊数
 		public static int UnitCount(int x, int y) {

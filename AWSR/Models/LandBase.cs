@@ -12,7 +12,7 @@ namespace AWSR.Models
 	/// <summary>
 	/// 基地航空隊クラス
 	/// </summary>
-	class LandBase
+	internal class LandBase
 	{
 		// 所属する中隊
 		public List<LandBaseTeam> Team { get; set; }
@@ -20,16 +20,14 @@ namespace AWSR.Models
 		public List<int> AttackCount { get; set; }
 		// 中隊の数
 		public int TeamCount {
-			get {
-				return Team.Count;
-			}
+			get { return Team.Count; }
 		}
 		// 制空値
 		public string AirValueText {
 			get {
 				string output = "";
 				foreach (var team in Team.Select((v, i) => new { v, i })) {
-					output += (team.i != 0 ? "," : "");
+					output += team.i != 0 ? "," : "";
 					output += $"{team.v.AirValue}";
 				}
 				return output;
@@ -54,12 +52,12 @@ namespace AWSR.Models
 			string output = "";
 			for(int ti = 0; ti < TeamCount; ++ti) {
 				output += $"({ti + 1})";
-				output += (AttackCount[ti] == 2 ? "集中" : "分散");
+				output += AttackCount[ti] == 2 ? "集中" : "分散";
 				foreach (var weapon in Team[ti].Weapon.Select((v, i) => new { v, i })) {
-					output += (weapon.i == 0 ? "　" : ",");
+					output += weapon.i == 0 ? "　" : ",";
 					output += weapon.v.Name;
 					output += ToMasStr(weapon.v.Proficiency);
-					output += (weapon.v.Improvement > 0 ? $"★{weapon.v.Improvement}" : "");
+					output += weapon.v.Improvement > 0 ? $"★{weapon.v.Improvement}" : "";
 				}
 				output += "\n";
 			}
@@ -71,7 +69,8 @@ namespace AWSR.Models
 			AttackCount = new List<int>();
 		}
 	}
-	class LandBaseTeam
+
+	internal class LandBaseTeam
 	{
 		// 所持装備
 		public List<Weapon> Weapon { get; set; }
@@ -87,10 +86,7 @@ namespace AWSR.Models
 				return airValue;
 			}
 		}
-		// 計算可能な値を事前に計算しておく
-		public void Complete() {
 
-		}
 		public LandBaseTeam() {
 			Weapon = Enumerable.Repeat(new Weapon(), 4).ToList();
 			Airs = Enumerable.Repeat(18, 4).ToList();

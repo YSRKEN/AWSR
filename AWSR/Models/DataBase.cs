@@ -198,13 +198,13 @@ namespace AWSR.Models
 	{
 		// フィールド
 		// 艦名,艦種,対空,搭載数,初期装備,艦娘フラグ
-		public string Name { get; private set; }
-		public FleetType Type { get; private set; }
-		public int AntiAir { get; private set; }
-		public int SlotCount { get; private set; }
-		public int[] Airs { get; private set; }
-		public int[] WeaponId { get; private set; }
-		public bool IsKammusu { get; private set; }
+		public string Name { get; }
+		public FleetType Type { get; }
+		public int AntiAir { get; }
+		public int SlotCount { get; }
+		public int[] Airs { get; }
+		public int[] WeaponId { get; }
+		public bool IsKammusu { get; }
 		// コンストラクタ
 		public KammusuData() {
 			Name = "なし";
@@ -230,11 +230,11 @@ namespace AWSR.Models
 	{
 		// フィールド
 		// 装備名,種別,対空,対爆,迎撃
-		public string Name { get; private set; }
-		public string Type { get; private set; }
-		public int AntiAir { get; private set; }
-		public int AntiBomb { get; private set; }
-		public int Intercept { get; private set; }
+		public string Name { get; }
+		public string Type { get; }
+		public int AntiAir { get; }
+		public int AntiBomb { get; }
+		public int Intercept { get; }
 		// コンストラクタ
 		public WeaponData() {
 			Name = "―";

@@ -16,7 +16,6 @@
 using System;
 
 namespace Rei.Random {
-
     /// <summary>
     /// Rei.Random.RandomBaseをSystem.Random互換にするアダプタクラス。
     /// 各メンバ関数の入力・出力はSystem.Randomと同じ範囲になります。
@@ -80,7 +79,5 @@ namespace Rei.Random {
         public override void NextBytes( byte[] buffer ) {
             original.NextBytes(buffer);
         }
-
     }
-
 }

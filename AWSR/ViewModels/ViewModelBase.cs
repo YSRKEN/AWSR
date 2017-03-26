@@ -2,7 +2,7 @@
 
 namespace AWSR.ViewModels
 {
-	class ViewModelBase : INotifyPropertyChanged
+	internal class ViewModelBase : INotifyPropertyChanged
 	{
 		public event PropertyChangedEventHandler PropertyChanged;
 
